@@ -748,6 +748,7 @@ def _native_combat(arena,actor,brain,seen,nearby,allies,target,dest,retreat,bloc
     ratio=float(actor.hp/actor.max_hp)
     distance=math.dist(pos,target['pos'])
     tank=actor.info['tank_id']
+    mod=module_for(tank)
     exclude=(tuple(target['turret_rect']),) if target.get('turret_rect') else ()
     if tank in bot_ai19.TANKS:
         return bot_ai19.decide(actor,brain,allies,target,nearby,dest,retreat,blocked,now)
