@@ -14,6 +14,7 @@ import hmac
 import json
 import re
 import secrets
+import sqlite3
 import struct
 import time
 
@@ -356,7 +357,9 @@ def apply(state, body, db, context):
             native = _snapshot_packets(db)
         else:
             known_absent = True
-            if state.get('battle') or state.get('tank_selection') or (state.get('room') or {}).get('state', 0) != 0:
+            if (state.get('battle') or state.get('tank_selection')
+                    or state.get('multiplayer_room_id') or state.get('started_room')
+                    or (state.get('room') or {}).get('state', 0) != 0):
                 raise RewardError('economy_phase', 'Về sảnh hoặc phòng chờ để bán/tách/nâng trợ thủ.')
             value = plan(db, request['intent'])
             if action == 'preview':
@@ -389,7 +392,7 @@ def apply(state, body, db, context):
         if score is not None:
             state['booster_attack'] = score
         return final, None
-    except (RewardError, ValueError, UnicodeError, struct.error) as exc:
+    except (RewardError, ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         error = exc if isinstance(exc, RewardError) else RewardError('economy_invalid', 'Dữ liệu kho chưa hợp lệ; chưa thay đổi vật phẩm.')
         envelope = error.envelope()

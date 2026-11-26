@@ -114,18 +114,22 @@ def fingerprint(key, payload):
     return _mac(key, 'm31-account-intent-v1', payload)
 
 
+def _row_to_record(row, deleted):
+    result = dict(row)
+    result['deleted'] = deleted
+    result['world'] = json.loads(result['state']) if result['state'] is not None else None
+    if result['profile_id'] is not None and not isinstance(result['world'], dict):
+        raise AccountError('account_data_invalid', 'Dữ liệu nhân vật không hợp lệ; chưa thay đổi tài khoản.')
+    return result
+
+
 def _record(db, username):
     row = db.execute('SELECT u.username,u.salt,u.pw,u.created,c.profile_id,w.state,w.arena '
                      'FROM users u LEFT JOIN characters c ON c.username=u.username '
                      'LEFT JOIN worlds w ON w.profile_id=c.profile_id WHERE u.username=?', (username,)).fetchone()
     if row is None:
         return None
-    result = dict(row)
-    result['deleted'] = lifecycle.blocked(db, username)
-    result['world'] = json.loads(result['state']) if result['state'] is not None else None
-    if result['profile_id'] is not None and not isinstance(result['world'], dict):
-        raise AccountError('account_data_invalid', 'Dữ liệu nhân vật không hợp lệ; chưa thay đổi tài khoản.')
-    return result
+    return _row_to_record(row, lifecycle.blocked(db, username))
 
 
 def _public(record, key):
@@ -142,11 +146,25 @@ def accounts(db, key, query='', status='active', offset=0, limit=25):
     if status not in ('active', 'deleted', 'all'):
         raise AccountError('account_filter_invalid', 'Bộ lọc tài khoản không hợp lệ.', status=400)
     query = query.casefold()
+    has_deleted = lifecycle.has_table(db, 'admin_account_deleted_v1')
+    if has_deleted:
+        sql = ('SELECT u.username,u.salt,u.pw,u.created,c.profile_id,w.state,w.arena,'
+               'COALESCE(d.deleted,0) AS deleted '
+               'FROM users u LEFT JOIN characters c ON c.username=u.username '
+               'LEFT JOIN worlds w ON w.profile_id=c.profile_id '
+               'LEFT JOIN admin_account_deleted_v1 d ON d.username=u.username '
+               'ORDER BY u.username COLLATE NOCASE')
+    else:
+        sql = ('SELECT u.username,u.salt,u.pw,u.created,c.profile_id,w.state,w.arena,0 AS deleted '
+               'FROM users u LEFT JOIN characters c ON c.username=u.username '
+               'LEFT JOIN worlds w ON w.profile_id=c.profile_id '
+               'ORDER BY u.username COLLATE NOCASE')
     rows = []
-    for entry in db.execute('SELECT username FROM users ORDER BY username COLLATE NOCASE'):
-        record = _record(db, entry[0])
-        if status != 'all' and record['deleted'] != (status == 'deleted'):
+    for row in db.execute(sql):
+        deleted = bool(row['deleted'])
+        if status != 'all' and deleted != (status == 'deleted'):
             continue
+        record = _row_to_record(row, deleted)
         item = _public(record, key)
         if query and not any(query in str(item[field] or '').casefold() for field in ('username', 'profile_id', 'name')):
             continue

@@ -3,7 +3,8 @@
  * equipment, rank, reward, bot progress or additional loading delay is created.
  */
 import {LOADING_CAMP_POSITIONS} from './m81_flow_layout.js';
-import {element,assetImage,actionButton,setText,nativeText,flashProgressBar,flashSpriteButton} from './m8_ui_helpers.js';
+import {localLoadFraction} from './m8_flow_state.js';
+import {element,assetImage,actionButton,setText,nativeText,flashSpriteButton} from './m8_ui_helpers.js';
 import {M82OriginalMenuMovie} from './m82_swf_player.js';
 import {prewarmBattleGate} from './m86_gate_transition.js';
 import {isPveMap} from './m81314_protocol.js';
@@ -126,8 +127,8 @@ export class M86LoadingView {
       movie.start();
       this.root.append(spinnerHost);
     }
-    this.localBar=at(flashProgressBar(ui.assets,0,{width:136,height:14,className:'m86-loading-local-bar'}),432,368,136,14);
-    this.status=at(element('div',null,'m86-loading-status'),428,388,144,48);this.status.setAttribute('role','status');
+    this.localBar=this.progressBar(434,368,'Tiến độ tải trận','0%',false);
+    this.status=at(element('div',null,'m86-loading-status'),428,390,144,44);this.status.setAttribute('role','status');this.status.hidden=true;
     const tipShadow=this.assets.get('loading.tipShadow'),tipBg=this.assets.get('loading.tipBackground');
     if(tipShadow||tipBg){
       const tipBox=at(element('div',null,'m86-loading-tip'),232,502,536,38);
@@ -139,7 +140,7 @@ export class M86LoadingView {
     }
     this.exit=at(flashSpriteButton(ui,'zh_CN/gui_summer/controls/public/button_2_blue.png','Về sảnh',()=>ui.run(()=>ui.client.leaveRoom()),{width:104,height:28,className:'m86-loading-exit',testId:'m8-leave-loading'}),448,544,104,28);
     this.exit.title='Rời trận đang tải và về sảnh';
-    this.root.append(this.map,this.title,this.localBar,this.status,this.exit);
+    this.root.append(this.map,this.title,this.localBar.track,this.localBar.progress,this.localBar.label,this.status,this.exit);
     prewarmBattleGate(this.assets);
     this.chat=at(element('div',null,'m86-loading-chat'),272,579,456,38);
     this.chat.setAttribute('aria-label','Chat phe ta chưa khả dụng');this.chat.title='Chat trong trận chưa được kết nối';
@@ -162,6 +163,23 @@ export class M86LoadingView {
     const a=key&&this.assets.get(key);if(!a)return null;
     return this.art(key,Math.round(cx-a.width*scale/2),Math.round(cy-a.height*scale/2),a.width*scale,a.height*scale,card);
   }
+  progressBar(x,y,ariaLabel,initialText='…',card=false) {
+    const track=this.art('loading.progressTrack',x,y,132,16,card);
+    const progress=at(element('div',null,'m81-loading-progress'),x+1,y+1,0,14);
+    progress.setAttribute('role','progressbar');
+    if(ariaLabel)progress.setAttribute('aria-label',ariaLabel);
+    progress.setAttribute('aria-valuemin','0');progress.setAttribute('aria-valuemax','100');
+    progress.append(this.art('loading.progress',0,0,130,14,card));progress.style.overflow='hidden';
+    const label=at(element('span',initialText,'m8-load-percent'),x,y,132,16);
+    return {track,progress,label};
+  }
+  setBar(row,loaded,waitingText='Đang chờ') {
+    const pct=loaded==null?0:Math.max(0,Math.min(100,loaded));
+    row.progress.style.width=`${130*pct/100}px`;
+    row.label.classList.toggle('is-waiting',loaded==null);
+    if(loaded==null){row.progress.removeAttribute('aria-valuenow');setText(row.label,waitingText);}
+    else {row.progress.setAttribute('aria-valuenow',String(pct));setText(row.label,`${pct}%`);}
+  }
   renderRoster(state) {
     for(const cleanup of this.cardCleanups)cleanup();this.cardCleanups=[];this.bars.clear();this.roster.replaceChildren();
     const selfCamp=state.flow.roster.find(row=>row.accountId===state.accountId)?.camp;
@@ -177,29 +195,33 @@ export class M86LoadingView {
       const decoration=this.centered(model.decorationKey,117.5,95);if(decoration){decoration.dataset.loadingDecoration=String(c.decorateId);card.append(decoration);}
       const tank=this.assets.portraitForTank(model.tank,{size:160,preferNative:true});
       card.append(at(tank,38,4,160,160));this.cardCleanups.push(()=>tank.dispose?.());
-      card.append(this.art('loading.progressTrack',51.5,166,null,null,true));
-      const progress=at(element('div',null,'m81-loading-progress'),52.5,167,0,14);
-      progress.setAttribute('role','progressbar');progress.setAttribute('aria-label','Tiến độ tải của '+c.name);
-      progress.setAttribute('aria-valuemin','0');progress.setAttribute('aria-valuemax','100');
-      progress.append(this.art('loading.progress',0,0,130,14,true));progress.style.overflow='hidden';
-      const label=at(element('span','…','m8-load-percent'),51.5,164,132,23);card.append(progress,label);
+      const bar=this.progressBar(51.5,166,'Tiến độ tải của '+c.name,'…',true);
+      card.append(bar.track,bar.progress,bar.label);
       if(c.teamName) {
         const guild=at(element('div',null,'m86-loading-guild'),30,0,175,28);
         const guildName=element('span',c.teamName);guildName.title=c.teamName;
         const badge=this.assets.get(model.guildKey);if(badge)guild.append(assetImage(badge));
         guild.append(guildName);card.append(guild);
       }
-      const name=at(element('span',c.name,'m86-loading-name'),78,143,145,22);name.title=c.name||'';
+      const nameRow=at(element('div',null,'m86-loading-name-row'),37,142,161,22);
+      const vip=this.assets.get(model.vipKey);
+      if(vip){
+        const vipNode=this.assets.menuArt(vip,'','m8-art m86-loading-vip',{nativePriority:20});
+        this.cardCleanups.push(()=>vipNode.dispose?vipNode.dispose():this.assets.menuAnimations.release(vipNode));
+        const h=Math.min(16,vip.height||16),w=vip.height?Math.round((vip.width||h)*h/vip.height):h;
+        Object.assign(vipNode.style,{width:`${w}px`,height:`${h}px`});
+        nameRow.append(vipNode);
+      }
+      const name=element('span',c.name,'m86-loading-name');name.title=c.name||'';
       const colors=loadingNameColors(c.vipLevel);
-      if(colors){name.classList.add('m86-loading-vip-name');name.style.backgroundImage=`linear-gradient(#${colors[0].toString(16).padStart(6,'0')},#${colors[1].toString(16).padStart(6,'0')})`;name.style.paddingRight='20px';}
-      card.append(name);
-      const vip=this.assets.get(model.vipKey);if(vip)card.append(this.art(model.vipKey,43,143+(22-vip.height*36/vip.width)/2,36,vip.height*36/vip.width,true));
+      if(colors){name.classList.add('m86-loading-vip-name');name.style.backgroundImage=`linear-gradient(#${colors[0].toString(16).padStart(6,'0')},#${colors[1].toString(16).padStart(6,'0')})`;}
+      nameRow.append(name);card.append(nameRow);
       const honor=this.centered(model.honor?.key,35.5,66);if(honor){honor.title=model.honor.name||'';card.append(honor);}
       const rank=this.centered(model.military?.key,52.5,37,.4);if(rank){rank.title=model.military.name||'';card.append(rank);}
       if(model.skill?.icon){const skill=at(assetImage(model.skill.icon),195,80,30,30);skill.title=nativeText(model.skill.name);card.append(skill);}
-      const ping=c.accountId===state.accountId?at(element('span',null,'m86-loading-ping'),158,127,51,22):null;
+      const ping=c.accountId===state.accountId?at(element('span',null,'m86-loading-ping'),148,124,52,18):null;
       if(ping)card.append(ping);
-      this.bars.set(c.accountId,{progress,label,ping});this.roster.append(card);
+      this.bars.set(c.accountId,{...bar,ping});this.roster.append(card);
     }
   }
   update(state) {
@@ -223,10 +245,8 @@ export class M86LoadingView {
       }
     }
     for(const [id,row] of this.bars) {
-      const value=loadingProgress(flow,id);row.progress.style.width=`${130*(value.loaded??0)/100}px`;
-      row.label.classList.toggle('is-waiting',value.loaded==null);
-      if(value.loaded==null){row.progress.removeAttribute('aria-valuenow');setText(row.label,'Đang chờ');}
-      else {row.progress.setAttribute('aria-valuenow',String(value.loaded));setText(row.label,`${value.loaded}%`);}
+      const value=loadingProgress(flow,id);
+      this.setBar(row,value.loaded);
       if(row.ping)setText(row.ping,value.delay==null?'':`${value.delay}ms`);
     }
     const map=this.assets.loadingPresentation?.maps?.[flow.mapId];
@@ -234,15 +254,12 @@ export class M86LoadingView {
     if(mapAsset&&this.map.getAttribute('src')!==mapAsset.url)this.map.src=mapAsset.url;
     this.map.hidden=!mapAsset;setText(this.title,pve?.title||map?.name||(flow.mapId===19?'Robo':`Bản đồ ${flow.mapId??''}`));
     const load=flow.localLoad;
-    const stage={catalog:'Đang đọc dữ liệu trận…',assets:'Đang tải hình ảnh và âm thanh…',interface:'Đang chuẩn bị trận…',graphics:'Đang chuẩn bị hiệu ứng…',
-      'waiting-server':'Đang chờ người chơi…',ready:'Sẵn sàng vào trận',error:'Không tải được trận'}[load?.stage]||'Đang chuẩn bị trận…';
-    const verified=load?.stage==='assets'&&load.completed>0?` · ${load.completed} tệp đã kiểm tra`:'';
-    setText(this.status,load?.error?stage+'\n'+load.error:stage+verified);
-    const stageFrac={catalog:.12,assets:.35,interface:.72,graphics:.88,'waiting-server':1,ready:1}[load?.stage]??.15;
-    const barFrac=load?.error?0:(load?.total>0&&finite(load?.completed)?Math.max(stageFrac,Math.min(.96,load.completed/load.total)):stageFrac);
-    this.localBar?.setProgress(barFrac);
+    const pct=Math.round(localLoadFraction(load)*100);
+    this.setBar(this.localBar,load?.error?null:pct,load?.error?'Lỗi':'0%');
+    this.localBar.track.title=load?.completed!=null?`${load.completed} / ${load.total} tài nguyên đã tải`:'';
+    this.status.hidden=!load?.error;
+    setText(this.status,load?.error?`Không tải được trận\n${load.error}`:'');
     this.status.classList.toggle('m86-loading-error',!!load?.error);
-    this.status.title=load?.completed!=null?`${load.completed} / ${load.total} tài nguyên đã tải và kiểm tra`:'';
     this.exit.disabled=!!state.play.busy;
   }
   snapshot(){return {players:this.bars.size,nativeProgress:Object.fromEntries([...this.bars].map(([id,r])=>[id,r.progress.getAttribute('aria-valuenow')]))};}

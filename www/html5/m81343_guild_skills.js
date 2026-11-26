@@ -169,7 +169,7 @@ export function renderNativeGuildSkills(ui,host,account,member,{onClose}={}) {
   const panel=createNativePanel({assets,kind:'box1',width:720,height:442,title:{asset:'m43.guildTitle',x:320.5,y:20,label:'Kỹ năng Guild'},
     close:{asset:'public.close',x:681,y:15,label:'Đóng kỹ năng Guild'},onClose});
   const root=panel.root;root.classList.add('m43-guild-skills');root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Kỹ năng Guild');
-  root.dataset.nativeScreen='guild-skills';at(root,149,70,720,442);panel.close.dataset.testid='guild-skills-close';
+  root.dataset.nativeScreen='guild-skills';at(root,140,79,720,442);panel.close.dataset.testid='guild-skills-close';
   const body=panel.content;
   const frame=createNativePanel({assets,kind:'box3',state:'LIGHT_BG',width:570,height:314});at(frame.root,17,78,570,314);body.append(frame.root);
   for(const [key,x,label,icon] of [['learn',35,'Học','learnTab'],['research',133,'Nghiên cứu','researchTab']]){

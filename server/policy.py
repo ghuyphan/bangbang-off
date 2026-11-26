@@ -1,8 +1,10 @@
 """Flash socket policy — ports 843 and 41843 (xmlsocket://host:41843)."""
 from __future__ import annotations
 
+import errno
 import socket
 import threading
+import time
 from server_logging import get_logger
 
 log = get_logger('policy')
@@ -17,18 +19,25 @@ POLICY = (
 
 
 def _serve(port: int) -> None:
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    try:
-        sock.bind(("0.0.0.0", port))
-    except OSError as exc:
-        log.exception("[policy] port %s bind failed", port)
-        return
-    sock.listen(32)
-    log.info(f"[policy] listening :{port}")
-    while True:
-        conn, addr = sock.accept()
-        threading.Thread(target=_one, args=(conn, addr, port), daemon=True).start()
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            sock.bind(("0.0.0.0", port))
+        except OSError:
+            log.exception("[policy] port %s bind failed", port)
+            return
+        sock.listen(32)
+        log.info(f"[policy] listening :{port}")
+        while True:
+            try:
+                conn, addr = sock.accept()
+            except OSError as exc:
+                if exc.errno in (errno.EBADF, errno.EINVAL):
+                    break
+                log.warning("[policy:%s] accept error: %s", port, exc)
+                time.sleep(0.05)
+                continue
+            threading.Thread(target=_one, args=(conn, addr, port), daemon=True).start()
 
 
 def _one(conn: socket.socket, addr, port: int) -> None:

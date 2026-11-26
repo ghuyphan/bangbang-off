@@ -62,8 +62,6 @@ def project_lock(directory):
             return
 
         import msvcrt
-        if handle.tell() == 0:
-            handle.write(b'0'); handle.flush()
         handle.seek(0)
         try:
             msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
@@ -71,6 +69,10 @@ def project_lock(directory):
             yield False
             return
         try:
+            handle.seek(0, os.SEEK_END)
+            if handle.tell() == 0:
+                handle.write(b'0')
+                handle.flush()
             yield True
         finally:
             handle.seek(0)
@@ -147,7 +149,7 @@ def main():
         instance = uuid.uuid4().hex
         os.environ['BB_LAUNCH_ID'] = instance
         base = f'http://127.0.0.1:{http_port}'
-        ready = threading.Event(); stopping = threading.Event()
+        ready = threading.Event(); stopping = threading.Event(); ready_lock = threading.Lock()
         print('BANG BANG — M45 portable + xác nhận EXP dư', flush=True)
         print('Đang khởi động. Giữ cửa sổ này trong khi chơi.', flush=True)
         print('Game:', base + '/html5/', flush=True)
@@ -156,13 +158,19 @@ def main():
         print('Ghi log mặc định TẮT. Có thể bật/tắt trong web buff.', flush=True)
         print('Thoát game về sảnh rồi nhấn Ctrl+C tại đây để dừng.', flush=True)
         def when_ready():
+            tmp_file = ready_file.with_suffix('.json.tmp')
+            payload = json.dumps(dict(url=base, instance=instance, pid=os.getpid(), native_port=native_port, lan_url=lan_url))
             for _ in range(180):
                 if stopping.wait(.5):
                     return
                 if not health(base, instance):
                     continue
-                ready_file.write_text(json.dumps(dict(url=base, instance=instance, pid=os.getpid(), native_port=native_port, lan_url=lan_url)), encoding='utf-8')
-                ready.set()
+                with ready_lock:
+                    if stopping.is_set():
+                        return
+                    tmp_file.write_text(payload, encoding='utf-8')
+                    os.replace(tmp_file, ready_file)
+                    ready.set()
                 print('SẴN SÀNG — đóng cửa sổ này sẽ dừng server.', flush=True)
                 if not args.no_browser:
                     open_pages(base)
@@ -180,8 +188,12 @@ def main():
         try:
             app.main()
         finally:
-            stopping.set();worker.join(timeout=2)
-            ready_file.unlink(missing_ok=True)
+            with ready_lock:
+                stopping.set()
+            worker.join(timeout=2)
+            with ready_lock:
+                ready_file.unlink(missing_ok=True)
+                ready_file.with_suffix('.json.tmp').unlink(missing_ok=True)
         return 0 if ready.is_set() else 1
 
 if __name__ == '__main__':

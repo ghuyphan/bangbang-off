@@ -20,7 +20,7 @@ class DiaoChanActions(ActionLockMixin, TankActions):
         self.ready = self.dash = None
         self.space_count,self.space_next_charge = 3,0
 
-    def _cooldown(self,slot):
+    def _cooldown(self,slot,changed=False):
         return 1572,props(SLOTS[slot],slot,self.space_count if slot==2 else -1,
                           self.cooldowns[slot],self.space_next_charge if slot==2 else 0)+struct.pack('<I',self.id)
 

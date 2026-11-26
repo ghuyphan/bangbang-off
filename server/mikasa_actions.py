@@ -21,7 +21,7 @@ class MikasaActions(MpResourceMixin, TankActions):
         self.e_next_charge = self.space_next_charge = 0
         self.ready = self.hook = self.dash = self.reload = None
 
-    def _cooldown(self,slot):
+    def _cooldown(self,slot,changed=False):
         count = self.e_count if slot==1 else self.space_count if slot==2 else -1
         next_charge = self.e_next_charge if slot==1 else self.space_next_charge if slot==2 else 0
         return 1572,props(SLOTS[slot],slot,count,self.cooldowns[slot],next_charge)+struct.pack('<I',self.id)

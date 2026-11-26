@@ -240,7 +240,8 @@ def ai(arena, now):
                 key=lambda a: (math.dist(pos, a.position_at(now)), a.id), default=None)
             if tpl == 718:
                 brain['goal'] = _patrol(arena,actor,now)
-                if target and math.dist(pos,target.position_at(now))<=100 and now>=actor.cooldowns[0]:
+                if (target and math.dist(pos,target.position_at(now))<=100 and now>=actor.cooldowns[0]
+                        and not actor.blocked('attack',now) and not actor.skill_sealed(0,now)):
                     from pve_shots import targets
                     actor.cooldowns[0]=now+1000
                     for victim in targets(actor,pos,144,now):

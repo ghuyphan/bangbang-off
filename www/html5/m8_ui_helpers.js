@@ -15,6 +15,14 @@ export async function sha256Hex(bytes) {
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))]
     .map(value => value.toString(16).padStart(2, '0')).join('');
 }
+export async function fetchVerifiedJson(url, errorMessage = 'Không tải được dữ liệu.') {
+  const response = await fetch(url, {cache: 'no-store'});
+  if (!response.ok) throw new Error(errorMessage);
+  const bytes = await response.arrayBuffer();
+  const sha256 = await sha256Hex(bytes);
+  const catalog = JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(bytes));
+  return {catalog, sha256, bytes: bytes.byteLength};
+}
 export function imageAssetsFromSource(source) {
   if (/\.(png|jpe?g|webp)$/i.test(source?.url || '')) return [source];
   const d = source?.derived;

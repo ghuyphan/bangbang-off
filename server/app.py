@@ -17,16 +17,17 @@ from urllib.parse import unquote, urlparse
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
+    except (OSError, ValueError):
         pass
 if sys.stderr and hasattr(sys.stderr, "reconfigure"):
     try:
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
+    except (OSError, ValueError):
         pass
 
 ROOT = Path(__file__).resolve().parents[1]
 WWW = ROOT / "www"
+_WWW_ROOT = WWW.resolve()
 DATA = ROOT / "data"
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -57,8 +58,7 @@ _ADMIN_CSP = (
     "connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'none'; form-action 'self'"
 )
 _MIRROR_SSL = ssl.create_default_context()
-_MIRROR_SSL.check_hostname = False
-_MIRROR_SSL.verify_mode = ssl.CERT_NONE
+_MAX_JSON_BODY = 1024 * 1024
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -131,12 +131,27 @@ class Handler(SimpleHTTPRequestHandler):
         super().send_error(code, message, explain)
 
     def _read_json(self) -> dict:
-        n = int(self.headers.get("Content-Length") or 0)
-        raw = self.rfile.read(n) if n else b"{}"
-        try:
-            return json.loads(raw.decode("utf-8") or "{}")
-        except Exception:
+        raw_len = self.headers.get("Content-Length")
+        if raw_len is None or not raw_len.strip():
             return {}
+        try:
+            n = int(raw_len)
+        except ValueError as exc:
+            raise ValueError("Invalid Content-Length header") from exc
+        if n < 0 or n > _MAX_JSON_BODY:
+            raise ValueError("Request body size out of range")
+        if n == 0:
+            return {}
+        raw = self.rfile.read(n)
+        if len(raw) != n:
+            raise ValueError("Incomplete request body")
+        try:
+            parsed = json.loads(raw.decode("utf-8"))
+        except (UnicodeError, json.JSONDecodeError) as exc:
+            raise ValueError("Malformed JSON request body") from exc
+        if not isinstance(parsed, dict):
+            raise ValueError("JSON object expected")
+        return parsed
 
     def _cookie(self) -> str | None:
         raw = self.headers.get("Cookie") or ""
@@ -184,7 +199,15 @@ class Handler(SimpleHTTPRequestHandler):
             self.path = "/index.html"
             return super().do_GET()
 
-        file_path = WWW / path.lstrip("/")
+        rel_path = unquote(path).lstrip("/")
+        try:
+            file_path = (WWW / rel_path).resolve()
+        except OSError:
+            self.send_error(400)
+            return
+        if not file_path.is_relative_to(_WWW_ROOT):
+            self.send_error(403)
+            return
         if not file_path.exists():
             # Dynamically fetch & cache any missing asset from netzone mirror
             if not self.offline_assets and (
@@ -201,8 +224,8 @@ class Handler(SimpleHTTPRequestHandler):
                             file_path.write_bytes(data)
                             log.info(f"[http] Proxy-cached {path} ({len(data)} bytes) from netzone")
                             return self._send_bytes(200, data, self.guess_type(str(file_path)))
-                except Exception:
-                    pass
+                except (OSError, ValueError) as exc:
+                    log.debug("[http] Mirror fetch skipped for %s: %s", path, exc)
 
             if path.endswith(".xml"):
                 log.warning(f"[http] Missing XML fallback for {path}")
@@ -214,8 +237,11 @@ class Handler(SimpleHTTPRequestHandler):
         path = urlparse(self.path).path
         if path.startswith('/api/admin/'):
             return admin_buff.handle(self)
-        if path in ('/api/sandbox/info', '/api/sandbox/grant'):
+        try:
             payload = self._read_json()
+        except ValueError as exc:
+            return self._json(400, dict(success=False, message=str(exc)))
+        if path in ('/api/sandbox/info', '/api/sandbox/grant'):
             session = STORE.session_from_cookie(self._cookie())
             if not session:
                 return self._json(401, dict(success=False, message='Đăng nhập lại để nhận quà sandbox.'))
@@ -237,7 +263,6 @@ class Handler(SimpleHTTPRequestHandler):
             except ValueError as exc:
                 return self._json(400, dict(success=False, message=str(exc)))
         if path in ('/api/bots/get','/api/bots/save'):
-            payload = self._read_json()
             session = STORE.session_from_cookie(self._cookie())
             if not session:
                 return self._json(401,dict(success=False,message='Đăng nhập lại để thiết lập trận.'))
@@ -253,24 +278,20 @@ class Handler(SimpleHTTPRequestHandler):
             except ValueError as exc:
                 return self._json(400,dict(success=False,message=str(exc)))
         if path == "/api/login":
-            payload = self._read_json()
             result = STORE.login(str(payload.get("username") or ""), str(payload.get("password") or ""))
             if result.get("success"):
                 cookie = result.pop("cookie")
                 return self._json(200, result, set_cookie=cookie)
             return self._json(200, result, clear_cookie=True)
         if path == "/api/session":
-            self._read_json()
             result = STORE.refresh_from_cookie(self._cookie())
             if result is None:
                 return self._json(200, {"success": False}, clear_cookie=True)
             return self._json(200, result)
         if path == "/api/logout":
-            self._read_json()
             STORE.logout_cookie(self._cookie())
             return self._json(200, {"success": True}, clear_cookie=True)
         if path == "/capi":
-            self._read_json()
             return self._json(200, {"ok": True})
         self.send_error(404)
 
@@ -302,12 +323,11 @@ class LanHandler(Handler):
         return True
 
 
-class LanServer(Server):
-    def __init__(self, bind, port, cert, key):
+class _TLSServer(Server):
+    def __init__(self, server_address, handler_cls, cert, key):
         self.context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         self.context.load_cert_chain(str(cert), str(key))
-        self.authority = f'{bind}:{port}'
-        super().__init__((bind, port), LanHandler)
+        super().__init__(server_address, handler_cls)
 
     def process_request_thread(self, request, client_address):
         try:
@@ -318,6 +338,12 @@ class LanServer(Server):
             return
         secure.settimeout(None)
         super().process_request_thread(secure, client_address)
+
+
+class LanServer(_TLSServer):
+    def __init__(self, bind, port, cert, key):
+        self.authority = f'{bind}:{port}'
+        super().__init__((bind, port), LanHandler, cert, key)
 
 
 def start_side_servers(html5_local=False, native_port=49119) -> None:
@@ -334,20 +360,16 @@ def start_side_servers(html5_local=False, native_port=49119) -> None:
         start_sixcube()
 
 
-def start_https(bind: str, port: int) -> None:
-    import ssl
-
+def start_https(bind: str, port: int):
     cert = DATA / "certs" / "cert.pem"
     key = DATA / "certs" / "key.pem"
     if not cert.exists() or not key.exists():
         log.warning("[https] missing certs, skip")
-        return
-    httpd = Server((bind, port), Handler)
-    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-    ctx.load_cert_chain(str(cert), str(key))
-    httpd.socket = ctx.wrap_socket(httpd.socket, server_side=True)
+        return None
+    httpd = _TLSServer((bind, port), Handler, cert, key)
     log.info(f"[https] https://{bind}:{port}/")
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    return httpd
 
 
 def main() -> None:
@@ -399,8 +421,8 @@ def main() -> None:
         print('[admin] Local gift-mail admin: http://127.0.0.1:' + str(args.port) + '/admin/buff/')
         print('[admin] Operator key file (open locally, never share): ' + str(key_path))
     start_side_servers(args.html5_local, args.native_port)
-    if not args.html5_local:
-        start_https(args.bind, args.https_port)
+    https_server = None if args.html5_local else start_https(args.bind, args.https_port)
+    lan_server = None
     if all(lan):
         lan_server = LanServer(*lan)
         threading.Thread(target=lan_server.serve_forever, daemon=True).start()
@@ -415,6 +437,9 @@ def main() -> None:
             time.sleep(1)
     else:
         log.error(f"[http] ERROR: Could not bind port {args.port}!")
+        for srv in (https_server, lan_server):
+            if srv is not None:
+                srv.server_close()
         return
 
     log.info(f"[http] http://{args.bind}:{args.port}/  www={WWW}")
@@ -422,6 +447,12 @@ def main() -> None:
         httpd.serve_forever()
     except KeyboardInterrupt:
         log.info("[http] stop")
+    finally:
+        httpd.server_close()
+        for srv in (https_server, lan_server):
+            if srv is not None:
+                srv.shutdown()
+                srv.server_close()
 
 
 if __name__ == "__main__":

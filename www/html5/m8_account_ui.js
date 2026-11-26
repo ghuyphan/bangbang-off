@@ -23,7 +23,7 @@ import {validateNormalShopCatalog,normalShopType,normalShopOffer,normalShopIcon,
  * Schemas: cosmetic_shop.py, guilds.py, guild_protocol.py, character_info.py.
  */
 import {element,actionButton,assetImage,field,selectInput,textInput,nativeText,numberText,note} from './m8_ui_helpers.js';
-import {renderGuildManagement,renderGuildMembers,renderGuildInvitations,guildName,guildPermissions} from './m81_guild_management.js';
+import {renderGuildManagement,guildName,guildPermissions} from './m81_guild_management.js';
 import {renderPublicProfile} from './m81_profile.js';
 import {renderLeaderboard,loadLeaderboard,renderPublicRankDetail} from './m82_leaderboard.js';
 import {renderInventoryShell,placeInventoryDetails} from './m82_account_shell.js';
@@ -31,8 +31,6 @@ import {nativeMilitaryView,ownGuildMember} from './m8_account_state.js';
 
 const BAG_TYPES=[[2,'Vật phẩm'],[3,'Nguyên liệu'],[4,'Avatar'],[7,'Phông nền'],[6,'Skin tank'],[10,'Pha lê'],[9,'Hào quang'],[8,'Tạm giữ'],[1,'Trang bị'],[5,'Bổ trợ']];
 const SECTIONS={inventory:'Kho đồ',shop:'Cửa hàng',profile:'Hồ sơ',military:'Quân hàm',leaderboard:'Xếp hạng',guild:'Guild'};
-// Native guilds.SLOTS, not a guessed contiguous range. Slot 1 accepts active skills.
-const GUILD_SLOTS=[1,5,6,7,8];
 const MILITARY_ATTRS={1:'Công vật lý / năng lượng',3:'Xuyên giáp / năng lượng',6:'Giáp vật lý',7:'Giáp năng lượng',12:'HP',14:'Hồi chiêu đánh thường'};
 const currencyField=type=>['cash','golden','silver','honor','crystal','presentPoint'][Number(type)-1];
 const currencyName=type=>['Xu','Bạc','Phiếu quà','Huy chương','Pha lê','Điểm quà'][Number(type)-1]||'Tiền';
@@ -107,9 +105,10 @@ function makeTable(headers,rows) {
 }
 
 export class M8AccountUI {
-  constructor({host,client,catalog,assets,run,section='inventory',onClose=()=>{},onSection=()=>{}}) {
+  constructor({host,client,catalog,assets,run,section='inventory',rankKind='stars',onClose=()=>{},onSection=()=>{}}) {
     this.host=host;this.client=client;this.catalog=catalog||assets?.account||{};this.assets=assets;
     this.onClose=onClose;this.onSection=onSection;this.run=run||((task)=>task());this.section=SECTIONS[section]?section:'inventory';
+    this.initialRankKind=rankKind||'stars';
     this.bag=2;this.page=0;this.shopType=client.state.meta.tanks.length?'normal:1':'normal:2';this.query='';this.selectedUuid=null;this.guildTab='overview';
     this.pending=false;this.message='';this.messageError=false;this.confirmation=null;this.disposed=false;
     this.fields={};this.cache={};this.loading=new Set();this.epoch=0;
@@ -123,7 +122,7 @@ export class M8AccountUI {
     if(this.disposed)return;
     const identity=String(snapshot?.meta?.character?.accountId||snapshot?.accountId||'');
     if(this.identity!==identity||this.connectionGeneration!==this.client.generation){this.economyDialog?.dispose();this.identity=identity;this.connectionGeneration=this.client.generation;
-      this.epoch++;this.guildMemberView=null;this.guildApplicationView=null;this.accountPagerStates={};this.rankKind='stars';this.rankPages=1;this.recruitEdits={};this.queryTickets={};this.shopPreview={};this.inventoryDetails=false;this.inventoryMore=false;this.guildPage=0;this.guildJoinable=false;this.profileIdentity=null;this.rankPage=0;this.cache={};this.loading.clear();this.confirmation=null;this.fields={};this.pending=false;this.message='';}
+      this.epoch++;this.guildMemberView=null;this.guildApplicationView=null;this.accountPagerStates={};this.rankKind=this.initialRankKind;this.initialRankKind='stars';this.rankPages=1;this.recruitEdits={};this.queryTickets={};this.shopPreview={};this.inventoryDetails=false;this.inventoryMore=false;this.guildPage=0;this.guildJoinable=false;this.profileIdentity=null;this.rankPage=0;this.cache={};this.loading.clear();this.confirmation=null;this.fields={};this.pending=false;this.message='';}
     if(this.snapshot?.meta?.character?.avatarId!==snapshot?.meta?.character?.avatarId||this.snapshot?.meta?.character?.decorateId!==snapshot?.meta?.character?.decorateId)this.shopPreview={};
     this.snapshot=snapshot;
     this.economyDialog?.update(snapshot);
@@ -176,7 +175,7 @@ export class M8AccountUI {
   async perform(task,success='Đã cập nhật.') {
     if(!this.canMutate())return;
     const epoch=this.epoch;
-    this.pending=true;this.message='Đang chờ máy chủ xác nhận…';this.messageError=false;this.confirmation=null;this.render();
+    this.pending=true;this.message='';this.messageError=false;this.confirmation=null;this.render();
     try {await this.run(async()=>{try {await task();if(!this.disposed&&epoch===this.epoch)this.message=success;}catch(error){if(!this.disposed&&epoch===this.epoch){this.message=error?.message||'Chưa cập nhật được.';this.messageError=true;}throw error;}});}
     catch(error){if(!this.disposed&&epoch===this.epoch){this.message=error?.message||'Chưa cập nhật được.';this.messageError=true;}}
     finally {if(!this.disposed&&epoch===this.epoch){this.pending=false;this.snapshot=this.client.snapshot?.()||this.snapshot;this.render();}}
@@ -252,7 +251,7 @@ export class M8AccountUI {
     else if(this.section==='military')renderNativeMilitary(this,body);
     else renderNativeGuild(this,body);
     panel.append(body);const status=note(this.message||(!this.canMutate()&&!this.pending?'Về sảnh hoặc phòng chờ để thay đổi vật phẩm và Guild.':''),this.messageError?'error':'');
-    status.classList.add('m8-account-status');status.setAttribute('aria-live','polite');if(!nativePanel||this.message)panel.append(status);shell.append(nativePanel?.root||panel);
+    status.classList.add('m8-account-status');status.setAttribute('aria-live','polite');if(this.section!=='guild'&&(!nativePanel||this.message))panel.append(status);shell.append(nativePanel?.root||panel);
     const previousConfirmation=this.renderedConfirmation;let modal=null;
     if(this.confirmation){const background=nativePanel?.root||panel;background.inert=true;modal=this.renderConfirmation();shell.append(modal);}
     this.host.replaceChildren(shell);body.scrollTop=scroll;modal?.restoreScroll?.();
@@ -326,75 +325,13 @@ export class M8AccountUI {
   renderShop(body) {
     return renderNativeShop(this,body,{purchaseState:cosmeticPurchaseState,previewAppearance:shopPreviewAppearance,currencyName});
   }
-  renderProfile(body) {
-    const char=this.snapshot.meta?.character||{},data=this.cache.profile;const layout=element('div',null,'m8-account-profile');layout.append(this.avatarPreview());
-    const content=element('div',null,'m8-account-profile-info');const military=nativeMilitaryView(Number(char.militaryStar||0),this.catalog);
-    const badge=military.current?.nativeIcon?this.assets?.get?.('zh_CN/II/tank/militaryRank/rank/'+military.current.nativeIcon):null;
-    const rank=element('div',null,'m8-account-rank');if(badge)rank.append(this.image(badge,'Quân hàm'));rank.append(element('h3',nativeText(military.current?.name||'Quân hàm')),note(`${numberText(military.stars)} sao tank`));content.append(rank);
-    const nextRank=(this.catalog.military||[]).find(row=>row.stars>military.stars&&row.rankId!==military.current?.rankId);
-    content.append(makeTable(['Thông tin','Hiện tại'],[['Cấp nhân vật',numberText(char.level)],['Tank sở hữu',numberText((this.snapshot.meta?.tanks||[]).filter(t=>t.containerType===0).length)],
-      ['Guild',this.snapshot.account?.guild?.name||'Chưa tham gia'],['Quân hàm kế tiếp',nextRank?`${nativeText(nextRank.name)} · ${numberText(nextRank.stars)} sao`:'Đã đạt mốc cao nhất']]));
-    const attrs=Object.entries(military.totals).map(([key,value])=>{const [type,valueType]=key.split(':').map(Number);return [MILITARY_ATTRS[type]||'Thuộc tính',militaryAttributeText(value,valueType)];});
-    if(attrs.length){content.append(element('h3','Thuộc tính quân hàm'),makeTable(['Thuộc tính','Tổng cộng'],attrs));}
-    if(data?.queryError)content.append(note(data.queryError,'error'));
-    else if(this.loading.has('profile'))content.append(note('Đang tải hồ sơ…'));
-    else if(data?.state===1){content.append(note(`Tank chủ chiến: ${this.assets?.tankName?.(data.char_tank?.[0]?.tank_tplt_id)||'—'}`));}
-    layout.append(content);body.append(layout);
-  }
-  renderGuildLegacy(body) {
-    const account=this.snapshot.account||{};
-    renderGuildInvitations(this,body,account);
-    if(!account.guild){this.renderGuildJoin(body);return;}
-    const guild=account.guild;const char=this.snapshot.meta?.character||{};const officer=!!char.charUuid&&[guild.leaderUuid,guild.viceLeaderUuid].includes(char.charUuid);
-    const member=ownGuildMember(account,Number(char.accountId||this.identity));const team=(account.teams||[]).find(row=>row.teamId===account.selfTeamId);
-    const summary=element('div',null,'m8-account-guild-summary');summary.append(element('h3',`${guild.name} · Cấp ${guild.level}`),
-      element('span',`Quỹ ${numberText(guild.coin)} · ${team?.name||'Đội'} · Cống hiến ${numberText(member?.merit||0)}`));body.append(summary);
-    const tabs=element('div',null,'m8-account-filter');for(const [key,label] of [['overview','Thông tin'],['skills','Kỹ năng'],['members','Thành viên'],['manage','Quản lý']])tabs.append(this.button(label,()=>{this.guildTab=key;this.render();},{className:this.guildTab===key?'is-active':'',testId:`guild-tab-${key}`}));body.append(tabs);
-    if(this.guildTab==='skills')this.renderGuildSkills(body,account,member,officer);
-    else if(this.guildTab==='members')this.renderGuildMembers(body,account);
-    else if(this.guildTab==='manage')this.renderGuildManage(body,account);
-    else {
-      const cols=element('div',null,'m8-account-columns'),info=element('section',null,'m8-account-card');info.append(element('h3','Thông báo'),note(nativeText(guild.notice)||'Chưa có thông báo.'));
-      info.append(makeTable(['Đội','Thành viên','Quỹ'],account.teams.map(t=>[t.name,numberText((account.members?.[t.teamId]||[]).length),numberText(t.coin)])));
-      const next=(this.catalog.guildLevels||[]).find(row=>row.nLevel===guild.level);
-      if(officer&&next?.iNextCoin)info.append(this.button('Nâng cấp Guild',()=>this.confirm('Nâng cấp Guild',`Tiêu ${numberText(next.iNextCoin)} quỹ Guild để lên cấp ${guild.level+1}.`,()=>this.client.guildAction('upgrade'),{success:'Đã nâng cấp Guild.'}),{disabled:!this.canMutate()||guild.coin<next.iNextCoin,testId:'guild-upgrade'}));
-      info.append(this.button('Rời Guild',()=>this.confirm('Rời Guild','Rời Guild hiện tại? Giới hạn tham gia lại trong ngày do máy chủ áp dụng.',()=>this.client.guildAction('leave'),{button:'Rời Guild',success:'Đã rời Guild.'}),{disabled:!this.canMutate(),testId:'guild-leave'}));cols.append(info);
-      const donate=element('section',null,'m8-account-card');this.renderDonation(donate,account);cols.append(donate);body.append(cols);
-    }
-  }
-  renderGuildJoin(body) {
-    const cols=element('div',null,'m8-account-columns'),list=element('section',null,'m8-account-card');list.append(element('h3','Tìm Guild'));
-    const data=this.cache.guildList;
-    if(this.loading.has('guildList'))list.append(note('Đang tải danh sách Guild…'));
-    else if(data?.queryError)list.append(note(data.queryError,'error'));
-    const rows=data?.datas||[];
-    const search=this.input('guildSearch','',{placeholder:'Tên Guild chính xác…',maxLength:80});
-    list.append(search,this.button('Tìm',()=>this.queryServer('guildSearchResult','cGuildInfo.php',{gn:search.value.trim()},true),{disabled:!search.value.trim(),testId:'guild-search'}));
-    search.addEventListener('input',()=>{this.fields.guildSearch=search.value;this.render();});
-    const filter=element('label',null,'m8-account-inline');const joinable=element('input');joinable.type='checkbox';joinable.checked=!!this.guildJoinable;
-    joinable.addEventListener('change',()=>{this.guildJoinable=joinable.checked;this.guildPage=0;this.loadSection();});filter.append(joinable,element('span','Chỉ Guild có thể gia nhập'),this.button('Làm mới',()=>this.refresh()));list.append(filter);
-    if(this.loading.has('guildSearchResult'))list.append(note('Đang tìm Guild…'));
-    else if(Object.hasOwn(this.cache,'guildSearchResult')){
-      const found=this.cache.guildSearchResult;
-      if(found?.nGuildId)list.append(note(`${found.szGuildName} · Cấp ${found.nGuildLv} · ${found.nGuildNumMember} thành viên · Chủ Guild ${found.szGuildLeader}`),this.button('Xin tham gia',()=>this.confirm('Xin tham gia Guild',found.szGuildName,()=>this.client.guildAction('apply',{guildId:found.nGuildId,inviter:'',fast:0}),{success:'Đã gửi yêu cầu tham gia.'}),{disabled:!this.canMutate(),testId:'guild-search-apply'}));
-      else list.append(note(found?.queryError||'Không tìm thấy Guild có tên này.'));
-    }
-    if(rows.length)list.append(makeTable(['Guild','Cấp / Thành viên',''],rows.map(row=>[`${row.guild_name}\n${row.guild_notice||''}`,`${row.guild_level} · ${row.guild_number}/${row.guild_maxnum}`,
-      this.button(row.auto_join?'Tham gia':'Xin vào',()=>this.confirm(row.auto_join?'Tham gia Guild':'Xin vào Guild',`${row.guild_name} · yêu cầu cấp ${row.guild_level_limit}.`,
-        ()=>this.client.guildAction('apply',{guildId:row.guild_id,inviter:'',fast:0}),{success:row.auto_join?'Đã tham gia Guild.':'Đã gửi đơn xin vào Guild.'}),
-        {disabled:!this.canMutate()||Number(this.snapshot.meta?.character?.level||0)<Number(row.guild_level_limit)||Number(row.guild_ladder_limit)>0,testId:`guild-join-${row.guild_id}`})])));
-    else if(!this.loading.has('guildList'))list.append(note('Chưa có Guild phù hợp.'));
-    const pages=Math.max(1,Math.ceil(Number(data?.amount||0)/10)),pager=element('div',null,'m8-account-pager');
-    const page=this.guildPage||0;const go=delta=>{this.guildPage=Math.max(0,Math.min(pages-1,page+delta));this.loadSection();};
-    pager.append(this.button('‹',()=>go(-1),{disabled:page<=0,testId:'guild-page-prev'}),element('span',`${page+1} / ${pages}`),this.button('›',()=>go(1),{disabled:page+1>=pages,testId:'guild-page-next'}));list.append(pager);cols.append(list);
-    const create=element('section',null,'m8-account-card');create.append(element('h3','Tạo Guild'),note('Cần 1 Thẻ Tạo Guild. Tên Guild và tên đội tối đa 12 byte UTF-8.'));
-    const card=this.catalog.guildItems?.['2600007'];
-    if(card)create.append(this.button('Mua thẻ · '+numberText(card.silverPrice)+' Bạc',()=>this.buyGuildCreationCard(),{disabled:!this.canMutate()||Number(this.snapshot.meta?.character?.currency?.golden||0)<card.silverPrice,testId:'guild-buy-create-card'}));
-    create.append(this.button('Tạo Guild',()=>this.openGuildCreation(false),{disabled:!this.canMutate(),testId:'guild-create'}));cols.append(create);body.append(cols);
-  }
   buyGuildCreationCard() {
     const card=this.catalog.guildItems?.['2600007'];if(!card||!this.canMutate())return;
     this.confirm('Mua '+nativeText(card.name),`${numberText(card.silverPrice)} Bạc · 1 thẻ.`,()=>this.client.guildPurchase(card,{coinType:2,count:1}),{image:card.icon,success:'Đã mua Thẻ Tạo Guild.'});
+  }
+  openGuildDonation() {
+    const item=this.catalog.guildItems?.['8000002'];if(!item||!this.canMutate())return;
+    this.confirm('Cống hiến Team','',null,{kind:'donation',item});
   }
   openGuildCreation(team=false) {
     if(!this.canMutate())return;
@@ -414,33 +351,7 @@ export class M8AccountUI {
     };
     this.confirm(operation==='invite'?'Mời vào Guild':'Mời chuyển Team','',null,{kind:'guild-invite',teamName:team.name,inviteState,
       task:value=>{const state=inviteState(value);if(state.error)throw new Error(state.error);return this.client.guildAction(operation,{name:state.name,teamId});},
-      success:'Máy chủ đã xử lý yêu cầu mời; chỉ nhận được lời mời khi người nhận hợp lệ và đang kết nối.'});
-  }
-  renderDonation(host,account) {
-    const item=this.catalog.guildItems?.['8000002'];host.append(element('h3','Cống hiến Team'));if(!item)return;
-    host.append(note(`Mỗi 10 cống hiến: ${numberText(item.silverPrice)} Bạc hoặc ${numberText(item.cashPrice)} Xu; 3 quỹ Guild, 7 quỹ Team.`));
-    host.append(this.button('Cống hiến',()=>this.confirm('Cống hiến Team','',null,{kind:'donation',item}),{disabled:!this.canMutate(),testId:'guild-donate'}));
-  }
-  renderGuildSkills(body,account,member,officer) {
-    const slots=element('div',null,'m8-account-guild-slots');
-    for(const [index,slotId] of GUILD_SLOTS.entries()){
-      const box=element('div',null,'m8-account-slot'),open=!!(account.slotFlags&(1<<slotId));box.append(element('strong',slotId===1?'Kỹ năng chủ động':`Bị động ${index}`));
-      if(!open){const cost=750*index**2;box.append(note(`${numberText(cost)} cống hiến`),this.button('Mở ô',()=>this.confirm('Mở ô kỹ năng',`Tiêu ${numberText(cost)} cống hiến.`,()=>this.client.guildAction('unlockSlot',{slotId}),{success:'Đã mở ô kỹ năng.'}),{disabled:!this.canMutate()||Number(member?.merit||0)<cost,testId:`guild-unlock-${slotId}`}));}
-      else {const options=guildSkillOptions(account,this.catalog,slotId),current=account.slots?.[slotId];const select=selectInput([{value:0,label:'Không trang bị'},...options],current?.skillId||0,`Kỹ năng ô ${slotId}`);
-        box.append(select,this.button('Lưu',()=>{const skillId=Number(select.value),row=options.find(o=>Number(o.value)===skillId);this.perform(()=>this.client.guildAction('equipSkill',{slotId,skillId,level:row?.level||0}),'Đã lưu ô kỹ năng.');},{disabled:!this.canMutate(),testId:`guild-equip-${slotId}`}));}
-      slots.append(box);
-    }body.append(slots);
-    const groups=[...new Set((this.catalog.guildSkills||[]).map(row=>row.nGuildSkillId))];const grid=element('div',null,'m8-account-skill-grid');
-    for(const skillId of groups){const levels=this.catalog.guildSkills.filter(row=>row.nGuildSkillId===skillId),base=levels[0];
-      const learned=Number(account.learned?.[skillId]||0),researched=Number(account.research?.[skillId]||0);
-      const learn=levels.find(row=>row.nLevel===learned+1),research=levels.find(row=>row.nLevel===researched+1);const card=element('article',null,'m8-account-skill');
-      card.append(this.image(base.icon,nativeText(base.name)),element('h4',nativeText(base.name)),note(`Đã học ${learned} · Guild ${researched}`),note(nativeText((levels.find(row=>row.nLevel===learned)||base).description)));
-      if(learn)card.append(this.button(`Học Lv ${learn.nLevel} · ${numberText(learn.nNeedMerit)}`,()=>this.confirm('Học '+nativeText(base.name),`Lv ${learn.nLevel} · ${numberText(learn.nNeedMerit)} cống hiến.`,()=>this.client.guildAction('learn',{skillId}),{image:base.icon,success:'Đã học kỹ năng Guild.'}),
-        {disabled:!this.canMutate()||learn.nLevel>researched||Number(this.snapshot.meta?.character?.level||0)<learn.nCharLevelMin||Number(member?.merit||0)<learn.nNeedMerit,testId:`guild-learn-${skillId}`,title:`Cần nhân vật cấp ${learn.nCharLevelMin}, Guild nghiên cứu cấp ${learn.nLevel}.`}));
-      if(officer&&research)card.append(this.button(`Nghiên cứu Lv ${research.nLevel} · ${numberText(research.nResearchFee)}`,()=>this.confirm('Nghiên cứu '+nativeText(base.name),`Lv ${research.nLevel} · ${numberText(research.nResearchFee)} quỹ Guild.`,()=>this.client.guildAction('research',{skillId}),{image:base.icon,success:'Đã nghiên cứu kỹ năng Guild.'}),
-        {disabled:!this.canMutate()||account.guild.level<research.nNeedGuildLevel||account.guild.coin<research.nResearchFee,testId:`guild-research-${skillId}`,title:`Cần Guild cấp ${research.nNeedGuildLevel}.`}));
-      grid.append(card);
-    }body.append(grid);
+      success:'Đã gửi lời mời.'});
   }
   openGuildMove(memberUuid) {
     const member=Object.values(this.snapshot.account?.members||{}).flat().find(m=>m.charUuid===memberUuid);if(!member)return;
@@ -452,13 +363,11 @@ export class M8AccountUI {
     this.guildMemberRoot=renderNativeGuildMembers(this,body,account,{
       onMember:member=>this.confirm('Thành viên Guild','',null,{kind:'guild-member',memberUuid:member.charUuid}),
       onTeam:team=>this.confirm('Thông tin đội','',null,{kind:'guild-team-info',teamId:team.teamId})});
-    const uuid=this.snapshot.meta?.character?.charUuid,me=Object.values(account.members||{}).flat().find(m=>m.charUuid===uuid);
-    if(me&&guildPermissions(account,uuid,me).move&&account.teams.length>1){const move=this.button('Chuyển đội của tôi',()=>this.confirm('Chuyển đội','',null,{kind:'guild-member',memberUuid:uuid}),{testId:'guild-self-move'});Object.assign(move.style,{position:'absolute',top:'320px',left:'4px'});body.append(move);}
   }
   renderGuildMemberOptions(value) {
     const account=this.snapshot.account||{},member=Object.values(account.members||{}).flat().find(m=>m.charUuid===value.memberUuid);
     const charUuid=this.snapshot.meta?.character?.charUuid,p=guildPermissions(account,charUuid,member),actions=[];
-    const memberAction=(op,post)=>{const fresh=()=>{const a=this.snapshot.account||{},m=Object.values(a.members||{}).flat().find(m=>m.charUuid===value.memberUuid),rights=guildPermissions(a,this.snapshot.meta?.character?.charUuid,m);if(!m||(op==='remove'?!rights.remove:!rights.posts.includes(post)))throw new Error('Quyền hoặc thành viên đã thay đổi.');return {charUuid:m.charUuid,teamId:m.teamId,...(op==='appoint'?{post}:{})};};const label=op==='remove'?'Đuổi thành viên':({10:'Chuyển chủ hội',9:'Bổ nhiệm phó hội',5:'Bổ nhiệm đội trưởng',0:'Bỏ chức vụ'})[post];this.confirm(label,op==='remove'?'Máy chủ kiểm tra phí theo cống hiến và thời gian offline; không khấu trừ trước.':`Xác nhận ${label.toLowerCase()} cho thành viên đã chọn.`,()=>this.client.guildAction(op,fresh()),{button:label,success:'Đã cập nhật Guild.'});};
+    const memberAction=(op,post)=>{const fresh=()=>{const a=this.snapshot.account||{},m=Object.values(a.members||{}).flat().find(m=>m.charUuid===value.memberUuid),rights=guildPermissions(a,this.snapshot.meta?.character?.charUuid,m);if(!m||(op==='remove'?!rights.remove:!rights.posts.includes(post)))throw new Error('Quyền hoặc thành viên đã thay đổi.');return {charUuid:m.charUuid,teamId:m.teamId,...(op==='appoint'?{post}:{})};};const label=op==='remove'?'Đuổi thành viên':({10:'Chuyển chủ hội',9:'Bổ nhiệm phó hội',5:'Bổ nhiệm đội trưởng',0:'Bỏ chức vụ'})[post];this.confirm(label,op==='remove'?'Máy chủ tự tính phí theo cống hiến và thời gian offline.':`Xác nhận ${label.toLowerCase()} cho thành viên đã chọn.`,()=>this.client.guildAction(op,fresh()),{button:label,success:'Đã cập nhật Guild.'});};
     if(member){
       if(p.move&&account.teams.length>1)actions.push({id:'guild-member-move',label:'Chuyển đội',run:()=>this.openGuildMove(member.charUuid)});
       if(p.remove)actions.push({id:`guild-remove-${member.accountId}`,label:'Đuổi thành viên',run:()=>memberAction('remove')});

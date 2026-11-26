@@ -56,7 +56,7 @@ def groups(arena):
     """Only exact authored bomb identities in a matching native layout."""
     # Old checkpoints may contain a spent bomb and partially damaged bricks.
     # Do not make those remaining old-rule bricks suddenly indestructible.
-    profile = arena.state.get('battle', {}).get('pve_balance') or {}
+    profile = (arena.state.get('battle') or {}).get('pve_balance') or {}
     if profile.get('bomb_puzzles_version') != 1:
         return ()
     rule = PUZZLES.get(arena.geometry.id)

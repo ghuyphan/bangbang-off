@@ -2,6 +2,7 @@
 from collections import Counter
 from copy import deepcopy
 from functools import lru_cache
+import sqlite3
 import struct
 import time
 import uuid
@@ -43,17 +44,28 @@ def _upgrade_rows(database):
             for r in storage.template_rows('ConsumeLevelTemplate_table.xml')}
 
 
-def _consume(containers, costs):
+def _usable_material(item):
+    return (item is not None and item.get('count', 0) > 0
+            and not (item.get('ext_flag', 0) & 2) and not item.get('life_time', 0))
+
+
+def _consume(containers, costs, *, reserved_slots=None):
     """Validate the complete cost before touching any stack."""
     bag = containers.get('3', [])
+    reserved = reserved_slots or {}
     for ident, count in costs.items():
-        if count <= 0 or sum(i['count'] for i in bag if i['template_id'] == ident) < count:
+        available = sum(max(0, i['count'] - reserved.get(i['slot_no'], 0))
+                        for i in bag if i['template_id'] == ident and _usable_material(i))
+        if count <= 0 or available < count:
             raise ValueError('Không đủ nguyên liệu trợ thủ.')
     for ident, count in costs.items():
         for item in sorted(bag, key=lambda i: i['slot_no']):
-            if item['template_id'] != ident:
+            if item['template_id'] != ident or not _usable_material(item):
                 continue
-            take = min(item['count'], count)
+            free = max(0, item['count'] - reserved.get(item['slot_no'], 0))
+            if not free:
+                continue
+            take = min(free, count)
             item['count'] -= take
             count -= take
             if not count:
@@ -63,12 +75,12 @@ def _consume(containers, costs):
 
 def _rate_materials(containers, slots, rank):
     """HelperGradeUpProxy: up to three selected doses, including one stack twice."""
-    bag = {i['slot_no']: i for i in containers.get('3', [])}
+    bag = {i['slot_no']: i for i in containers.get('3', []) if i['count'] > 0}
     qualified, extra = 0, 0
     for slot, count in Counter(slots).items():
         item = bag.get(slot)
         row = catalog()[0].get(item['template_id'], {}) if item else {}
-        if item is None or item['count'] < count or int(row.get('nType') or 0) != 39:
+        if not _usable_material(item) or item['count'] < count or int(row.get('nType') or 0) != 39:
             raise ValueError('Vật liệu tăng tỷ lệ không hợp lệ hoặc không đủ số lượng.')
         tier = int(row.get('iReuseB') or 0)
         qualified += count if tier >= rank // 2 else 0
@@ -93,12 +105,13 @@ def _upgrade(containers, wallet, pet, template, kind, slots):
         raise ValueError('Cấu hình nâng trợ thủ không hợp lệ.')
     if wallet['currency'][1] < coin:
         raise ValueError('Không đủ bạc để nâng trợ thủ.')
+    slot_counts = Counter(slots)
     extra, bag = _rate_materials(containers, slots, pet['rank'])
     # Only selected slots contribute/are spent; the base material is located
     # by its configured ID because C157/C158 do not send its slot.
-    _consume(containers, {int(row['nItemId']): amount})
-    for slot in slots:
-        bag[slot]['count'] -= 1
+    _consume(containers, {int(row['nItemId']): amount}, reserved_slots=slot_counts)
+    for slot, used in slot_counts.items():
+        bag[slot]['count'] -= used
     containers['3'] = [i for i in containers['3'] if i['count'] > 0]
     wallet['currency'][1] -= coin
     success = secrets.randbelow(10_000_000) < min(10_000_000, rate + extra)
@@ -132,17 +145,23 @@ def snapshot(db):
 
 
 def _grant(containers, ident, count, *, level=0):
+    if count <= 0:
+        raise ValueError('Số lượng vật phẩm không hợp lệ.')
     row = catalog()[0][ident]
-    bag = containers.setdefault(str(row['nContType']), [])
+    cont = str(row['nContType'])
+    bag = containers.setdefault(cont, [])
     maximum = int(row['iStackMax'])
+    if maximum <= 0:
+        raise ValueError('Cấu hình vật phẩm không hợp lệ.')
+    cap = inventory.CAPACITY.get(cont, 135)
     for item in bag:
-        if item['template_id'] == ident and item['level'] == level:
-            take = min(count, maximum - item['count'])
+        if item['template_id'] == ident and item['level'] == level and not item.get('life_time', 0):
+            take = min(count, max(0, maximum - item['count']))
             item['count'] += take
             count -= take
-    while count:
+    while count > 0:
         occupied = {i['slot_no'] for i in bag}
-        slot = next((s for s in range(135) if s not in occupied), None)
+        slot = next((s for s in range(cap) if s not in occupied), None)
         if slot is None:
             raise ValueError('Túi trợ thủ/nguyên liệu đã đầy; hãy để trống ô rồi đăng nhập lại để nhận quà.')
         take = min(count, maximum)
@@ -242,7 +261,7 @@ def apply(state, mid, payload, db):
                 raise ValueError('Trợ thủ đã đạt cấp tối đa; không tiêu chip.')
             chip = next((i for i in containers.get('3', []) if i['slot_no'] == exp_slot), None)
             template = catalog()[0].get(chip['template_id'], {}) if chip else {}
-            if (chip is None or chip['count'] <= 0 or int(template.get('nType', 0)) != 37
+            if (not _usable_material(chip) or int(template.get('nType', 0)) != 37
                     or int(template.get('iReuseA', 0)) <= 0):
                 raise ValueError('Hãy chọn chip EXP hợp lệ trong túi nguyên liệu.')
             pet['exp'] += int(template['iReuseA'])
@@ -298,9 +317,10 @@ def apply(state, mid, payload, db):
         db.commit()
         state['booster_attack'] = new_score
         return packets, None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
-        return [shop.tip(mid, str(exc))], str(exc)
+        message = str(exc) if type(exc) is ValueError else 'Yêu cầu trợ thủ không hợp lệ.'
+        return [shop.tip(mid, message)], message
     except BaseException:
         db.rollback()
         raise

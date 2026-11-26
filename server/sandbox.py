@@ -1,6 +1,7 @@
 """In-game sandbox & gift delivery backed by offline_mail + mail_rewards."""
 from __future__ import annotations
 
+import json
 import time
 import uuid
 
@@ -25,19 +26,36 @@ UPGRADE_GEM_MATERIALS = (
 )
 
 
-def catalog_summary(db, profile_id, world_state):
-    available = mail_rewards.catalog(db)
+def _profile_state(db, profile_id):
     with storage.for_profile(profile_id):
         wallet = cosmetic_shop.snapshot(db)
         containers = inventory.load(db)
-        garage = [row for row in storage.garage() if int(row.get('cont_type', 0)) == 0]
-    owned_tanks = {int(r['tank_id']) for r in garage}
+    garage = [
+        json.loads(r[0])
+        for r in db.execute('SELECT data FROM garage WHERE profile_id=? ORDER BY ordinal', (profile_id,))
+    ]
+    owned_tanks = {int(r['tank_id']) for r in garage if int(r.get('cont_type', 0)) == 0}
     owned_items = {
         int(item['template_id'])
         for bag in containers.values()
         for item in bag
         if item.get('count', 0) > 0 and not item.get('life_time')
     }
+    return wallet, owned_tanks, owned_items
+
+
+def _parse_int(value, label):
+    if isinstance(value, bool):
+        raise ValueError(f'{label} không hợp lệ.')
+    try:
+        return int(value)
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f'{label} không hợp lệ.') from exc
+
+
+def catalog_summary(db, profile_id, world_state):
+    available = mail_rewards.catalog(db)
+    wallet, owned_tanks, owned_items = _profile_state(db, profile_id)
 
     tanks, materials, crystals, cosmetics, helpers = [], [], [], [], []
     for row in available.values():
@@ -100,19 +118,12 @@ def _cap_currency(current, want):
 
 
 def grant_preset(db, profile_id, world_state, request):
+    if not isinstance(request, dict):
+        raise ValueError('Gói quà sandbox không hợp lệ.')
     preset = str(request.get('preset') or '').strip()
     available = mail_rewards.catalog(db)
-    with storage.for_profile(profile_id):
-        wallet = cosmetic_shop.snapshot(db)['currency']
-        containers = inventory.load(db)
-        garage = [row for row in storage.garage() if int(row.get('cont_type', 0)) == 0]
-    owned_tanks = {int(r['tank_id']) for r in garage}
-    owned_items = {
-        int(item['template_id'])
-        for bag in containers.values()
-        for item in bag
-        if item.get('count', 0) > 0 and not item.get('life_time')
-    }
+    wallet_snap, owned_tanks, owned_items = _profile_state(db, profile_id)
+    wallet = wallet_snap['currency']
     name = world_state.get('name') or 'Người chơi'
     rewards = []
     subject = 'Quà Sandbox'
@@ -130,7 +141,7 @@ def grant_preset(db, profile_id, world_state, request):
     elif preset == 'currency':
         subject = 'Gói Tiền Sandbox'
         for cur_id, idx in (('cash', 0), ('golden', 1), ('gift', 2)):
-            want = int(request.get(cur_id) or 0)
+            want = _parse_int(request.get(cur_id) or 0, cur_id)
             amt = _cap_currency(wallet[idx], want)
             if amt > 0:
                 rewards.append(dict(kind='currency', id=cur_id, quantity=amt))
@@ -158,7 +169,9 @@ def grant_preset(db, profile_id, world_state, request):
     elif preset == 'tanks':
         subject = 'Mở Khóa Tank Vĩnh Viễn'
         wanted = request.get('tank_ids')
-        pool = [int(t) for t in wanted] if isinstance(wanted, list) and wanted else [
+        if wanted is not None and not isinstance(wanted, list):
+            raise ValueError('Danh sách tank không hợp lệ.')
+        pool = [_parse_int(t, 'tank_id') for t in wanted] if wanted else [
             r['id'] for r in available.values() if r['kind'] == 'tank'
         ]
         for ident in pool:
@@ -168,8 +181,8 @@ def grant_preset(db, profile_id, world_state, request):
             if len(rewards) >= 32:
                 break
     elif preset == 'item':
-        ident = int(request.get('id') or 0)
-        qty = max(1, int(request.get('quantity') or 1))
+        ident = _parse_int(request.get('id') or 0, 'id')
+        qty = max(1, _parse_int(request.get('quantity') or 1, 'quantity'))
         row = available.get(f'item:{ident}')
         if not row:
             raise ValueError('Vật phẩm này không có trong danh mục quà hỗ trợ.')
@@ -178,8 +191,13 @@ def grant_preset(db, profile_id, world_state, request):
         rewards.append(dict(kind='item', id=ident, quantity=min(qty, row['max_quantity'])))
         subject = f'Quà: {row["name"]}'
     elif preset == 'custom':
-        for raw in (request.get('rewards') or []):
-            rewards.append(dict(kind=str(raw['kind']), id=raw['id'], quantity=int(raw['quantity'])))
+        raw_rewards = request.get('rewards') or []
+        if not isinstance(raw_rewards, list):
+            raise ValueError('Danh sách phần thưởng không hợp lệ.')
+        for raw in raw_rewards:
+            if not isinstance(raw, dict) or 'kind' not in raw or 'id' not in raw or 'quantity' not in raw:
+                raise ValueError('Phần thưởng tùy chỉnh không hợp lệ.')
+            rewards.append(dict(kind=str(raw['kind']), id=raw['id'], quantity=_parse_int(raw['quantity'], 'quantity')))
     else:
         raise ValueError('Gói quà sandbox không hợp lệ.')
 

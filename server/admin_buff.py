@@ -107,8 +107,11 @@ class Access:
             return False
         with self.lock:
             proof = session['previews'].get(token)
-            return bool(proof and proof['expires_at'] > time.time() and
-                        secrets.compare_digest(proof['payload_hash'], payload_hash))
+            if (proof and proof['expires_at'] > time.time() and
+                    secrets.compare_digest(proof['payload_hash'], payload_hash)):
+                del session['previews'][token]
+                return True
+            return False
 
 
 def _safe_key_path(path):
@@ -468,4 +471,5 @@ def handle(handler):
         return _send(handler, 400, dict(ok=False, error=dict(code='request_invalid', message='Yêu cầu quản trị không hợp lệ.')))
     except Exception:
         # No body, cookie, secret or private database values in HTTP error text.
+        log.exception('[admin] Unhandled request error')
         return _send(handler, 500, dict(ok=False, error=dict(code='admin_error', message='Không hoàn tất thao tác. Giữ nguyên mã yêu cầu và thử lại để kiểm tra biên nhận.')))

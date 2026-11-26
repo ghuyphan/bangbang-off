@@ -277,18 +277,18 @@ export function buildNativeRoom(ui){
     });
   };
   ui.roomMapSelect=flashSpriteButton(ui,'zh_CN/gui_summer/controls/public/button_2_blue.png','Đổi bản đồ',openRoomMapPicker,{
-    width:168,height:28,className:'m81337-room-map-btn',title:'Mở bảng chọn bản đồ cho phòng',testId:'room-map-select',
+    width:96,height:27,className:'m81337-room-map-btn',title:'Mở bảng chọn bản đồ cho phòng',testId:'room-map-select',
   });
-  ui.content.append(ui.roomPolicies.root,ui.roomCount,at(ui.roomMapSelect,509,534,168,28));
+  ui.content.append(ui.roomPolicies.root,ui.roomCount,at(ui.roomMapSelect,540,399,96,27));
   ui.roomCards=at(element('section',null,'m84-room-roster'),0,0,808,399);ui.roomCards.setAttribute('aria-label','Đội hình hai phe');ui.content.append(ui.roomCards);
-  ui.roomMap=at(assetImage(ui.assets.m3.maps[String(ui.state?.flow?.mapId)]?.preview,mapName(ui.state?.flow?.mapId)),509,433,168,100);
+  ui.roomMap=at(assetImage(ui.assets.m3.maps[String(ui.state?.flow?.mapId)]?.preview,mapName(ui.state?.flow?.mapId)),509,436,168,100);
   ui.roomMap.style.cursor='pointer';ui.roomMap.addEventListener('click',openRoomMapPicker);
-  ui.content.append(ui.roomMap,art(ui,'startgame_background_t',498,424));
-  ui.readyButton=button(ui,'ready_button_t','Sẵn sàng',()=>ui.run(()=>{const self=ui.state.flow.roster.find(c=>c.accountId===ui.state.accountId);return ui.client.setReady(!self?.ready);}),688,440,{testId:'m8-ready'});
-  ui.startButton=button(ui,'startgame_button_t','Vào game',()=>ui.run(()=>ui.client.startMatch()),688,440,{testId:'m8-start'});
-  ui.ownerCancel=button(ui,'button_2_s_blue','Hủy sẵn sàng',()=>ui.run(()=>ui.client.setReady(false)),687,528,{testId:'m81-owner-cancel-ready'});
-  ui.ownerCancel.append(label('Hủy sẵn sàng',0,2,86,22,'m84-cancel-label'));
-  ui.changeCamp=button(ui,'button_2_blue','Đổi phe',()=>ui.run(()=>ui.client.changeRoomCamp()),595,404,{icon:'b2_changeteam_t',testId:'m82-change-camp'});
+  ui.content.append(ui.roomMap,art(ui,'startgame_background_t',498,427));
+  ui.readyButton=button(ui,'ready_button_t','Sẵn sàng',()=>ui.run(()=>{const self=ui.state.flow.roster.find(c=>c.accountId===ui.state.accountId);return ui.client.setReady(!self?.ready);}),688,435,{testId:'m8-ready'});
+  ui.startButton=button(ui,'startgame_button_t','Vào game',()=>ui.run(()=>ui.client.startMatch()),688,435,{testId:'m8-start'});
+  ui.ownerCancel=button(ui,'button_2_s_blue','Hủy sẵn sàng',()=>ui.run(()=>ui.client.setReady(false)),687,521,{testId:'m81-owner-cancel-ready'});
+  ui.ownerCancel.append(label('Hủy sẵn sàng',0,2,86,21,'m84-cancel-label'));
+  ui.changeCamp=button(ui,'button_2_blue','Đổi phe',()=>ui.run(()=>ui.client.changeRoomCamp()),646,399,{icon:'b2_changeteam_t',testId:'m82-change-camp'});
   ui.roomSidebar=createSidebar(ui);ui.content.append(ui.readyButton,ui.startButton,ui.ownerCancel,ui.changeCamp,createChat(ui,true),ui.roomSidebar.root);
 }
 export function updateNativeRoom(ui){
@@ -301,7 +301,7 @@ export function updateNativeRoom(ui){
     ui.roomMapSelect.hidden=!managed;
     ui.roomMapSelect.disabled=busy||!owner||!managed;
     const cap=ui.roomMapSelect.querySelector('.m8-flash-btn-label');
-    if(cap)setText(cap,owner?'Đổi bản đồ ▾':mapName(s.flow.mapId));
+    if(cap)setText(cap,owner?'Đổi bản đồ':mapName(s.flow.mapId));
   }
   ui.roomSidebar?.update();ui.changeCamp.disabled=busy||!isPKMap(s.flow.mapId);
   const preview=ui.assets.m3.maps[String(s.flow.mapId)]?.preview;

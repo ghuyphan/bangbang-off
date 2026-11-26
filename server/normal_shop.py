@@ -18,7 +18,6 @@ import sqlite3
 import struct
 import time
 
-from classic_progress import TOPUP_PACKS, VOUCHER_SLOT
 import cosmetic_shop
 import economy_actions
 import inventory
@@ -51,10 +50,6 @@ def _ident(value):
 def canonical(value):
     if not isinstance(value, dict):
         raise RewardError('intent_invalid', 'Thao tác shop không hợp lệ.')
-    if value.get('kind') == 'topup':
-        if set(value) != {'kind', 'pack'} or type(value['pack']) is not int or value['pack'] not in TOPUP_PACKS:
-            raise RewardError('intent_invalid', 'Chọn gói nạp mô phỏng hợp lệ.')
-        return dict(kind='topup', pack=value['pack'])
     if value.get('kind') == 'buy':
         if (set(value) != {'kind', 'goods_id', 'payment', 'quantity'}
                 or not _integer(value['goods_id'], 1, 0xffffffff)
@@ -187,8 +182,7 @@ def _public_box(box, available):
 def public_catalog():
     source = catalog()
     return dict(v=VERSION, revision=source['revision'], tabs=deepcopy(source['tabs']),
-                offers=deepcopy(source['offers']), topup_packs=[
-                    dict(vouchers=cost, xu=xu) for cost, xu in TOPUP_PACKS.items()],
+                offers=deepcopy(source['offers']),
                 boxes={key: _public_box(box, source['rewards']) for key, box in source['boxes'].items()})
 
 
@@ -282,19 +276,6 @@ def plan(db, intent, state=None):
     available = _available(db, source)
     before = _snapshot(db)
     revision = digest(dict(economy=before, catalog=source['revision']))
-    if intent['kind'] == 'topup':
-        if not (state or {}).get('classic'):
-            raise RewardError('classic_only', 'Phiếu nạp mô phỏng dành cho tài khoản khởi đầu cổ điển.')
-        cost = intent['pack']
-        balance = before['wallet']['currency'][VOUCHER_SLOT]
-        if balance < cost:
-            raise RewardError('insufficient_vouchers', f'Cần {cost} phiếu, hiện có {balance}. Hoàn thành trận PK để nhận phiếu.')
-        value = mail_rewards.plan(db, storage.profile_id(),
-                                  [dict(kind='currency', id='cash', quantity=TOPUP_PACKS[cost])], available)
-        value['wallet']['currency'][VOUCHER_SLOT] -= cost
-        quote = dict(kind='topup', profile_id=storage.profile_id(), policy='all_or_nothing',
-                     pack=cost, voucher_balance=balance, rewards=[_descriptor(row, available) for row in value['rewards']])
-        return dict(revision=revision, quote=quote, values=[dict(outcome='topup', value=value)], available=available)
     if intent['kind'] == 'buy':
         offer = next((row for row in source['offers'] if row['goodsId'] == intent['goods_id']), None)
         if offer is None:

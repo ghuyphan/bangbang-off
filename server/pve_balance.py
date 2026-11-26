@@ -106,7 +106,7 @@ def profile_for_room(room):
 
 
 def frozen_profile(arena):
-    profile = arena.state.get('battle', {}).get('pve_balance')
+    profile = (arena.state.get('battle') or {}).get('pve_balance')
     if profile is None:
         return None
     room = arena.state.get('room') or {}

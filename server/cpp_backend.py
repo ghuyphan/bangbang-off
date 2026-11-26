@@ -222,15 +222,19 @@ def initialize():
 
 def status():
     """No database/user data or local path is exposed in health output."""
-    return dict(_status)
+    with _lock:
+        return dict(_status)
 
 
 def encode_checkpoint_graph(value, decimal_type, shield_type, asdict):
     """Build the SAME VERSION1 graph; JSON encoding/durable writes unchanged."""
     global _checkpoint_module
-    if not _initialized:
+    with _lock:
+        initialized = _initialized
+    if not initialized:
         initialize()
-    module = _checkpoint_module
+    with _lock:
+        module = _checkpoint_module
     if module is None:
         return NotImplemented
     try:
@@ -238,10 +242,11 @@ def encode_checkpoint_graph(value, decimal_type, shield_type, asdict):
     except Exception as exc:
         if _mode == 'cpp':
             raise
-        _checkpoint_module = None
         reason = ('Native checkpoint encoder raised ' + type(exc).__name__
                   + '; current error propagated, future calls use Python')
-        _status.update(checkpoint='python', checkpoint_reason=reason)
+        with _lock:
+            _checkpoint_module = None
+            _status.update(checkpoint='python', checkpoint_reason=reason)
         _log.warning('[combat] %s', reason)
         # A custom iterator/asdict callback may already have been evaluated.
         # Retrying this same input could duplicate side effects or hide a data
@@ -281,8 +286,9 @@ class RectangleIndex:
         self._finalizer = weakref.finalize(self, lib.bb_geometry_destroy, handle)
 
     def contact(self, start, end, padding=0):
-        if _status['active'] != 'cpp':
-            return NotImplemented
+        with _lock:
+            if _status['active'] != 'cpp':
+                return NotImplemented
         args = (*start, *end, padding)
         if len(args) != 5 or not _supported(args) or padding < 0:
             return NotImplemented
@@ -295,7 +301,8 @@ class RectangleIndex:
 
 def create_index(rectangles):
     initialize()
-    lib = _library
+    with _lock:
+        lib = _library
     if lib is None:
         return None
     rectangles = tuple(rectangles)

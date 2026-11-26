@@ -1,12 +1,8 @@
 /** Additional native Guild art. No gameplay values or ownership are created. */
+import {fetchVerifiedJson} from './m8_ui_helpers.js';
+
 export async function loadNativeGuildCatalog(url) {
-  const response = await fetch(url, {cache: 'no-store'});
-  if (!response.ok) throw new Error('Không tải được tài nguyên kỹ năng Guild.');
-  const bytes = await response.arrayBuffer();
-  const sha256 = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))]
-    .map(value => value.toString(16).padStart(2, '0')).join('');
-  return {catalog: JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(bytes)),
-    sha256, bytes: bytes.byteLength};
+  return fetchVerifiedJson(url, 'Không tải được tài nguyên kỹ năng Guild.');
 }
 
 export function mergeNativeGuildCatalog(catalog, extra, baseSha256) {

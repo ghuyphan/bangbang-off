@@ -219,7 +219,8 @@ def ai(arena,now):
                 key=lambda a:(math.dist(pos,a.position_at(now)),a.id),default=None)
             if tpl in (527,567):
                 brain['goal']=_patrol(arena,actor,now)
-                if tpl==567 and target and math.dist(pos,target.position_at(now))<=72 and now>=actor.cooldowns[0]:
+                if (tpl==567 and target and math.dist(pos,target.position_at(now))<=72 and now>=actor.cooldowns[0]
+                        and not actor.blocked('attack',now) and not actor.skill_sealed(0,now)):
                     actor.cooldowns[0]=now+1000;packets+=actor._shot(target.position_at(now),now,target)
             elif target:
                 dest=target.position_at(now);near=math.dist(pos,dest)<=actor.pve_fire_range

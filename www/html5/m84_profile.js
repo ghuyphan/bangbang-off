@@ -141,7 +141,7 @@ export function renderNativePublicProfile(ui,body,tankRows){
     const [start,end]=profileVisibleRange(list.scrollTop,tanks.length),range=`${start}:${end}`;
     if(range!==previous){
       previous=range;
-      for(const [index,node] of live)if(index<start||index>=end){node.remove();live.delete(index);}
+      for(const [index,node] of live)if(index<start||index>=end){node.querySelector('.m8-portrait')?.dispose?.();node.remove();live.delete(index);}
       for(let index=start;index<end;index++){
         if(live.has(index))continue;const tank=tanks[index],name=rankName(ui,tank);
         const row=at(ui.button('',()=>{ui.profileTankId=tank.tankId;ui.render();},{testId:`profile-tank-${tank.tankId}`,title:name,className:'m84-profile-tank-row m84-art-hit'}),0,index*76,220,76);
@@ -200,7 +200,7 @@ export function renderNativePublicProfile(ui,body,tankRows){
     if(event.target===thumb||thumb.contains(event.target)){
       const startY=event.clientY,startScroll=list.scrollTop;
       const thumbH=thumb.offsetHeight||32,travel=Math.max(1,trackH-thumbH);
-      const move=e=>{list.scrollTop=Math.max(0,Math.min(maxScroll,startScroll+(e.clientY-startY)*(maxScroll/travel)));paint();};
+      const move=e=>{if(!bar.isConnected){stop();return;}list.scrollTop=Math.max(0,Math.min(maxScroll,startScroll+(e.clientY-startY)*(maxScroll/travel)));paint();};
       const stop=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',stop);window.removeEventListener('pointercancel',stop);};
       window.addEventListener('pointermove',move);window.addEventListener('pointerup',stop);window.addEventListener('pointercancel',stop);
     }else{

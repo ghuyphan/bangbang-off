@@ -19,10 +19,6 @@ export function shopItemReference(item,container){
 }
 export function canonicalShopIntent(value){
   assert(object(value));
-  if(value.kind==='topup'){
-    assert(exact(value,['kind','pack'])&&positive(value.pack,99));
-    return {kind:'topup',pack:value.pack};
-  }
   if(value.kind==='buy'){
     assert(exact(value,['kind','goods_id','payment','quantity'])&&positive(value.goods_id,0xffffffff)
       &&typeof value.payment==='string'&&['primary','alternate'].includes(value.payment)&&positive(value.quantity,99));
@@ -51,9 +47,6 @@ function validReward(row){
 const rewards=value=>Array.isArray(value)&&value.length<=256&&value.every(validReward);
 export function validShopQuote(value){
   if(!object(value)||value.policy!=='all_or_nothing'||!positive(value.profile_id,0xffffffff))return false;
-  if(value.kind==='topup')return positive(value.pack,99)&&integer(value.voucher_balance)
-    &&value.voucher_balance>=value.pack&&rewards(value.rewards)&&value.rewards.length===1
-    &&value.rewards[0].kind==='currency'&&value.rewards[0].id===1;
   if(!['buy','open_box'].includes(value.kind)||!positive(value.item_id,0xffffffff)||!text(value.name,500)||!positive(value.quantity,99))return false;
   if(value.kind==='buy')return positive(value.goods_id,0xffffffff)&&['primary','alternate'].includes(value.payment)
     &&[1,2,3].includes(value.coin_type)&&integer(value.unit_price)&&integer(value.total_price)
@@ -67,8 +60,7 @@ export function validShopQuote(value){
 export function validShopReceipt(value){
   return object(value)&&id(value.operation_id)&&positive(value.profile_id,0xffffffff)&&hash(value.intent_hash)
     &&positive(value.committed_at,Number.MAX_SAFE_INTEGER)&&validShopQuote(value.quote)&&value.quote.profile_id===value.profile_id
-    &&rewards(value.rewards)&&value.rewards.length>0&&(value.quote.kind==='topup'?value.outcome==='topup'
-      :value.quote.kind==='buy'?value.outcome==='purchase':['main','material','fixed'].includes(value.outcome));
+    &&rewards(value.rewards)&&value.rewards.length>0&&(value.quote.kind==='buy'?value.outcome==='purchase':['main','material','fixed'].includes(value.outcome));
 }
 export function decodeShopPacket({msgId,payload}){
   if(msgId!==SHOP_REPLY)return null;
@@ -98,7 +90,6 @@ export async function shopIntentHash(intent){
 }
 export function shopQuoteMatchesIntent(quote,intent){
   if(!validShopQuote(quote))return false;
-  if(intent.kind==='topup')return quote.kind==='topup'&&quote.pack===intent.pack;
   return quote.kind===intent.kind&&(intent.kind==='buy'?quote.goods_id===intent.goods_id&&quote.payment===intent.payment
     &&quote.quantity===intent.quantity:quote.item_id===intent.item.template_id&&quote.quantity===1);
 }

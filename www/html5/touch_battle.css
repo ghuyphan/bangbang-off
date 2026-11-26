@@ -17,6 +17,10 @@
 body[data-touch-active="true"] #robo-aim-assist,
 body[data-touch-active="true"] #robo-mobile-zoom { display: block; }
 
+body[data-touch-active="true"] #battle-panel.robo-native {
+  height: 100dvh;
+}
+
 body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
   width: 100%;
   height: 100%;
@@ -46,11 +50,11 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     padding: 0;
     border-radius: 50%;
     color: #f4fbff;
-    font: 700 13px Tahoma, system-ui, sans-serif;
+    font: 700 calc(13px * var(--tb-scale, 1)) Tahoma, system-ui, sans-serif;
     touch-action: none;
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
-    transition: filter .1s ease, border-color .1s ease;
+    transition: filter .1s ease, border-color .1s ease, transform .08s ease;
   }
 
   /* Invisible bottom-left floating joystick grab zone */
@@ -58,8 +62,8 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 42vw;
-    height: 62vh;
+    width: 44vw;
+    height: 60dvh;
     pointer-events: auto;
     touch-action: none;
   }
@@ -67,18 +71,24 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
   /* Left movement thumbstick */
   .touch-battle-stick {
     position: absolute;
-    left: max(18px, env(safe-area-inset-left));
-    bottom: max(18px, env(safe-area-inset-bottom));
-    width: clamp(92px, 19vw, 114px);
+    left: max(16px, env(safe-area-inset-left));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: calc(102px * var(--tb-scale, 1));
     aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
     border: 1.5px solid rgba(132, 203, 240, 0.55);
-    background: radial-gradient(circle, rgba(9, 28, 48, 0.36) 0%, rgba(7, 22, 38, 0.68) 100%);
+    background: radial-gradient(circle, rgba(9, 28, 48, 0.34) 0%, rgba(7, 22, 38, 0.68) 100%);
     box-shadow: inset 0 0 14px rgba(72, 174, 232, 0.16), 0 4px 14px rgba(0, 0, 0, 0.42);
     opacity: 0.78;
+    touch-action: none;
+    pointer-events: auto;
+    transition: border-color .1s ease, opacity .1s ease;
   }
 
   .touch-battle-stick span {
-    width: 40%;
+    width: 42%;
     aspect-ratio: 1;
     border: 1.5px solid #aee5ff;
     border-radius: 50%;
@@ -92,22 +102,22 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     opacity: 1;
   }
 
-  /* Right twin-stick aim/fire pad + arc of skills */
+  /* Right twin-stick aim/fire pad + proportionally scaled MOBA arc of skills */
   .touch-battle-actions {
     position: absolute;
     right: max(14px, env(safe-area-inset-right));
     bottom: max(14px, env(safe-area-inset-bottom));
-    width: 196px;
-    height: 196px;
+    width: calc(196px * var(--tb-scale, 1));
+    height: calc(196px * var(--tb-scale, 1));
     pointer-events: none;
   }
 
   .touch-battle-actions .touch-battle-fire {
     position: absolute;
-    right: 6px;
-    bottom: 6px;
-    width: 82px;
-    height: 82px;
+    right: calc(6px * var(--tb-scale, 1));
+    bottom: calc(6px * var(--tb-scale, 1));
+    width: calc(82px * var(--tb-scale, 1));
+    height: calc(82px * var(--tb-scale, 1));
     border: 2px solid rgba(255, 212, 122, 0.85);
     background: radial-gradient(circle, rgba(112, 58, 18, 0.52) 0%, rgba(64, 30, 8, 0.82) 100%);
     box-shadow: inset 0 0 14px rgba(255, 190, 92, 0.22), 0 4px 14px rgba(0, 0, 0, 0.5);
@@ -116,13 +126,13 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
   .touch-battle-fire-thumb {
     display: grid;
     place-items: center;
-    width: 50px;
-    height: 50px;
+    width: calc(50px * var(--tb-scale, 1));
+    height: calc(50px * var(--tb-scale, 1));
     border-radius: 50%;
     border: 1.5px solid #ffe49c;
     background: radial-gradient(circle at 35% 30%, #f59a38, #9c4711);
     color: #fff9e6;
-    font: 700 13px Tahoma, system-ui, sans-serif;
+    font: 700 calc(13px * var(--tb-scale, 1)) Tahoma, system-ui, sans-serif;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
     pointer-events: none;
@@ -140,8 +150,8 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
 
   .touch-battle-skill {
     position: absolute;
-    width: 50px;
-    height: 50px;
+    width: calc(50px * var(--tb-scale, 1));
+    height: calc(50px * var(--tb-scale, 1));
     overflow: visible;
     border: 2px solid rgba(138, 196, 232, 0.78);
     background: linear-gradient(160deg, rgba(18, 52, 82, 0.92), rgba(7, 24, 42, 0.95));
@@ -150,11 +160,21 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
 
   .touch-battle-skill[hidden] { display: none !important; }
 
-  /* Spacious mobile MOBA arc around the Attack button */
-  .touch-skill-e  { right: 112px; bottom: 8px; }
-  .touch-skill-r  { right: 106px; bottom: 72px; }
-  .touch-skill-q  { right: 64px;  bottom: 124px; width: 46px; height: 46px; }
-  .touch-skill-sp { right: 6px;   bottom: 120px; width: 56px; height: 56px; border-color: rgba(255, 212, 122, 0.88); }
+  .touch-skill-e  { right: calc(112px * var(--tb-scale, 1)); bottom: calc(8px * var(--tb-scale, 1)); }
+  .touch-skill-r  { right: calc(106px * var(--tb-scale, 1)); bottom: calc(72px * var(--tb-scale, 1)); }
+  .touch-skill-q  {
+    right: calc(64px * var(--tb-scale, 1));
+    bottom: calc(124px * var(--tb-scale, 1));
+    width: calc(46px * var(--tb-scale, 1));
+    height: calc(46px * var(--tb-scale, 1));
+  }
+  .touch-skill-sp {
+    right: calc(6px * var(--tb-scale, 1));
+    bottom: calc(120px * var(--tb-scale, 1));
+    width: calc(56px * var(--tb-scale, 1));
+    height: calc(56px * var(--tb-scale, 1));
+    border-color: rgba(255, 212, 122, 0.88);
+  }
 
   .touch-skill-icon {
     width: 100%;
@@ -213,7 +233,7 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     place-items: center;
     border-radius: 50%;
     color: #fff6c9;
-    font: 800 13px Tahoma, system-ui, sans-serif;
+    font: 800 calc(13px * var(--tb-scale, 1)) Tahoma, system-ui, sans-serif;
     text-shadow: 0 1px 3px #000, 0 0 4px #000;
     pointer-events: none;
   }
@@ -223,6 +243,10 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
   .touch-battle-skill.is-ready {
     border-color: #7ee3ff;
     box-shadow: 0 0 12px rgba(84, 212, 255, 0.4), 0 3px 10px rgba(0, 0, 0, 0.52);
+  }
+
+  .touch-battle-skill.is-ready:active:not(.is-aiming) {
+    transform: scale(0.93);
   }
 
   .touch-skill-sp.is-ready {
@@ -237,8 +261,9 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
   }
 
   .touch-battle-skill.is-locked,
-  .touch-battle-skill.is-low-mp {
-    opacity: 0.46;
+  .touch-battle-skill.is-low-mp,
+  .touch-battle-skill.is-cooldown {
+    opacity: 0.62;
   }
 
   .touch-battle-skill.is-aiming {
@@ -249,12 +274,12 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
 
   .touch-battle-cancel {
     position: absolute;
-    right: 12px;
-    bottom: 196px;
+    right: calc(12px * var(--tb-scale, 1));
+    bottom: calc(196px * var(--tb-scale, 1));
     padding: 7px 14px;
     border-radius: 999px;
     border: 1.5px solid rgba(255, 130, 120, 0.75);
-    background: rgba(44, 16, 18, 0.88);
+    background: rgba(44, 16, 18, 0.9);
     color: #ffd5d0;
     font: 700 12px Tahoma, system-ui, sans-serif;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
@@ -263,7 +288,7 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
 
   .touch-battle-cancel.is-active {
     border-color: #ff6b6b;
-    background: rgba(185, 36, 36, 0.94);
+    background: rgba(185, 36, 36, 0.95);
     color: #fff;
     transform: scale(1.08);
   }
@@ -272,63 +297,51 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     position: absolute;
     right: max(8px, env(safe-area-inset-right));
     top: max(6px, env(safe-area-inset-top));
-    width: 30px;
-    height: 30px;
-    border-radius: 6px !important;
-    border: 1.5px solid #82d9fa;
-    background: linear-gradient(#126ca3, #07385c);
-    box-shadow: inset 0 1px 0 #c6f4ff66, 0 2px 8px rgba(0, 0, 0, 0.5);
-    font-size: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px !important;
+    border: 1.5px solid rgba(130, 217, 250, 0.85);
+    background: linear-gradient(180deg, rgba(16, 98, 152, 0.92), rgba(7, 48, 82, 0.94));
+    box-shadow: inset 0 1px 0 rgba(198, 244, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.5);
+    font-size: 16px;
   }
 
-  /* Mobile HUD: hide duplicate skill bar and turn m7-bottom into a compact Flash-framed vital pill */
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-system {
-    right: calc(44px / var(--m7-hud-scale, 0.54));
-    top: 6px;
-    width: auto;
-    height: auto;
-  }
+  .touch-battle-settings:active { transform: scale(0.92); }
 
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-system-bg {
-    display: none;
-  }
-
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-ping {
-    position: static;
-    width: auto;
-    min-width: 44px;
-    height: 22px;
-    line-height: 22px;
-    padding: 0 7px;
-    border-radius: 4px;
-    background: rgba(6, 38, 62, 0.86);
-    border: 1px solid #69c7ee;
+  /* Responsive mobile HUD anchored directly to viewport CSS pixels + safe-area insets */
+  .m7-robo-hud[data-mobile-scaled="true"] {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    box-sizing: border-box;
   }
 
   .m7-robo-hud[data-mobile-scaled="true"] .m7-map-title {
-    left: 6px;
-    top: 2px;
-    font-size: 13px;
-    max-width: 150px;
+    left: max(8px, env(safe-area-inset-left));
+    top: max(4px, env(safe-area-inset-top));
+    font-size: 11px;
+    max-width: 32vw;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-objective {
-    right: calc(104px / var(--m7-hud-scale, 0.54));
-    width: 196px;
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-score {
+    top: max(2px, env(safe-area-inset-top));
+    transform: scale(calc(var(--m7-ui-scale, 0.85) * 0.78));
+    transform-origin: top center;
   }
 
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-objective-text {
-    width: 116px;
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-system {
+    right: max(48px, calc(env(safe-area-inset-right) + 44px));
+    top: max(6px, env(safe-area-inset-top));
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-kda {
-    left: 124px;
-    width: 64px;
-  }
-
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-system-bg,
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-exit,
   .m7-robo-hud[data-mobile-scaled="true"] .m7-settings,
   .m7-robo-hud[data-mobile-scaled="true"] .m7-battle-chat,
   .m7-robo-hud[data-mobile-scaled="true"] .m7-signal,
@@ -337,12 +350,80 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     display: none;
   }
 
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-ping {
+    position: static;
+    width: auto;
+    min-width: 42px;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 7px;
+    border-radius: 6px;
+    font-size: 11px;
+    background: rgba(6, 32, 54, 0.78);
+    border: 1px solid rgba(105, 199, 238, 0.65);
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-objective {
+    top: max(36px, calc(env(safe-area-inset-top) + 34px));
+    right: max(8px, env(safe-area-inset-right));
+    width: auto;
+    max-width: min(210px, 38vw);
+    height: 24px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 6px;
+    background: rgba(8, 28, 44, 0.76);
+    border: 1px solid rgba(114, 198, 232, 0.35);
+    font-size: 11px;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-objective-text {
+    position: static;
+    width: auto;
+    max-width: 128px;
+    flex: 1;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-kda {
+    position: static;
+    width: auto;
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-kill-feed {
+    right: max(8px, env(safe-area-inset-right));
+    top: max(64px, calc(env(safe-area-inset-top) + 62px));
+    transform: scale(calc(var(--m7-ui-scale, 0.85) * 0.76));
+    transform-origin: top right;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster {
+    transform: scale(calc(var(--m7-ui-scale, 0.85) * 0.68));
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-a {
+    left: max(8px, env(safe-area-inset-left));
+    top: var(--m7-minimap-bottom, 126px);
+    transform-origin: top left;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-b {
+    right: max(8px, env(safe-area-inset-right));
+    top: max(122px, calc(env(safe-area-inset-top) + 118px));
+    transform-origin: top right;
+  }
+
   .m7-robo-hud[data-mobile-scaled="true"] .m7-bottom {
     width: 150px;
     height: 70px;
     margin-left: -75px;
-    bottom: 6px;
-    border-radius: 4px;
+    bottom: max(6px, env(safe-area-inset-bottom));
+    transform: scale(calc(var(--m7-ui-scale, 0.85) * 0.92));
+    transform-origin: bottom center;
+    border-radius: 8px;
     background: linear-gradient(180deg, rgba(10, 56, 92, 0.9), rgba(5, 29, 51, 0.94));
     border: 1.5px solid #6ad2f7;
     box-shadow: inset 0 1px 0 rgba(191, 243, 255, 0.45), 0 3px 10px rgba(0, 0, 0, 0.55);
@@ -353,30 +434,14 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     top: 2px;
   }
 
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster {
-    top: 164px;
-    transform: scale(0.5);
-  }
-
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-a {
-    left: 6px;
-    transform-origin: top left;
-  }
-
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-b {
-    top: 72px;
-    right: 6px;
-    transform-origin: top right;
-  }
-
   .m7-robo-hud[data-mobile-scaled="true"] .m7-buffs {
     left: 50%;
-    top: 74px;
-    bottom: auto;
+    top: auto;
+    bottom: max(76px, calc(env(safe-area-inset-bottom) + 72px));
     width: auto;
     height: 36px;
     transform: translateX(-50%) scale(0.82);
-    transform-origin: top center;
+    transform-origin: bottom center;
     display: flex;
     justify-content: center;
     gap: 4px;
@@ -391,65 +456,144 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
     overflow: hidden;
   }
 
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img:not([src])),
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img[src=""]),
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img[src*="offline_empty_buff"]),
-  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img[hidden]) {
-    display: none;
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-hud-status {
+    bottom: max(116px, calc(env(safe-area-inset-bottom) + 110px));
+    max-width: 72%;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(6, 22, 38, 0.78);
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m71-kill-banner {
+    top: max(74px, calc(env(safe-area-inset-top) + 70px));
+    transform: translateX(-50%) scale(calc(var(--m7-ui-scale, 0.85) * 0.72));
+    transform-origin: top center;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-relive {
+    bottom: max(84px, calc(env(safe-area-inset-bottom) + 78px));
+    transform: scale(var(--m7-relive-scale, 0.72));
+    transform-origin: bottom center;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-spectate {
+    left: 50%;
+    top: auto;
+    bottom: max(180px, calc(env(safe-area-inset-bottom) + 174px));
+    width: auto;
+    max-width: 75vw;
+    transform: translateX(-50%);
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(6, 24, 42, 0.78);
+    font-size: 12px;
+    text-align: center;
   }
 
   #battle-panel.robo-native:has(.touch-battle-controls:not([hidden])) #battle-paused {
-    bottom: 92px;
+    bottom: max(88px, calc(env(safe-area-inset-bottom) + 84px));
     text-align: center;
     font-size: 11px;
     padding: 4px 10px;
   }
 
-  .robo-settings {
-    max-width: calc(100vw - 28px);
-    max-height: calc(100vh - 28px);
+  /* Native-feeling mobile in-game settings sheet */
+  body[data-touch-active="true"] .robo-settings {
+    width: min(320px, calc(100vw - 28px));
+    max-height: calc(100dvh - 28px);
+    padding: 16px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(124, 215, 251, 0.65);
+    background: linear-gradient(180deg, rgba(14, 34, 54, 0.96), rgba(8, 20, 34, 0.98));
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
     overflow: auto;
   }
 
-  /* Portrait phones only: scale down login neatly without clipping & lift touch pads */
+  body[data-touch-active="true"] .robo-settings h3 {
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #fff2b2;
+  }
+
+  body[data-touch-active="true"] .robo-settings button,
+  body[data-touch-active="true"] .robo-settings select {
+    min-height: 44px;
+    border-radius: 10px;
+    font-size: 14px;
+  }
+
+  body[data-touch-active="true"] .robo-settings label {
+    display: grid;
+    gap: 6px;
+    margin: 10px 0;
+    font-size: 12px;
+    color: #b9d5ea;
+  }
+
+  body[data-touch-active="true"] .robo-settings #robo-settings-close {
+    margin-top: 12px;
+    background: linear-gradient(180deg, #2292ca, #116293);
+    border-color: #7ee3ff;
+    color: #fff;
+  }
+
+  body[data-touch-active="true"] .robo-settings #robo-exit {
+    margin-top: 8px;
+    background: rgba(140, 36, 36, 0.45);
+    border-color: rgba(255, 130, 120, 0.55);
+    color: #ffd7d2;
+  }
+
+  /* Portrait phones: lift touch pads cleanly above centered vitals pill & stack top objective */
   @media (orientation: portrait) {
     .touch-battle-move-zone {
-      height: calc(50vh - 40px);
-      bottom: 44px;
+      height: calc(48dvh - 68px);
+      bottom: max(70px, calc(env(safe-area-inset-bottom) + 64px));
     }
 
     .touch-battle-stick {
-      bottom: max(54px, calc(env(safe-area-inset-bottom) + 48px));
-      width: 90px;
+      bottom: max(76px, calc(env(safe-area-inset-bottom) + 70px));
     }
 
     .touch-battle-actions {
-      bottom: max(50px, calc(env(safe-area-inset-bottom) + 44px));
+      bottom: max(72px, calc(env(safe-area-inset-bottom) + 66px));
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-map-title {
+      max-width: 82px;
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-score {
+      transform: scale(calc(var(--m7-ui-scale, 0.72) * 0.82));
     }
 
     .m7-robo-hud[data-mobile-scaled="true"] .m7-objective {
-      top: 76px;
-      right: 12px;
-      width: 176px;
+      top: max(56px, calc(env(safe-area-inset-top) + 54px));
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      max-width: calc(100vw - 24px);
     }
 
     .m7-robo-hud[data-mobile-scaled="true"] .m7-objective-text {
-      width: 102px;
+      max-width: 140px;
     }
 
-    .m7-robo-hud[data-mobile-scaled="true"] .m7-kda {
-      left: 110px;
-      width: 58px;
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-kill-feed {
+      top: max(84px, calc(env(safe-area-inset-top) + 82px));
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-roster {
+      transform: scale(calc(var(--m7-ui-scale, 0.72) * 0.76));
     }
 
     .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-b {
-      top: 112px;
+      top: max(128px, calc(env(safe-area-inset-top) + 124px));
     }
 
-    .m7-robo-hud[data-mobile-scaled="true"] .m7-bottom {
-      transform: scale(1.18);
-      transform-origin: bottom center;
-      bottom: 4px;
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-buffs {
+      bottom: max(76px, calc(env(safe-area-inset-bottom) + 72px));
     }
 
     body:not(:has(.m85-settings-surface)) .m8-shell[data-screen="lobby"]:not(:has(.m81-create-shade,.m8-account))::after {
@@ -534,6 +678,9 @@ body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
       top: auto;
       left: 12px;
       right: 12px;
+      transform: none;
+      width: auto;
+      max-width: none;
       bottom: max(12px, env(safe-area-inset-bottom));
     }
   }

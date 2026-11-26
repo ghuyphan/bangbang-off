@@ -38,7 +38,9 @@ export class TouchBattleControls {
     moveZone.className = 'touch-battle-move-zone';
     root.append(moveZone);
 
-    const stick = this.stick = button('stick', '', 'Di chuyển');
+    const stick = this.stick = document.createElement('div');
+    stick.className = 'touch-battle-stick';
+    stick.setAttribute('aria-label', 'Di chuyển');
     const thumb = this.thumb = document.createElement('span');
     stick.append(thumb);
     root.append(stick);
@@ -83,7 +85,7 @@ export class TouchBattleControls {
       skill.append(icon, sweep, keyLabel, chargeLabel, cdLabel);
 
       const cell = {
-        index: def.index, slot: def.defaultSlot, passive: false,
+        index: def.index, slot: def.defaultSlot, passive: false, ready: true,
         button: skill, icon, sweep, keyLabel, chargeLabel, cdLabel, iconUrl: '',
       };
       this.skillCells.push(cell);
@@ -95,9 +97,9 @@ export class TouchBattleControls {
       };
 
       skill.addEventListener('pointerdown', event => {
-        if (event.button !== 0 || cell.passive || this.skillDrags.has(cell.index)) return;
+        if (event.button !== 0 || cell.passive || !cell.ready || this.skillDrags.has(cell.index)) return;
         event.preventDefault();
-        this.skillDrags.set(cell.index, {id: event.pointerId, x: event.clientX, y: event.clientY, dragged: false});
+        this.skillDrags.set(cell.index, {id: event.pointerId, x: event.clientX, y: event.clientY, dragged: false, wasCancel: false});
         skill.classList.add('is-aiming');
         try { skill.setPointerCapture(event.pointerId); } catch {}
       });
@@ -110,6 +112,8 @@ export class TouchBattleControls {
           drag.dragged = true;
           cancel.hidden = false;
           const canceled = overCancel(event.clientX, event.clientY);
+          if (canceled && !drag.wasCancel) win?.navigator?.vibrate?.(6);
+          drag.wasCancel = canceled;
           cancel.classList.toggle('is-active', canceled);
           const factor = Math.min(1, 22 / len);
           skill.style.transform = `translate(${dx * factor}px, ${dy * factor}px)`;
@@ -117,6 +121,7 @@ export class TouchBattleControls {
           else input.previewTouchSkill(cell.slot, dx, dy);
         } else if (drag.dragged) {
           drag.dragged = false;
+          drag.wasCancel = false;
           cancel.hidden = true;
           cancel.classList.remove('is-active');
           skill.style.transform = '';
@@ -138,6 +143,7 @@ export class TouchBattleControls {
           input.cancelTouchSkill();
           return;
         }
+        win?.navigator?.vibrate?.(8);
         const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
         if (drag.dragged && Math.hypot(dx, dy) >= 16) input.castTouchSkill(cell.slot, dx, dy);
         else input.castTouchSkill(cell.slot);
@@ -166,24 +172,30 @@ export class TouchBattleControls {
     input.touchControls = root;
     input.onTouchReset = () => this.reset();
 
-    const maxRadius = 42;
     const applyStickOffset = drag => {
       stick.style.transform = drag.baseDx || drag.baseDy
         ? `translate(${drag.baseDx}px, ${drag.baseDy}px)` : '';
+    };
+    const clampOrigin = (x, y, maxRadius) => {
+      const stageRect = stage.getBoundingClientRect();
+      const pad = Math.max(24, maxRadius * 0.75);
+      return [
+        Math.max(stageRect.left + pad, Math.min(stageRect.left + stageRect.width * 0.44 - pad, x)),
+        Math.max(stageRect.top + 60, Math.min(stageRect.bottom - pad, y)),
+      ];
     };
     const startMove = (event, target, floating) => {
       if (this.drag || event.button !== 0) return;
       event.preventDefault();
       const rect = stick.getBoundingClientRect();
+      const maxRadius = Math.max(32, Math.round((rect.width || 100) * 0.42));
       const homeX = rect.left + rect.width / 2;
       const homeY = rect.top + rect.height / 2;
-      const baseDx = floating ? event.clientX - homeX : 0;
-      const baseDy = floating ? event.clientY - homeY : 0;
+      const [ox, oy] = floating ? clampOrigin(event.clientX, event.clientY, maxRadius) : [homeX, homeY];
       this.drag = {
-        id: event.pointerId, target,
-        x: floating ? event.clientX : homeX,
-        y: floating ? event.clientY : homeY,
-        homeX, homeY, baseDx, baseDy,
+        id: event.pointerId, target, maxRadius,
+        thumbTravel: Math.max(22, Math.round((rect.width || 100) * 0.3)),
+        x: ox, y: oy, homeX, homeY, baseDx: ox - homeX, baseDy: oy - homeY,
       };
       stick.classList.add('is-held');
       applyStickOffset(this.drag);
@@ -194,19 +206,20 @@ export class TouchBattleControls {
       if (!drag || event.pointerId !== drag.id) return;
       let dx = event.clientX - drag.x, dy = event.clientY - drag.y;
       let length = Math.hypot(dx, dy);
-      if (length > maxRadius) {
-        const excess = length - maxRadius;
+      if (length > drag.maxRadius) {
+        const excess = length - drag.maxRadius;
         const ux = dx / length, uy = dy / length;
-        drag.x += ux * excess;
-        drag.y += uy * excess;
+        const [ox, oy] = clampOrigin(drag.x + ux * excess, drag.y + uy * excess, drag.maxRadius);
+        drag.x = ox;
+        drag.y = oy;
         drag.baseDx = drag.x - drag.homeX;
         drag.baseDy = drag.y - drag.homeY;
         applyStickOffset(drag);
-        dx = ux * maxRadius;
-        dy = uy * maxRadius;
-        length = maxRadius;
+        dx = event.clientX - drag.x;
+        dy = event.clientY - drag.y;
+        length = Math.hypot(dx, dy);
       }
-      const factor = length ? Math.min(1, 30 / length) : 1;
+      const factor = length ? Math.min(1, drag.thumbTravel / length) : 1;
       thumb.style.transform = `translate(${dx * factor}px, ${dy * factor}px)`;
       const horizontal = Math.abs(dx) > length * .4 ? dx > 0 ? 1 : 2 : 0;
       const vertical = Math.abs(dy) > length * .4 ? dy > 0 ? 4 : 8 : 0;
@@ -236,7 +249,9 @@ export class TouchBattleControls {
       event.preventDefault();
       this.fireDrag = {id: event.pointerId, x: event.clientX, y: event.clientY, manual: false};
       try { fire.setPointerCapture(event.pointerId); } catch {}
-      fire.classList.toggle('is-held', input.setTouchFire(true));
+      const active = input.setTouchFire(true);
+      if (active) win?.navigator?.vibrate?.(6);
+      fire.classList.toggle('is-held', active);
     });
     fire.addEventListener('pointermove', event => {
       const drag = this.fireDrag;
@@ -294,6 +309,7 @@ export class TouchBattleControls {
       }
     };
     this._onMediaChange = () => notifyIfChanged();
+    this._win = win;
     win?.addEventListener('pointerdown', this._onGlobalPointerDown, true);
     win?.addEventListener('keydown', this._onGlobalKeyDown, true);
     this._coarseQuery?.addEventListener?.('change', this._onMediaChange);
@@ -301,6 +317,14 @@ export class TouchBattleControls {
     this._fineQuery?.addEventListener?.('change', this._onMediaChange);
     this._lastTouchActive = this.isTouchViewport();
     this.syncBodyFlag(this._lastTouchActive);
+  }
+
+  dispose() {
+    this._win?.removeEventListener('pointerdown', this._onGlobalPointerDown, true);
+    this._win?.removeEventListener('keydown', this._onGlobalKeyDown, true);
+    this._coarseQuery?.removeEventListener?.('change', this._onMediaChange);
+    this._anyCoarseQuery?.removeEventListener?.('change', this._onMediaChange);
+    this._fineQuery?.removeEventListener?.('change', this._onMediaChange);
   }
 
   _detectInitialInputKind(win) {
@@ -346,6 +370,7 @@ export class TouchBattleControls {
         else { icon.removeAttribute('src'); icon.hidden = true; }
       }
       const ready = !!row.availability?.ready && !row.passive;
+      cell.ready = ready;
       const reason = row.availability?.reason;
       const indefinite = !!row.skill?.indefinite;
       const rem = indefinite ? 0 : (Number(row.skill?.remainingMs) || 0);

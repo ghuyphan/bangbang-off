@@ -1,7 +1,7 @@
 import {element,nativeText,numberText,textInput,note} from './m8_ui_helpers.js';
 import {createNativePanel} from './m81_native_panel.js';
 import {at,panelArt,panelAsset,nativeLabel,nativeButton,createCharacterAppearance,characterAsset,decorationAsset,nativeCharacterBonus} from './m84_character.js';
-import {normalShopType,renderNormalShopGoods,renderNormalShopRecovery,openSimulatedTopup,canUseNormalShop} from './m81345_shop_ui.js';
+import {normalShopType,renderNormalShopGoods,renderNormalShopRecovery} from './m81345_shop_ui.js';
 
 const P='zh_CN/gui_summer/controls/';
 export const SHOP_NATIVE_GEOMETRY=Object.freeze({size:[1020,620],avatar:[16,49,210,302],inside:[225,85,776,446],
@@ -40,10 +40,10 @@ export function renderNativeShop(ui,body,{purchaseState,previewAppearance,curren
       title:tip,testId:`shop-filter-${key}`,module:'ShopModuleFactory',onClick:()=>{ui.shopSub=key;ui.page=0;ui.render();}});
     button.setAttribute('aria-pressed',String(key===sub));body.append(button);
   }
-  const searchW=isNormal?254:348;
-  const searchBox=at(element('div',null,'m84-shop-search'),518,101,searchW,28);
+  const searchW=204;
+  const searchBox=at(element('div',null,'m84-shop-search'),isNormal?566:668,101,searchW,28);
   searchBox.setAttribute('role','search');
-  searchBox.append(panelArt(ui,P+'public/label200x28.png',0,0,searchW,28,{className:'m84-native-fill'}));
+  searchBox.append(panelArt(ui,P+'public/label200x28.png',0,0,searchW,28));
   const searchInput=textInput(ui.query,{placeholder:'Tìm kiếm… (/)',maxLength:80});
   searchInput.dataset.accountField='shop-search';searchInput.setAttribute('aria-label','Tìm vật phẩm');
   searchInput.addEventListener('input',()=>{ui.query=searchInput.value;ui.page=0;ui.render();});
@@ -52,9 +52,9 @@ export function renderNativeShop(ui,body,{purchaseState,previewAppearance,curren
     searchBox.append(ui.button('×',()=>{ui.query='';ui.page=0;ui.render();ui.host.querySelector('[data-account-field="shop-search"]')?.focus();},{testId:'shop-search-close',className:'m84-shop-search-clear',title:'Xóa từ khóa'}));
   }
   body.append(searchBox);
-  const affordBtn=nativeButton(ui,{skin:P+`public/button_2_${ui.shopAffordable?'green':'blue'}.png`,
+  const affordBtn=nativeButton(ui,{skin:P+`public/${ui.shopAffordable?'button_2_green':'button_window_blue'}.png`,
     text:ui.shopAffordable?'✓ Đủ tiền':'Đủ tiền',label:'Chỉ hiện vật phẩm đủ tiền mua',
-    x:isNormal?780:874,y:101,width:88,height:28,testId:'shop-filter-affordable',module:'ShopModuleFactory',
+    x:isNormal?780:882,y:101,width:90,height:28,testId:'shop-filter-affordable',className:'m84-shop-toolbar-btn',module:'ShopModuleFactory',
     onClick:()=>{ui.shopAffordable=!ui.shopAffordable;ui.page=0;ui.render();}});
   affordBtn.setAttribute('aria-pressed',String(!!ui.shopAffordable));
   body.append(affordBtn);
@@ -64,12 +64,6 @@ export function renderNativeShop(ui,body,{purchaseState,previewAppearance,curren
     body.append(panelArt(ui,P+'public/label200x28.png',21,y),panelArt(ui,P+`shop/${icon}.png`,29,y+2),
       nativeLabel(label,54,y+4,60,24,{align:'center'}),nativeLabel(comma(currency[key]),95,y+4,120,24,{align:'right'}));
   }
-  body.append(nativeButton(ui,{skin:P+'public/button_window_blue.png',text:'Nạp Xu mô phỏng',
-    label:'Nạp Xu mô phỏng',x:36,y:484,width:160,height:30,
-    disabled:!ui.snapshot.play.setup?.classic||!canUseNormalShop(ui)||ui.loading.has('normalShop'),
-    title:ui.snapshot.play.setup?.classic?'Đổi phiếu lấy Xu trong game':'Dành cho tài khoản khởi đầu cổ điển',
-    testId:'shop-recharge',
-    onClick:()=>openSimulatedTopup(ui)}));
   body.append(panelArt(ui,P+'public/window_button_blue_bk.png',57,535),nativeButton(ui,{
     skin:P+'public/button_window_blue.png',icon:P+'shop/word_mypack_t.png',label:'Kho',x:61,y:539,
     testId:'shop-inventory',onClick:()=>ui.setSection('inventory')}));
@@ -91,8 +85,10 @@ export function renderNativeShop(ui,body,{purchaseState,previewAppearance,curren
     const state=purchaseState(ui.snapshot.meta,goods),name=nativeText(goods.name),card=at(element('article',null,'m84-shop-card'),index*250,0,250,380);
     card.dataset.goodsId=String(goods.goodsId);card.dataset.itemId=String(goods.itemId);
     card.append(panelArt(ui,P+'shop/bigGoodsCard.png',-2,-2));
-    const title=nativeLabel(name,10,13,230,24,{align:'center',className:'m84-shop-card-name'});title.title=name;card.append(title);
+    const title=nativeLabel(name,10,13,173,24,{align:'center',className:'m84-shop-card-name'});title.title=name;card.append(title);
     const asset=goods.containerType===4?characterAsset(ui,goods.itemId):decorationAsset(ui,goods.itemId,'icon');
+    const aw=Math.min(180,asset?.width||180),ah=Math.min(234,asset?.height||234);
+    const ax=Math.round((250-aw)/2),ay=Math.round(41+(234-ah)/2);
     if(state.owned){
       // Preserve the existing HTML5 equip action as a transparent art hit area;
       // the current native 70M goods branch intentionally has no buy/repay row.
@@ -100,20 +96,20 @@ export function renderNativeShop(ui,body,{purchaseState,previewAppearance,curren
         disabled:state.equipped||!ui.canMutate(),testId:`shop-equip-${goods.itemId}`,className:'m84-native-button m84-art-hit',
         title:state.equipped?'Đang dùng':'Sử dụng '+name});
       equip.dataset.nativeSkin='true';equip.setAttribute('aria-label',state.equipped?'Đang dùng '+name:'Sử dụng '+name);
-      card.append(at(equip,37,41,asset?.width||180,asset?.height||240));if(asset)equip.append(panelArt(ui,asset));
-    }else if(asset)card.append(panelArt(ui,asset,37,41));
+      card.append(at(equip,ax,ay,aw,ah));if(asset)equip.append(panelArt(ui,asset,0,0,aw,ah));
+    }else if(asset)card.append(panelArt(ui,asset,ax,ay,aw,ah));
     const tryButton=nativeButton(ui,{skin:P+'title/button_view3_t.png',label:'Thử '+name,x:185,y:9,
       testId:'shop-try-'+goods.itemId,onClick:()=>{ui.shopPreview={...ui.shopPreview,[goods.containerType===4?'avatarId':'decorateId']:goods.itemId};ui.render();}});
     card.append(tryButton);
     const bonuses=nativeCharacterBonus(ui.assets.accountPresentation,{[goods.containerType===4?'avatarId':'decorateId']:goods.itemId},goods.containerType===4?'avatar':'decoration');
-    if(bonuses)card.append(nativeLabel(bonuses,0,281,250,22,{align:'center',size:12,color:'#ff6600'}));
-    const price=at(element('div',null,'m84-shop-price'),20,302,230,26);
+    if(bonuses)card.append(nativeLabel(bonuses,10,279,230,20,{align:'center',size:12,color:'#ff6600'}));
+    const price=at(element('div',null,'m84-shop-price'),10,302,230,26);
     if(state.owned)price.append(element('span','Đã sở hữu'));
     else {
       const coin=panelAsset(ui,P+`shop/${goods.coinType===1?'money':goods.coinType===3?'coupon':'diamond'}.png`);
-      if(coin){const image=panelArt(ui,coin);Object.assign(image.style,{position:'static',width:`${coin.width}px`,height:`${coin.height}px`});price.append(image);}
+      if(coin){const image=panelArt(ui,coin);Object.assign(image.style,{position:'static',width:'22px',height:'22px'});price.append(image);}
       price.append(element('span',comma(goods.price)));
-      const buy=nativeButton(ui,{skin:P+'shop/button_buy_t.png',label:'Mua '+name,x:32,y:336,testId:`shop-buy-${goods.itemId}`,
+      const buy=nativeButton(ui,{skin:P+'shop/button_buy_t.png',label:'Mua '+name,x:80,y:338,testId:`shop-buy-${goods.itemId}`,
         disabled:!state.affordable||!ui.canMutate(),title:state.affordable?'Mua '+name:'Chưa đủ '+currencyName(goods.coinType)+'.',
         onClick:()=>ui.confirm('Mua '+name,`Sở hữu vĩnh viễn · ${numberText(goods.price)} ${currencyName(goods.coinType)}. Số dư hiện tại: ${numberText(state.balance)} ${currencyName(goods.coinType)}.`,
           ()=>ui.client.purchaseCosmetic({...goods,kind:1,count:1}),{kind:'shop',goods,purchaseState:()=>purchaseState(ui.snapshot.meta,goods),image:asset,

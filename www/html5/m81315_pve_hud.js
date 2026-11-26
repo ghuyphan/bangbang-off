@@ -77,30 +77,42 @@ export class PveBossHud extends PveBossGroups {
   draw(view, state) {
     if (!scoped(state) || state.result || !view.prepared?.pveBossCatalog) return;
     const bar = view.prepared.pveBossCatalog.bossBar, context = view.context;
-    const left = Math.trunc((view.width - bar.width) / 2);
+    const compact = !!view.touch?.isTouchViewport?.() || view.width < 680 || view.height < 520;
+    const scale = compact ? Math.min(1, (view.width - 24) / bar.width) : 1;
+    const drawW = Math.round(bar.width * scale), drawH = Math.round(bar.height * scale);
+    const left = Math.trunc((view.width - drawW) / 2);
+    const baseTop = compact ? 64 : view.height - bar.bottomOffset;
+    const stepY = compact ? drawH + 22 : -bar.rowHeight;
     this.rows(state).forEach((row, index) => {
-      const top = view.height - bar.bottomOffset - bar.rowHeight * index;
+      const top = Math.round(baseTop + stepY * index);
       const frame = bar.frames[row.frameIndex], asset = frame?.asset || bar.asset;
       const image = view.store.image(asset);
       if (!frame || !image) return; // Asset gate reports absence; no fake bar.
       view.surface.draw(image, {sx: frame.sx, sy: frame.sy, sw: frame.w, sh: frame.h,
-        x: left + frame.offsetX + frame.w / 2, y: top + frame.offsetY + frame.h / 2,
-        width: frame.w, height: frame.h});
+        x: left + (frame.offsetX + frame.w / 2) * scale, y: top + (frame.offsetY + frame.h / 2) * scale,
+        width: frame.w * scale, height: frame.h * scale});
       context.save();
       context.textBaseline = 'top'; context.textAlign = 'center';
-      context.font = 'bold 16px Verdana, sans-serif'; context.fillStyle = '#fff';
+      context.font = `bold ${Math.max(11, Math.round(16 * scale))}px Verdana, sans-serif`; context.fillStyle = '#fff';
       context.strokeStyle = '#121500'; context.lineWidth = 2;
       const hpLabel = `${row.hp}/${row.maxHp}`;
-      context.strokeText(hpLabel, left + bar.width / 2, top + 5);
-      context.fillText(hpLabel, left + bar.width / 2, top + 5);
-      context.font = 'bold 22px "Microsoft YaHei", Tahoma, sans-serif';
-      context.textAlign = 'right';
-      const gradient = context.createLinearGradient(0, top, 0, top + 27);
+      context.strokeText(hpLabel, left + drawW / 2, top + Math.round(5 * scale));
+      context.fillText(hpLabel, left + drawW / 2, top + Math.round(5 * scale));
+      const nameSize = Math.max(12, Math.round(22 * scale));
+      context.font = `bold ${nameSize}px "Microsoft YaHei", Tahoma, sans-serif`;
+      const gradient = context.createLinearGradient(0, top, 0, top + nameSize + 4);
       gradient.addColorStop(0, '#ffff00'); gradient.addColorStop(1, '#ff7c00');
-      context.fillStyle = gradient; context.strokeStyle = '#4d1700'; context.lineWidth = 4;
-      // Native name label occupies [-200,0] relative to the bar, never the bar.
-      context.strokeText(row.name, left, top, 200);
-      context.fillText(row.name, left, top, 200);
+      context.fillStyle = gradient; context.strokeStyle = '#4d1700'; context.lineWidth = 3;
+      if (left < 190) {
+        context.textAlign = 'center';
+        context.strokeText(row.name, view.width / 2, top - nameSize - 2, drawW);
+        context.fillText(row.name, view.width / 2, top - nameSize - 2, drawW);
+      } else {
+        context.textAlign = 'right';
+        // Native name label occupies [-200,0] relative to the bar, never the bar.
+        context.strokeText(row.name, left, top, 200);
+        context.fillText(row.name, left, top, 200);
+      }
       context.restore();
     });
   }

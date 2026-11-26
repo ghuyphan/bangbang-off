@@ -244,7 +244,7 @@ class SniperActions(ActionLockMixin, TankActions):
         if slot not in SLOTS or self.blocked('attack',now) or self.skill_sealed(slot,now) or self.cooldowns[slot]>now:
             return []
         if slot in (0,1) and start==dest:return []
-        packets=[];power=self.combat_stat('iAttack',now)
+        packets=self._activity(now) if slot in (0,1) else [];power=self.combat_stat('iAttack',now)
         if slot==0 and self.special:
             index=self.special['index'];skill=SHOTS[index]
             self.cooldowns[0]=now+1250

@@ -92,8 +92,7 @@ File khóa tự được tạo ở lần chạy đầu. Nếu chưa thấy file,
 Giữ tùy chọn **Khởi đầu cổ điển** khi tạo tài khoản. Nhân vật bắt đầu ở cấp 1,
 với kho trống và 399 Xu Khóa để mua tank đầu tiên trong Cửa hàng. Tank đầu tiên
 được đặt xuất chiến tự động. Bot trong phòng PK mới dùng tank cùng tầm với tank
-xuất chiến. Trận PK thường kéo dài từ một phút trở lên cho EXP, tiền, vật liệu
-và một phiếu nạp. Trong Cửa hàng, **Nạp Xu mô phỏng** đổi phiếu lấy Xu trong game.
+xuất chiến. Trận PK thường kéo dài từ một phút trở lên cho EXP, tiền và vật liệu.
 
 ### Gửi đồ hoặc tiền
 

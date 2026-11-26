@@ -13,9 +13,11 @@ def use_tank(state, record):
 
 
 def begin(state, records):
+    if not records:
+        raise ValueError('Không có tank nào trong gara để chọn.')
     primary = next((r for r in records if r['uuid'] == state.get('selected_tank_uuid')), None)
     if primary is None:
-        primary = next(r for r in records if r['tank_id'] == state['tank_id'])
+        primary = next((r for r in records if r['tank_id'] == state.get('tank_id')), records[0])
         state['selected_tank_uuid'] = primary['uuid']
     use_tank(state, primary)
     state['match_tank_uuid'] = primary['uuid']
@@ -23,9 +25,10 @@ def begin(state, records):
 
 
 def restore_primary(state, records):
-    if state.pop('match_tank_uuid', None) is not None:
-        primary = next(r for r in records if r['uuid'] == state['selected_tank_uuid'])
-        use_tank(state, primary)
+    if state.pop('match_tank_uuid', None) is not None and records:
+        primary = next((r for r in records if r['uuid'] == state.get('selected_tank_uuid')), None)
+        if primary is not None:
+            use_tank(state, primary)
     state.pop('tank_selection', None)
 
 

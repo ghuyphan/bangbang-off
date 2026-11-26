@@ -39,8 +39,7 @@ export function renderGuildTeamInfo(ui,value){
   field('name','Tên đội',team.name??'—',112,17,264);field('leader','Đội trưởng',model.leader,112,51,264);
   field('level','Cấp đội',numeric(team.level),112,84,94);field('fund','Quỹ đội',numeric(team.coin),112,117,94);
   field('glory','Uy vọng',numeric(team.glory),281,84,94);field('merit','Cống hiến',numeric(team.merit),281,117,94);
-  field('maintenance','Phí duy trì chưa có dữ liệu','—',112,150,94);
-  text(body,'Chưa có dữ liệu phí duy trì',213,153,184,22).style.fontSize='11px';
+  field('maintenance','Phí duy trì','—',112,150,94);
   text(body,'Thành viên',50,189,136,22);text(body,'Điểm',186,189,70,22);text(body,'C.hiến',256,189,50,22);text(body,'Chức vụ',306,189,70,22);
   art(body,'list',42,211,'');const list=at(element('div',null,'m81-team-info-list'),44,212,332,121);list.setAttribute('role','list');list.setAttribute('aria-label','Thành viên đội');Object.assign(list.style,{overflowY:'scroll',overflowX:'hidden'});list.tabIndex=0;list.dataset.accountField=`team-info-list-${value.teamId}`;body.append(list);list.addEventListener('scroll',()=>{if(current())context.scrollTop=list.scrollTop;});
   if(members===null)text(list,'Chưa có dữ liệu thành viên',8,0,306,30);

@@ -41,9 +41,6 @@ export function validShopIcon(value){
 export function validateNormalShopCatalog(value){
   if(!object(value)||value.v!==1||!(/^[a-f0-9]{64}$/).test(value.revision)||!Array.isArray(value.tabs)
     ||!Array.isArray(value.offers)||value.offers.length>1000||!object(value.boxes))throw new Error('Danh mục cửa hàng chưa hợp lệ. Hãy làm mới danh mục.');
-  if(value.topup_packs!==undefined&&(!Array.isArray(value.topup_packs)||value.topup_packs.length>8
-    ||value.topup_packs.some(pack=>!object(pack)||!whole(pack.vouchers,1,99)||!whole(pack.xu,1))))
-    throw new Error('Danh mục nạp mô phỏng chưa hợp lệ.');
   const seen=new Set();
   for(const offer of value.offers){
     if(!object(offer)||!whole(offer.goodsId,1,0xffffffff)||seen.has(offer.goodsId)||!whole(offer.itemId,1,0xffffffff)
@@ -116,7 +113,7 @@ export function normalShopVisual(ui,offer,width=160,height=140){
 const rewardText=reward=>`${nativeText(reward.name)} ×${numberText(reward.quantity)}`;
 export function shopReceiptText(receipt){
   if(!receipt)return 'Đã đồng bộ giao dịch theo máy chủ.';
-  const prefix=receipt.outcome==='topup'?'Đã đổi phiếu':receipt.outcome==='purchase'?'Đã mua':receipt.outcome==='main'?'Đã mở, nhận phần thưởng chính':receipt.outcome==='material'?'Đã mở, nhận nguyên liệu':'Đã nhận quà';
+  const prefix=receipt.outcome==='purchase'?'Đã mua':receipt.outcome==='main'?'Đã mở, nhận phần thưởng chính':receipt.outcome==='material'?'Đã mở, nhận nguyên liệu':'Đã nhận quà';
   return `${prefix}: ${(receipt.rewards||[]).map(rewardText).join(', ')}.`;
 }
 function rulesText(box){return box?.mode==='random'?'Mỗi lần mở: 10% phần thưởng chính · 90% nguyên liệu.':box?.mode==='fixed'?'Gói quà cố định.':'';}
@@ -133,17 +130,6 @@ export function openNormalShopPurchase(ui,offer){
 export function openNormalShopBox(ui,item,container){
   if(!canUseNormalShop(ui)||!normalShopBox(ui,item.templateId))return;
   openDialog(ui,{mode:'open_box',item:structuredClone(item),container,quantity:1});
-}
-export async function openSimulatedTopup(ui){
-  if(!canUseNormalShop(ui)||!ui.snapshot.play.setup?.classic)return;
-  await ui.queryServer('normalShop','capi/normalshopquery.php',{},!!ui.cache.normalShop?.queryError);
-  if(!canUseNormalShop(ui)||ui.section!=='shop')return;
-  const packs=ui.cache.normalShop?.topup_packs;
-  if(!packs?.length){
-    ui.message=ui.cache.normalShop?.queryError||'Chưa tải được gói nạp mô phỏng.';
-    ui.messageError=true;ui.render();return;
-  }
-  openDialog(ui,{mode:'topup',packs,pack:packs[0].vouchers});
 }
 export function openNormalShopRecovery(ui){
   if(!canRecover(ui))return;
@@ -225,19 +211,52 @@ export function appendNormalShopBoxAction(ui,detail,item,container){
     title:protectedItem?'Vật phẩm đang khóa, có thời hạn hoặc đang sử dụng.':canUseNormalShop(ui)?'Xem trước phần thưởng rồi xác nhận mở.':blocker(ui)}));
 }
 function dialogIntent(value){
-  if(value.mode==='topup')return canonicalShopIntent({kind:'topup',pack:value.pack});
   return canonicalShopIntent(value.mode==='buy'?{kind:'buy',goods_id:value.goods.goodsId,payment:value.payment,quantity:value.quantity}
     :{kind:'open_box',item:shopItemReference(value.item,value.container)});
 }
 function currentDialog(ui,value){return !ui.disposed&&ui.confirmation===value&&ui.epoch===value.epoch&&ui.identity===value.identity&&ui.client.generation===value.generation;}
 async function runDialog(ui,value,action){
   if(!currentDialog(ui,value)||value.busy||!(action==='status'?canRecover(ui):canUseNormalShop(ui)))return;
-  if(action==='preview'&&value.mode==='buy'&&(!whole(value.quantity,1,maxQuantity(value.goods))||!value.goods.payments.some(p=>p.key===value.payment))){
+  if((action==='preview'||action==='quick_buy')&&value.mode==='buy'&&(!whole(value.quantity,1,maxQuantity(value.goods))||!value.goods.payments.some(p=>p.key===value.payment))){
     value.notice='Nhập số lượt mua nguyên từ 1 đến '+numberText(maxQuantity(value.goods))+'.';ui.render();return;
   }
   if(action==='apply'&&!value.preview)return;
-  value.busy=true;value.notice=action==='preview'?'Đang kiểm tra giá, số lượng và phần thưởng…':action==='apply'?'Đang chờ máy chủ xác nhận…':'Đang kiểm tra biên nhận đã lưu…';ui.render();
+  value.busy=true;
+  value.notice='';
+  ui.render();
   try{
+    if(action==='quick_buy'){
+      const intent=dialogIntent(value);
+      const preview=await ui.client.prepareShop(intent);
+      if(!currentDialog(ui,value))return;
+      if(!preview)throw new Error('Phiên giao dịch đã thay đổi. Hãy mở lại cửa hàng.');
+      ui.snapshot=ui.client.snapshot?.()||ui.snapshot;
+      if(preview.status==='committed'){
+        value.preview=null;value.stage='done';value.notice=shopReceiptText(preview.receipt);
+        ui.message=value.notice;ui.messageError=false;
+      }else if(value.mode==='buy'){
+        const payment=value.goods.payments.find(p=>p.key===value.payment)||value.goods.payments[0];
+        const expectedCost=payment.price*value.quantity;
+        if(preview.quote?.kind==='buy'&&preview.quote.total_price===expectedCost&&preview.quote.coin_type===payment.coinType){
+          const applied=await ui.client.applyShop(preview);
+          if(!currentDialog(ui,value))return;
+          if(!applied)throw new Error('Phiên giao dịch đã thay đổi. Hãy mở lại cửa hàng.');
+          value.preview=null;value.stage='done';
+          value.notice=applied.status==='committed'?shopReceiptText(applied.receipt):'Chưa hoàn tất giao dịch; hãy kiểm tra lại.';
+          if(applied.pendingClearFailed)value.notice+=' Chưa xóa được mã chờ trên trình duyệt; hãy kiểm tra kết quả trước khi mua tiếp.';
+          ui.message=value.notice;ui.messageError=false;
+        }else{
+          value.preview=preview;value.stage='confirm';value.notice='Giá hoặc tiền tệ từ máy chủ khác với lựa chọn; vui lòng xác nhận lại.';
+        }
+      }else{
+        const applied=await ui.client.applyShop(preview);
+        if(!currentDialog(ui,value))return;
+        value.preview=null;value.stage='done';
+        value.notice=applied?.status==='committed'?shopReceiptText(applied.receipt):'Chưa hoàn tất giao dịch.';
+        ui.message=value.notice;ui.messageError=false;
+      }
+      return;
+    }
     const result=action==='preview'?await ui.client.prepareShop(dialogIntent(value)):action==='apply'?await ui.client.applyShop(value.preview):await ui.client.reconcileShop();
     if(!currentDialog(ui,value))return;
     if(!result)throw new Error('Phiên giao dịch đã thay đổi. Hãy mở lại cửa hàng.');
@@ -267,77 +286,113 @@ function boxDetails(parent,box){
 export function renderNormalShopConfirmation(ui,value){
   const overlay=element('div',null,'m8-account-modal m81345-shop-overlay');overlay.dataset.testid='normal-shop-dialog';
   const current=()=>currentDialog(ui,value),cancel=()=>{if(!current()||value.busy)return;ui.confirmation=null;ui.render();};
-  const {root,content}=createNativePanel({assets:ui.assets.panels.assets,width:650,height:530,kind:'box1',state:'CONFIRM'});
+  const pending=ui.snapshot.normalShop?.pending;
+  const relatedBox=value.mode==='open_box'?normalShopBox(ui,value.item.templateId):value.mode==='buy'?normalShopBox(ui,value.goods.boxId||value.goods.itemId):null;
+  const tall=!!relatedBox||!!pending||!!value.preview?.quote?.rewards?.length;
+  const dlgW=tall?520:470,dlgH=tall?430:300;
+  const {root,content}=createNativePanel({assets:ui.assets.panels.assets,width:dlgW,height:dlgH,kind:'box1',state:'CONFIRM'});
   root.classList.add('m81345-shop-confirm');root.setAttribute('role','dialog');root.setAttribute('aria-modal','true');root.setAttribute('aria-label','Giao dịch cửa hàng');
   const topClose=flashCloseButton(ui,cancel,{label:'Đóng hộp thoại cửa hàng',className:'m81345-shop-close-x'});
   topClose.disabled=value.busy;
   root.append(topClose);
-  const body=at(element('div',null,'m81345-shop-dialog-body'),28,48,594,412),pending=ui.snapshot.normalShop?.pending;
-  const title=value.mode==='topup'?'Nạp Xu mô phỏng':value.mode==='buy'?'Mua '+nativeText(value.goods.name):value.mode==='open_box'?'Mở '+nativeText(normalShopBox(ui,value.item.templateId)?.name||'hộp quà'):'Kiểm tra giao dịch';
-  body.append(element('h2',title));
-  const footer=at(element('div',null,'m81345-shop-dialog-footer'),28,478,594,34);
-  const button=(text,handler,id,disabled=false,primaryBtn=false)=>nativeButton(ui,{skin:primaryBtn?P+'public/button_window_orange.png':P+'public/button_window_blue.png',text,label:text,width:170,height:32,
+  const title=value.mode==='buy'?'Mua '+nativeText(value.goods.name):value.mode==='open_box'?'Mở '+nativeText(relatedBox?.name||'hộp quà'):'Kiểm tra giao dịch';
+  content.append(at(element('h2',title,'m81345-shop-dialog-title'),48,14,dlgW-96,28));
+  const body=at(element('div',null,'m81345-shop-dialog-body'),26,50,dlgW-52,dlgH-144);
+  content.append(body);
+  const footer=at(element('div',null,'m81345-shop-dialog-footer'),26,dlgH-52,dlgW-52,34);
+  const button=(text,handler,id,disabled=false,primaryBtn=false)=>nativeButton(ui,{skin:primaryBtn?P+'public/button_window_orange.png':P+'public/button_window_blue.png',text,label:text,width:120,height:32,
     onClick:()=>{if(current()&&!value.busy)return handler();},testId:id,disabled:disabled||value.busy});
+  const coinChip=(coinType,amount)=>{
+    const chip=element('span',null,'m81345-coin-chip');
+    const asset=panelAsset(ui,P+`shop/${coinIconKey(coinType)}.png`);
+    if(asset){const img=panelArt(ui,asset);Object.assign(img.style,{position:'static',width:'20px',height:'20px'});chip.append(img);}
+    chip.append(element('span',comma(amount)));
+    return chip;
+  };
   let primary=null;
   if(pending){
     body.append(note('Giao dịch đã có mã đối soát. Kiểm tra kết quả để đồng bộ với máy chủ.'));
     if(pending.invalid)body.append(note('Không đọc được bản ghi cục bộ. Giữ nguyên dữ liệu trình duyệt để kiểm tra.','error'));
-    primary=button('Kiểm tra kết quả',()=>runDialog(ui,value,'status'),'normal-shop-reconcile',!!pending.invalid||!canRecover(ui),true);
+    primary=button('Kiểm tra',()=>runDialog(ui,value,'status'),'normal-shop-reconcile',!!pending.invalid||!canRecover(ui),true);
   }else if(value.stage!=='done'&&value.mode!=='recover'){
-    if(value.mode==='topup'){
-      const voucherBalance=ui.snapshot.meta.character.currency?.presentPoint||0;
-      body.append(note('Đổi phiếu nhận từ trận PK cổ điển lấy Xu. Chỉ dùng tiền trong game.'),
-        note(`Số dư: ${numberText(voucherBalance)} phiếu`));
-      const pack=selectInput(value.packs.map(row=>({value:row.vouchers,
-        label:`${numberText(row.vouchers)} phiếu → ${numberText(row.xu)} Xu`})),value.pack,'Gói mô phỏng');
-      pack.dataset.testid='topup-pack';
-      pack.disabled=value.busy||value.stage==='confirm';
-      pack.addEventListener('change',()=>{value.pack=Number(pack.value);value.notice='';ui.render();});
-      body.append(pack);
-      if(value.preview?.quote)body.append(note(`Còn ${numberText(value.preview.quote.voucher_balance-value.pack)} phiếu sau khi đổi.`),
-        rewardList(value.preview.quote.rewards,'Nhận sau khi đổi'));
-      primary=value.stage==='confirm'
-        ?button('Xác nhận đổi',()=>runDialog(ui,value,'apply'),'normal-shop-confirm',!canUseNormalShop(ui),true)
-        :button('Xem trước',()=>runDialog(ui,value,'preview'),'normal-shop-preview',!canUseNormalShop(ui)||voucherBalance<value.pack,true);
-      if(voucherBalance<value.pack)body.append(note('Hoàn thành trận PK cổ điển để nhận thêm phiếu.'));
-    }else{
     const heroOffer=value.mode==='buy'?value.goods:normalShopOffer(ui,value.item.templateId),hero=element('div',null,'m81345-shop-hero');
-    if(heroOffer){const image=normalShopVisual(ui,heroOffer,82,82);if(image)hero.append(image);}
-    const info=element('div');
-    if(value.mode==='buy')info.append(note(nativeText(value.goods.description||'')));
-    else info.append(note(`Mở đúng 1 hộp. Hiện có ${numberText(value.item.count)}.`));
+    if(heroOffer){const image=normalShopVisual(ui,heroOffer,76,76);if(image)hero.append(image);}
+    const info=element('div',null,'m81345-shop-hero-info');
+    if(value.mode==='buy')info.append(note(nativeText(value.goods.description||heroOffer?.description||'')));
+    else info.append(note(`Mở 1 hộp quà trong kho (hiện có ${comma(value.item.count)}).`));
     hero.append(info);body.append(hero);
+    let affordable=true,summary=null,payment=null,maxQ=1,balance=0,minusBtn=null,plusBtn=null;
+    const renderSummary=()=>{
+      if(!summary||!payment)return;
+      const quantityValid=whole(value.quantity,1,maxQ);
+      const totalCost=quantityValid?payment.price*value.quantity:0;
+      affordable=quantityValid&&balance>=totalCost;
+      summary.replaceChildren();
+      if(quantityValid){
+        const left=element('div',null,'m81345-summary-item');
+        left.append(element('span','Giá:'),coinChip(payment.coinType,totalCost));
+        if(payment.quantity*value.quantity>1)left.append(element('small',`(×${comma(payment.quantity*value.quantity)})`));
+        const right=element('div',null,'m81345-summary-item');
+        right.append(element('span','Số dư:'),coinChip(payment.coinType,balance));
+        if(!affordable)right.classList.add('is-short');
+        summary.append(left,right);
+      }else summary.append(element('span',`Nhập số lượng từ 1 đến ${maxQ}.`,'m81345-summary-short'));
+      if(minusBtn)minusBtn.disabled=value.busy||value.stage==='confirm'||value.quantity<=1;
+      if(plusBtn)plusBtn.disabled=value.busy||value.stage==='confirm'||value.quantity>=maxQ;
+      if(primary&&value.stage!=='confirm'&&value.mode==='buy')primary.disabled=value.busy||!canUseNormalShop(ui)||!affordable;
+    };
     if(value.mode==='buy'){
-      const choices=element('div',null,'m81345-shop-choices'),payment=value.goods.payments.find(p=>p.key===value.payment)||value.goods.payments[0];
-      const quantity=element('input');quantity.type='number';quantity.min='1';quantity.max=String(maxQuantity(value.goods));quantity.step='1';quantity.value=String(value.quantity);
-      quantity.dataset.accountField='normal-shop-quantity';quantity.dataset.testid='normal-shop-quantity';quantity.setAttribute('aria-label','Số lượt mua');quantity.disabled=value.busy||value.stage==='confirm';
-      quantity.addEventListener('input',()=>{if(!current()||value.busy||value.stage==='confirm')return;value.quantity=Number(quantity.value);value.preview=null;ui.render();});
-      const quantityLabel=element('label','Số lượt mua ');quantityLabel.append(quantity);
-      const paymentSelect=selectInput(value.goods.payments.map(p=>({value:p.key,label:`${numberText(p.price)} ${shopCurrencyName(p.coinType)} / ${numberText(p.quantity)} vật phẩm`})),value.payment,'Cách thanh toán');
-      paymentSelect.dataset.testid='normal-shop-payment';paymentSelect.dataset.accountField='normal-shop-payment';paymentSelect.disabled=value.busy||value.stage==='confirm';
-      paymentSelect.addEventListener('change',()=>{if(!current()||value.busy||value.stage==='confirm')return;value.payment=paymentSelect.value;value.preview=null;ui.render();});
-      choices.append(quantityLabel,paymentSelect);body.append(choices);
-      const balance=Number(ui.snapshot.meta?.character?.currency?.[currencyField(payment.coinType)]||0),quantityValid=whole(value.quantity,1,maxQuantity(value.goods));
-      body.append(note(quantityValid?`Tổng: ${numberText(payment.price*value.quantity)} ${shopCurrencyName(payment.coinType)} · Nhận ${numberText(payment.quantity*value.quantity)} đơn vị. Số dư: ${numberText(balance)} ${shopCurrencyName(payment.coinType)}.`:'Nhập số lượt mua hợp lệ.'));
+      payment=value.goods.payments.find(p=>p.key===value.payment)||value.goods.payments[0];
+      maxQ=maxQuantity(value.goods);
+      balance=Number(ui.snapshot.meta?.character?.currency?.[currencyField(payment.coinType)]||0);
+      const multiPay=value.goods.payments.length>1;
+      if(maxQ>1||multiPay){
+        const choices=element('div',null,'m81345-shop-choices');
+        if(maxQ>1){
+          const qtyWrap=element('div',null,'m81345-qty-stepper');
+          qtyWrap.append(element('span','Số lượng:'));
+          const clampQty=q=>Math.max(1,Math.min(maxQ,Math.trunc(Number(q)||1)));
+          minusBtn=ui.button('−',()=>{value.quantity=clampQty(value.quantity-1);value.preview=null;ui.render();},{className:'m81345-qty-btn',title:'Giảm số lượng',disabled:value.busy||value.stage==='confirm'||value.quantity<=1});
+          const quantity=element('input');quantity.type='number';quantity.min='1';quantity.max=String(maxQ);quantity.step='1';quantity.value=String(value.quantity);
+          quantity.dataset.accountField='normal-shop-quantity';quantity.dataset.testid='normal-shop-quantity';quantity.setAttribute('aria-label','Số lượt mua');quantity.disabled=value.busy||value.stage==='confirm';
+          quantity.addEventListener('input',()=>{if(!current()||value.busy||value.stage==='confirm')return;value.quantity=Number(quantity.value);value.preview=null;renderSummary();});
+          plusBtn=ui.button('+',()=>{value.quantity=clampQty(value.quantity+1);value.preview=null;ui.render();},{className:'m81345-qty-btn',title:'Tăng số lượng',disabled:value.busy||value.stage==='confirm'||value.quantity>=maxQ});
+          qtyWrap.append(minusBtn,quantity,plusBtn);
+          choices.append(qtyWrap);
+        }
+        if(multiPay){
+          const paymentSelect=selectInput(value.goods.payments.map(p=>({value:p.key,label:`${comma(p.price)} ${shopCurrencyName(p.coinType)}${p.quantity>1?` / ${comma(p.quantity)}`:''}`})),value.payment,'Cách thanh toán');
+          paymentSelect.dataset.testid='normal-shop-payment';paymentSelect.dataset.accountField='normal-shop-payment';paymentSelect.disabled=value.busy||value.stage==='confirm';
+          paymentSelect.addEventListener('change',()=>{if(!current()||value.busy||value.stage==='confirm')return;value.payment=paymentSelect.value;value.preview=null;ui.render();});
+          choices.append(paymentSelect);
+        }
+        body.append(choices);
+      }
+      summary=element('div',null,'m81345-shop-summary');
+      renderSummary();
+      body.append(summary);
     }
     const details=element('div',null,'m81345-shop-dialog-details'),quote=value.preview?.quote;
     if(quote?.kind==='buy'){
-      details.append(note(`Máy chủ xác nhận: ${numberText(quote.total_price)} ${shopCurrencyName(quote.coin_type)}.`),rewardList(quote.rewards,'Nhận sau khi mua'));
-      boxDetails(details,normalShopBox(ui,value.goods.boxId||value.goods.itemId));
+      details.append(note(`Máy chủ xác nhận: ${comma(quote.total_price)} ${shopCurrencyName(quote.coin_type)}.`),rewardList(quote.rewards,'Nhận sau khi mua'));
+      boxDetails(details,relatedBox);
     }else if(quote?.kind==='open_box')boxDetails(details,quote.box);
-    else boxDetails(details,normalShopBox(ui,value.mode==='buy'?value.goods.boxId||value.goods.itemId:value.item.templateId));
-    if(value.mode==='buy'&&normalShopBox(ui,value.goods.boxId||value.goods.itemId))details.append(note(value.goods.autoUse?'Nội dung gói được nhận ngay khi mua.':'Sau khi mua, vào Kho để chọn mở.'));
-    body.append(details);
+    else boxDetails(details,relatedBox);
+    if(value.mode==='buy'&&relatedBox)details.append(note(value.goods.autoUse?'Nội dung gói được nhận ngay khi mua.':'Sau khi mua, vào Kho để mở hộp.'));
+    if(details.children.length)body.append(details);
     if(value.stage==='confirm'){
       primary=button(value.mode==='buy'?'Xác nhận mua':'Xác nhận mở 1',()=>runDialog(ui,value,'apply'),'normal-shop-confirm',!canUseNormalShop(ui),true);
       footer.append(button('Chọn lại',()=>{value.stage='choose';value.preview=null;value.notice='';ui.render();},'normal-shop-back'));
-    }else primary=button('Xem trước',()=>runDialog(ui,value,'preview'),'normal-shop-preview',!canUseNormalShop(ui),true);
+    }else if(value.mode==='open_box'){
+      primary=button('Mở 1 hộp',()=>runDialog(ui,value,'preview'),'normal-shop-preview',!canUseNormalShop(ui),true);
+    }else{
+      primary=button('Mua ngay',()=>runDialog(ui,value,'quick_buy'),'normal-shop-confirm',!canUseNormalShop(ui)||!affordable,true);
     }
     if(!canUseNormalShop(ui)&&!value.busy)body.append(note(blocker(ui),'error'));
   }else if(value.mode==='recover'&&value.stage!=='done')body.append(note('Không có giao dịch đang chờ.'));
   if(value.notice){const status=note(value.notice);status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.classList.add('m81345-shop-dialog-status');body.append(status);}
   const close=button(value.stage==='done'?'Đóng':'Hủy',cancel,'normal-shop-cancel');if(primary)footer.append(primary);footer.append(close);
-  content.append(body,footer);overlay.append(root);overlay.initialFocus=close;
+  content.append(footer);overlay.append(root);overlay.initialFocus=close;
   overlay.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();cancel();}
     if(event.key==='Tab'){const nodes=[...overlay.querySelectorAll('button:not(:disabled),input:not(:disabled),select:not(:disabled)')];
       if(!nodes.length)return;event.preventDefault();const index=nodes.indexOf(document.activeElement);nodes[(index+(event.shiftKey?-1:1)+nodes.length)%nodes.length].focus();}});

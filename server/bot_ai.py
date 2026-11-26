@@ -31,6 +31,35 @@ import bot_ai20
 import bot_ai19
 import bot_obstacles
 
+AI_MODULES = (
+    bot_ai01, bot_ai02, bot_ai03, bot_ai04, bot_ai05,
+    bot_ai06, bot_ai07, bot_ai08, bot_ai09, bot_ai10,
+    bot_ai11, bot_ai12, bot_ai13, bot_ai14, bot_ai15,
+    bot_ai16, bot_ai17, bot_ai18, bot_ai19, bot_ai20,
+)
+_MODULE_BY_TANK = {tank_id: module for module in AI_MODULES for tank_id in module.TANKS}
+_LAST_STAND_BY_TANK = {
+    10000056: (10, 1), 10000031: (10, 2), 10000065: (10, 2),
+    **{tank_id: module.LAST_STAND[tank_id] for module in AI_MODULES for tank_id in module.TANKS},
+}
+_EXTENDED_SUPPORT_MODULES = frozenset(AI_MODULES[5:])  # bot_ai06..bot_ai20
+_LEGACY_SUPPORT_MODULES = frozenset((bot_ai01, bot_ai02, bot_ai04, bot_ai05))
+_COMPACT_RANGE_MODULES = frozenset((bot_ai01, bot_ai02, bot_ai03))
+_EXTENDED_STRUCTURE_MODULES = frozenset((bot_ai11, bot_ai12, bot_ai13, bot_ai14, bot_ai15))
+
+
+def module_for(tank_id):
+    return _MODULE_BY_TANK.get(tank_id)
+
+
+def can_recover(actor, now):
+    mod = module_for(actor.info['tank_id'])
+    if mod in (bot_ai10, bot_ai11):
+        return mod.can_recover(actor)
+    if mod in (bot_ai16, bot_ai17, bot_ai19):
+        return mod.can_recover(actor, now)
+    return True
+
 
 def octile_estimate(p, end):
     dx, dy = abs(p[0] - end[0]), abs(p[1] - end[1])
@@ -249,34 +278,9 @@ def observe(arena,actor,brain,now):
         if turret:seen[-1]['structure']=True
         if actor.info['tank_id']==10000041:
             seen[-1]['legolas_marks']=actor._stage(target,now)
-        if actor.info['tank_id'] in bot_ai03.TANKS:
-            seen[-1].update(bot_ai03.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai05.TANKS:
-            seen[-1].update(bot_ai05.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai06.TANKS:
-            seen[-1].update(bot_ai06.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai09.TANKS:
-            seen[-1].update(bot_ai09.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai10.TANKS:
-            seen[-1].update(bot_ai10.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai11.TANKS:
-            seen[-1].update(bot_ai11.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai12.TANKS:
-            seen[-1].update(bot_ai12.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai20.TANKS:
-            seen[-1].update(bot_ai20.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai19.TANKS:
-            seen[-1].update(bot_ai19.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai18.TANKS:
-            seen[-1].update(bot_ai18.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai17.TANKS:
-            seen[-1].update(bot_ai17.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai16.TANKS:
-            seen[-1].update(bot_ai16.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai15.TANKS:
-            seen[-1].update(bot_ai15.observation(actor,target,now))
-        if actor.info['tank_id'] in bot_ai13.TANKS:
-            seen[-1].update(bot_ai13.observation(actor,target,now))
+        mod=module_for(actor.info['tank_id'])
+        if mod is not None and hasattr(mod,'observation'):
+            seen[-1].update(mod.observation(actor,target,now))
     return seen
 
 
@@ -338,6 +342,9 @@ def walk(arena,actor,brain,goal,now):
              if a.id!=actor.id and a.camp==actor.camp and a.alive
              and not a.info.get('map_object') and not a.info.get('cow_object') and not a.info.get('bomb_cart') and not a.info.get('totem')]
     nearby=[p for p in friends if math.dist(pos,p)<240]
+    def enemy_avoid():
+        return [((r[0]+r[2])/2,(r[1]+r[3])/2) for r in arena.enemy_tank_rects(actor,now,pos,radius=240)]
+    avoid=nearby+enemy_avoid() if now<brain.get('avoid_allies_until',0) else ()
     if (arena.geometry.id==70 and brain.get('path') and 0<brain.get('repath_at',0)<=now
             and now>=brain.get('avoid_allies_until',0) and not brain.get('repair_box')
             and math.dist(pos,brain['path'][0])<=48
@@ -353,11 +360,9 @@ def walk(arena,actor,brain,goal,now):
         from bot_policy import ELITE,policy_for
         if policy_for(arena,actor)==ELITE:
             from bot_pro_navigation import path as pro_path
-            brain['path']=pro_path(arena.navigation,pos,goal,brain.get('repair_threats',()),
-                nearby if now<brain.get('avoid_allies_until',0) else ())
+            brain['path']=pro_path(arena.navigation,pos,goal,brain.get('repair_threats',()),avoid)
         else:
-            brain['path']=arena.navigation.path(pos,goal,brain.get('repair_threats',()),
-                nearby if now<brain.get('avoid_allies_until',0) else ())
+            brain['path']=arena.navigation.path(pos,goal,brain.get('repair_threats',()),avoid)
         if actor.info.get('pve_trap'):brain['path_goal']=tuple(goal)
         if arena.geometry.id in (35,40) and not actor.info.get('npc_template'):
             from map_portals import route as portal_route
@@ -369,13 +374,20 @@ def walk(arena,actor,brain,goal,now):
         bot_obstacles.note_blockage(arena,actor,brain,goal,goal,now)
         return []
     water=arena.water_rects(now)
+    nearby_enemies=arena.enemy_tank_rects(actor,now,pos,radius=144)
+    def step_blockers(dest):
+        if not nearby_enemies:return water
+        from combat_geometry import rect_contact
+        return water+tuple(r for r in nearby_enemies
+                           if rect_contact(pos,pos,(r,),35.999) is None
+                           or math.dist(dest,((r[0]+r[2])/2,(r[1]+r[3])/2))<=math.dist(pos,((r[0]+r[2])/2,(r[1]+r[3])/2)))
     def forward_step(waypoint):
         steps=sorted((math.dist((pos[0]+24*dx,pos[1]+24*dy),waypoint),i,(pos[0]+24*dx,pos[1]+24*dy))
                      for i,(dx,dy) in enumerate(DIRECTIONS[:8]))
         # A dash/CC can leave a bot off the A* grid. Its closest diagonal may
         # clip a corner; all candidates still use native walking collision.
         return next((s for s in steps if s[0]<math.dist(pos,waypoint)
-                     and arena.geometry.walk_end(pos,s[2],water)==s[2]),None)
+                     and arena.geometry.walk_end(pos,s[2],step_blockers(s[2]))==s[2]),None)
     step=forward_step(path[0])
     if step is None and len(path)>1 and math.dist(pos,path[0])<24:
         # An off-grid bot can be just outside the arrival radius with no
@@ -384,6 +396,7 @@ def walk(arena,actor,brain,goal,now):
         step=forward_step(path[1])
         if step is not None:path.pop(0)
     if step is None:
+        if nearby_enemies:brain['avoid_allies_until']=now+1000
         bot_obstacles.note_blockage(arena,actor,brain,path[0],goal,now)
         brain['path']=[];brain['repath_at']=now+500
         return stop(actor,now)
@@ -464,27 +477,11 @@ def _native_perform(arena,actor,slot,dest,target,now):
                 actor.pk_safe_until=0
             return packets
         finally:arena.damage_context=None;arena.current_slot=None
-    ai05=actor.info['tank_id'] in bot_ai05.TANKS
-    ai06=actor.info['tank_id'] in bot_ai06.TANKS
-    ai07=actor.info['tank_id'] in bot_ai07.TANKS
-    ai08=actor.info['tank_id'] in bot_ai08.TANKS
-    ai09=actor.info['tank_id'] in bot_ai09.TANKS
-    ai10=actor.info['tank_id'] in bot_ai10.TANKS
-    ai11=actor.info['tank_id'] in bot_ai11.TANKS
-    ai12=actor.info['tank_id'] in bot_ai12.TANKS
-    ai13=actor.info['tank_id'] in bot_ai13.TANKS
-    ai14=actor.info['tank_id'] in bot_ai14.TANKS
-    ai15=actor.info['tank_id'] in bot_ai15.TANKS
-    ai16=actor.info['tank_id'] in bot_ai16.TANKS
-    ai17=actor.info['tank_id'] in bot_ai17.TANKS
-    if actor.info['tank_id']==10000079 and actor.ice:return []
-    repeat=(actor.info['tank_id'] in bot_ai20.TANKS and bot_ai20.recast(actor,slot,now) or actor.info['tank_id'] in bot_ai19.TANKS and bot_ai19.recast(actor,slot,now) or ai05 and bot_ai05.recast(actor,slot,now) or ai06 and bot_ai06.recast(actor,slot,now) or
-            ai07 and bot_ai07.recast(actor,slot,now) or ai08 and bot_ai08.recast(actor,slot,now) or
-            ai09 and bot_ai09.recast(actor,slot,now) or ai10 and bot_ai10.recast(actor,slot,now) or
-            ai11 and bot_ai11.recast(actor,slot,now) or ai12 and bot_ai12.recast(actor,slot,now) or
-            ai13 and bot_ai13.recast(actor,slot,now) or ai14 and bot_ai14.recast(actor,slot,now) or
-            ai15 and bot_ai15.recast(actor,slot,now) or ai16 and bot_ai16.recast(actor,slot,now) or ai17 and bot_ai17.recast(actor,slot,now))
-    cleanse=actor.info['tank_id']==10000081 and slot==10 or ai11 and bot_ai11.cleanse(actor,slot,now)
+    tank=actor.info['tank_id']
+    if tank==10000079 and actor.ice:return []
+    mod=module_for(tank)
+    repeat=bool(mod is not None and hasattr(mod,'recast') and mod.recast(actor,slot,now))
+    cleanse=tank==10000081 and slot==10 or mod is bot_ai11 and bot_ai11.cleanse(actor,slot,now)
     if not (repeat or cleanse) and actor.skill_sealed(slot,now):return []
     if not repeat and actor.cooldowns.get(slot,now+1)>now:return []
     arena.damage_context=(actor.id,actor.generation,0,arena.new_id(2));arena.current_slot=slot
@@ -498,87 +495,15 @@ def _native_perform(arena,actor,slot,dest,target,now):
 
 def support(arena,actor,allies,seen,now,brain=None,recovering=False):
     if brain is not None:bot_ai02.adjust_goal(actor,brain,seen,now,recovering)
-    if actor.info['tank_id'] in bot_ai20.TANKS:
-        for slot,point,ident in bot_ai20.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai19.TANKS:
-        for slot,point,ident in bot_ai19.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai18.TANKS:
-        for slot,point,ident in bot_ai18.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai17.TANKS:
-        for slot,point,ident in bot_ai17.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai16.TANKS:
-        for slot,point,ident in bot_ai16.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai15.TANKS:
-        for slot,point,ident in bot_ai15.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai14.TANKS:
-        if brain is not None:bot_ai14.adjust_goal(actor,brain,seen,now,recovering)
-        for slot,point,ident in bot_ai14.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai13.TANKS:
-        for slot,point,ident in bot_ai13.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai12.TANKS:
-        for slot,point,ident in bot_ai12.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai11.TANKS:
-        for slot,point,ident in bot_ai11.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai10.TANKS:
-        for slot,point,ident in bot_ai10.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai09.TANKS:
-        for slot,point,ident in bot_ai09.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai08.TANKS:
-        for slot,point,ident in bot_ai08.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai07.TANKS:
-        for slot,point,ident in bot_ai07.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    if actor.info['tank_id'] in bot_ai06.TANKS:
-        if brain is not None:bot_ai06.adjust_goal(actor,brain,seen,now,recovering)
-        for slot,point,ident in bot_ai06.support_choices(actor,allies,seen,now,brain,recovering):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-        return []
-    policy=(bot_ai05 if actor.info['tank_id'] in bot_ai05.TANKS else
-            bot_ai04 if actor.info['tank_id'] in bot_ai04.TANKS else
-            bot_ai02 if actor.info['tank_id'] in bot_ai02.TANKS else bot_ai01)
-    for slot,point,ident in policy.support_choices(actor,allies,seen,now):
+    mod=module_for(actor.info['tank_id'])
+    if mod in _EXTENDED_SUPPORT_MODULES:
+        if brain is not None and hasattr(mod,'adjust_goal'):
+            mod.adjust_goal(actor,brain,seen,now,recovering)
+        choices=mod.support_choices(actor,allies,seen,now,brain,recovering)
+    else:
+        policy=mod if mod in _LEGACY_SUPPORT_MODULES else bot_ai01
+        choices=policy.support_choices(actor,allies,seen,now)
+    for slot,point,ident in choices:
         packets=perform(arena,actor,slot,point,ident,now)
         if packets:return packets
     return []
@@ -591,19 +516,7 @@ def useful_last_stand(actor,allies,tanks,now):
     support=[a for a in allies if a.id!=actor.id and math.dist(pos,a.position_at(now))<=450]
     if not close or not support or len(close)>len(support)+1:return False
     if any(s['hp']<.25 for s in close):return True
-    tank=actor.info['tank_id']
-    slots=(10,1) if tank==10000056 else (10,2) if tank==10000031 else (10,2) if tank==10000065 else bot_ai01.LAST_STAND.get(tank,bot_ai02.LAST_STAND.get(tank,bot_ai03.LAST_STAND.get(tank,bot_ai04.LAST_STAND.get(tank,bot_ai05.LAST_STAND.get(tank,bot_ai06.LAST_STAND.get(tank,bot_ai07.LAST_STAND.get(tank,bot_ai08.LAST_STAND.get(tank,bot_ai09.LAST_STAND.get(tank,())))))))))
-    if tank in bot_ai10.TANKS:slots=bot_ai10.LAST_STAND[tank]
-    if tank in bot_ai11.TANKS:slots=bot_ai11.LAST_STAND[tank]
-    if tank in bot_ai12.TANKS:slots=bot_ai12.LAST_STAND[tank]
-    if tank in bot_ai20.TANKS:slots=bot_ai20.LAST_STAND[tank]
-    if tank in bot_ai19.TANKS:slots=bot_ai19.LAST_STAND[tank]
-    if tank in bot_ai18.TANKS:slots=bot_ai18.LAST_STAND[tank]
-    if tank in bot_ai17.TANKS:slots=bot_ai17.LAST_STAND[tank]
-    if tank in bot_ai16.TANKS:slots=bot_ai16.LAST_STAND[tank]
-    if tank in bot_ai15.TANKS:slots=bot_ai15.LAST_STAND[tank]
-    if tank in bot_ai14.TANKS:slots=bot_ai14.LAST_STAND[tank]
-    elif tank in bot_ai13.TANKS:slots=bot_ai13.LAST_STAND[tank]
+    slots=_LAST_STAND_BY_TANK.get(actor.info['tank_id'],())
     return any(actor.cooldowns.get(s,now+1)<=now and not actor.skill_sealed(s,now) for s in slots)
 
 
@@ -621,7 +534,7 @@ def seek_repair(arena,actor,brain,seen,now):
         for box in arena.actors.values():
             if not box.alive or not getattr(box,'repair_box',False) or box.camp not in (0,actor.camp):continue
             waiting=bool(box.repair) or any(i<actor.id and b.get('repair_box')==box.id
-                and arena.actors[i].alive and arena.actors[i].camp==actor.camp
+                and (other := arena.actors.get(i)) and other.alive and other.camp==actor.camp
                 and b.get('repair_check_at',0)>now for i,b in arena.bot_brains.items())
             left,top,right,bottom=box.map_rect;cx,cy=box.position
             gap=144 if waiting else 36
@@ -693,12 +606,7 @@ def decide(arena,actor,brain,seen,now):
     tanks=[s for s in nearby if not s.get('objective',s['robo'])]
     ratio=float(actor.hp/actor.max_hp)
     commit=ratio<.4 and useful_last_stand(actor,allies,tanks,now)
-    can_recover=actor.info['tank_id'] not in bot_ai10.TANKS or bot_ai10.can_recover(actor)
-    if actor.info['tank_id'] in bot_ai11.TANKS:can_recover=bot_ai11.can_recover(actor)
-    if actor.info['tank_id'] in bot_ai17.TANKS:can_recover=bot_ai17.can_recover(actor,now)
-    if actor.info['tank_id'] in bot_ai16.TANKS:can_recover=bot_ai16.can_recover(actor,now)
-    if actor.info['tank_id'] in bot_ai19.TANKS:can_recover=bot_ai19.can_recover(actor,now)
-    recovering=can_recover and ratio<.4 and not commit and seek_repair(arena,actor,brain,nearby,now)
+    recovering=can_recover(actor,now) and ratio<.4 and not commit and seek_repair(arena,actor,brain,nearby,now)
     objective=None
     if arena.geometry.id in (30,40):
         from death_mode import survival_goal
@@ -743,7 +651,7 @@ def decide(arena,actor,brain,seen,now):
         brain['target']=None
         if not recovering:brain['goal']=objective[1] if objective else advance_goal(arena,actor,brain,now)
         return support(arena,actor,allies,seen if actor.info['tank_id']==10000112 else nearby,now,brain,recovering)
-    focus=[b.get('target') for i,b in arena.bot_brains.items() if i!=actor.id and arena.actors[i].camp==actor.camp]
+    focus=[b.get('target') for i,b in arena.bot_brains.items() if i!=actor.id and (other := arena.actors.get(i)) and other.camp==actor.camp]
     candidates=tanks or nearby
     if arena.geometry.id==70 and not recovering:
         from escort_mode import targets
@@ -765,27 +673,11 @@ def decide(arena,actor,brain,seen,now):
     blocked=arena.geometry.wall_contact(pos,target['pos'],exclude=exclude) is not None
     outnumbered=sum(arena.geometry.id not in (12,14,50,169) or math.dist(pos,s['pos'])<480 for s in tanks)>len(allies)+1
     retreat=recovering or not commit and (ratio<.28 and not bot_ai10.soul(actor) or outnumbered and ratio<.55)
-    tank=actor.info['tank_id'];desired=(bot_ai01.desired_range(actor) if tank in bot_ai01.TANKS
-                                      else bot_ai02.desired_range(actor) if tank in bot_ai02.TANKS
-                                      else bot_ai03.desired_range(actor) if tank in bot_ai03.TANKS
-                                      else bot_ai05.desired_range(actor,now) if tank in bot_ai05.TANKS
-                                      else bot_ai04.desired_range(actor,now) if tank in bot_ai04.TANKS
-                                      else bot_ai06.desired_range(actor,now) if tank in bot_ai06.TANKS
-                                      else bot_ai07.desired_range(actor,now) if tank in bot_ai07.TANKS
-                                      else bot_ai09.desired_range(actor,now) if tank in bot_ai09.TANKS
-                                      else bot_ai08.desired_range(actor,now) if tank in bot_ai08.TANKS
-                                      else bot_ai10.desired_range(actor,now) if tank in bot_ai10.TANKS
-                                      else bot_ai20.desired_range(actor,now) if tank in bot_ai20.TANKS
-                                      else bot_ai19.desired_range(actor,now) if tank in bot_ai19.TANKS
-                                      else bot_ai18.desired_range(actor,now) if tank in bot_ai18.TANKS
-                                      else bot_ai17.desired_range(actor,now) if tank in bot_ai17.TANKS
-                                      else bot_ai16.desired_range(actor,now) if tank in bot_ai16.TANKS
-                                      else bot_ai15.desired_range(actor,now) if tank in bot_ai15.TANKS
-                                      else bot_ai14.desired_range(actor,now) if tank in bot_ai14.TANKS
-                                      else bot_ai13.desired_range(actor,now) if tank in bot_ai13.TANKS
-                                      else bot_ai12.desired_range(actor,now) if tank in bot_ai12.TANKS
-                                      else bot_ai11.desired_range(actor,now) if tank in bot_ai11.TANKS
-                                      else 125 if tank==10000056 else 340 if tank==10000031 else 420)
+    tank=actor.info['tank_id']
+    mod=module_for(tank)
+    desired=(mod.desired_range(actor) if mod in _COMPACT_RANGE_MODULES
+             else mod.desired_range(actor,now) if mod is not None
+             else 125 if tank==10000056 else 340 if tank==10000031 else 420)
     if recovering:
         pass  # Keep the box/queue destination; shooting can still cover retreat.
     elif retreat:
@@ -793,15 +685,9 @@ def decide(arena,actor,brain,seen,now):
                        arena.geometry.spawn(actor.camp,actor.info.get('spawn_index',0),respawn=True))
     elif target.get('barrier') or arena.geometry.id in (12,14,50,169) and target.get('structure'):
         from base_mode import firing_position
-        reach=(bot_ai20.basic_range(actor,now) if tank in bot_ai20.TANKS else
-               bot_ai19.basic_range(actor,now) if tank in bot_ai19.TANKS else
-               bot_ai14.basic_range(actor,now) if tank in bot_ai14.TANKS else
-               bot_ai12.basic_range(actor,now) if tank in bot_ai12.TANKS else
-               bot_ai11.basic_range(actor,now) if tank in bot_ai11.TANKS else
-               bot_ai10.basic_range(actor,now) if tank in bot_ai10.TANKS else
-               bot_ai07.basic_range(actor,now) if tank in bot_ai07.TANKS else
-               bot_ai05.basic_range(actor,now) if tank in bot_ai05.TANKS else
-               bot_ai04.basic_range(actor,now) if tank in bot_ai04.TANKS else None)
+        reach=(mod.basic_range(actor,now)
+               if mod is not None and mod is not bot_ai03 and hasattr(mod,'basic_range')
+               else None)
         brain['goal']=firing_position(arena,actor,arena.actors[target['id']],now,reach=reach) or (objective[1] if objective else target['pos'])
     elif objective and objective[0] in ('bomb_escort','bomb_intercept'):
         brain['goal']=objective[1]
@@ -897,119 +783,25 @@ def _native_combat(arena,actor,brain,seen,nearby,allies,target,dest,retreat,bloc
     if tank in bot_ai12.TANKS and bot_ai12.hold_stealth(actor,retreat,now):return []
     if tank in bot_ai18.TANKS and bot_ai18.hold_fog(actor,retreat,now):return []
     if tank in bot_ai16.TANKS and bot_ai16.hold_flight(actor,retreat,now):return []
-    basic_range=(bot_ai20.basic_range(actor,now) if tank in bot_ai20.TANKS else
-                 bot_ai14.basic_range(actor,now) if tank in bot_ai14.TANKS else
-                 bot_ai12.basic_range(actor,now) if tank in bot_ai12.TANKS else
-                 bot_ai11.basic_range(actor,now) if tank in bot_ai11.TANKS else
-                 bot_ai07.basic_range(actor,now) if tank in bot_ai07.TANKS else
-                 bot_ai05.basic_range(actor,now) if tank in bot_ai05.TANKS else
-                 bot_ai04.basic_range(actor,now) if tank in bot_ai04.TANKS else
-                 bot_ai03.basic_range(actor,now) if tank in bot_ai03.TANKS else int(actor.stats['nFireRange']))
+    basic_range=(mod.basic_range(actor,now)
+                 if mod is not None and mod not in (bot_ai10,bot_ai19) and hasattr(mod,'basic_range')
+                 else int(actor.stats['nFireRange']))
     if target.get('barrier') or arena.geometry.id in (12,14,50,169) and target.get('structure'):
         if distance<=basic_range and arena.geometry.wall_contact(pos,dest,exclude=exclude) is None:
             if tank==10000063 and not actor.has_buff(338302,now) and not retreat:
                 packets=perform(arena,actor,2,pos,actor.id,now)
                 if packets:return packets
-            if tank in bot_ai03.TANKS and not retreat:
-                for slot,point,ident in bot_ai03.structure_choices(actor,dest,now):
-                    packets=perform(arena,actor,slot,point,ident,now)
-                    if packets:return packets
-            if tank in bot_ai15.TANKS and not retreat:
-                for slot,point,ident in bot_ai15.structure_choices(actor,brain,target,nearby,dest,now):
-                    packets=perform(arena,actor,slot,point,ident,now)
-                    if packets:return packets
-            if tank in bot_ai14.TANKS and not retreat:
-                for slot,point,ident in bot_ai14.structure_choices(actor,brain,target,nearby,dest,now):
-                    packets=perform(arena,actor,slot,point,ident,now)
-                    if packets:return packets
-            if tank in bot_ai13.TANKS and not retreat:
-                for slot,point,ident in bot_ai13.structure_choices(actor,brain,target,nearby,dest,now):
-                    packets=perform(arena,actor,slot,point,ident,now)
-                    if packets:return packets
-            if tank in bot_ai12.TANKS and not retreat:
-                for slot,point,ident in bot_ai12.structure_choices(actor,brain,target,nearby,dest,now):
-                    packets=perform(arena,actor,slot,point,ident,now)
-                    if packets:return packets
-            if tank in bot_ai11.TANKS and not retreat:
-                for slot,point,ident in bot_ai11.structure_choices(actor,brain,target,nearby,dest,now):
+            if not retreat:
+                struct_choices=(bot_ai03.structure_choices(actor,dest,now) if mod is bot_ai03
+                                else mod.structure_choices(actor,brain,target,nearby,dest,now)
+                                if mod in _EXTENDED_STRUCTURE_MODULES else ())
+                for slot,point,ident in struct_choices:
                     packets=perform(arena,actor,slot,point,ident,now)
                     if packets:return packets
             return perform(arena,actor,0,dest,target['id'],now)
         return []
-    if tank in bot_ai20.TANKS:
-        for slot,point,ident in bot_ai20.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai01.TANKS:
-        for slot,point,ident in bot_ai01.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai02.TANKS:
-        for slot,point,ident in bot_ai02.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai03.TANKS:
-        for slot,point,ident in bot_ai03.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai04.TANKS:
-        for slot,point,ident in bot_ai04.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai05.TANKS:
-        for slot,point,ident in bot_ai05.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai06.TANKS:
-        for slot,point,ident in bot_ai06.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai07.TANKS:
-        for slot,point,ident in bot_ai07.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai09.TANKS:
-        for slot,point,ident in bot_ai09.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai08.TANKS:
-        for slot,point,ident in bot_ai08.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai10.TANKS:
-        for slot,point,ident in bot_ai10.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai18.TANKS:
-        for slot,point,ident in bot_ai18.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai17.TANKS:
-        for slot,point,ident in bot_ai17.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai16.TANKS:
-        for slot,point,ident in bot_ai16.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai15.TANKS:
-        for slot,point,ident in bot_ai15.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai14.TANKS:
-        for slot,point,ident in bot_ai14.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai13.TANKS:
-        for slot,point,ident in bot_ai13.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai12.TANKS:
-        for slot,point,ident in bot_ai12.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
-            packets=perform(arena,actor,slot,point,ident,now)
-            if packets:return packets
-    if tank in bot_ai11.TANKS:
-        for slot,point,ident in bot_ai11.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
+    if mod is not None and hasattr(mod,'choices'):
+        for slot,point,ident in mod.choices(actor,brain,target,nearby,dest,retreat,blocked,now):
             packets=perform(arena,actor,slot,point,ident,now)
             if packets:return packets
     choices=[]

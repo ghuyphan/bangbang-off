@@ -1,6 +1,7 @@
 import {PVE_MAP_IDS,isPveMap} from './m81314_protocol.js';
 import {bindSupplementCannon} from './m81314_file_timeline.js';
 import {isWorldBossScene} from './m81330_protocol.js';
+import {fetchVerifiedJson} from './m8_ui_helpers.js';
 
 // Share the immutable source document between outside menus and the battle
 // loader. Hydration resolves this sidecar's own atlas namespace before merge.
@@ -8,16 +9,11 @@ const loads=new Map();
 export async function loadPveCatalog(url='./m81314_assets_catalog.json',{refresh=false}={}){
   if(refresh)loads.delete(url);
   if(!loads.has(url))loads.set(url,(async()=>{
-    const response=await fetch(url,{cache:'no-store'});
-    if(!response.ok)throw new Error('Không tải được tài nguyên trợ thủ và PvE.');
-    const bytes=await response.arrayBuffer();
-    const sha256=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))]
-      .map(value=>value.toString(16).padStart(2,'0')).join('');
-    const catalog=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
+    const {catalog,sha256,bytes}=await fetchVerifiedJson(url,'Không tải được tài nguyên trợ thủ và PvE.');
     if(catalog.schemaVersion!==1||!catalog.source?.m6CatalogSha256)
       throw new Error('Danh mục trợ thủ và PvE không đúng phiên bản.');
     catalog.rawTemplates=catalog.rawTemplates||catalog.templates;
-    return {catalog,sha256,bytes:bytes.byteLength};
+    return {catalog,sha256,bytes};
   })().catch(error=>{loads.delete(url);throw error;}));
   return loads.get(url);
 }

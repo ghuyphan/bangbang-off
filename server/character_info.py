@@ -37,6 +37,23 @@ def _characters(db):
         'ON c.profile_id=w.profile_id ORDER BY w.profile_id')]
 
 
+def _find_one(db, identity):
+    if not identity or len(identity) > 200:
+        return None
+    if identity.isdigit():
+        row = db.execute(
+            'SELECT w.profile_id,w.state FROM characters c JOIN worlds w '
+            'ON c.profile_id=w.profile_id WHERE w.profile_id=?', (int(identity),)).fetchone()
+        if row:
+            return int(row[0]), json.loads(row[1])
+    row = db.execute(
+        "SELECT w.profile_id,w.state FROM characters c JOIN worlds w "
+        "ON c.profile_id=w.profile_id WHERE json_extract(w.state, '$.char_uuid')=?", (identity,)).fetchone()
+    if row:
+        return int(row[0]), json.loads(row[1])
+    return None
+
+
 def _find(records, identity):
     if not identity or len(identity) > 200:
         return None
@@ -126,7 +143,7 @@ def _public_companion(db, ident):
 
 
 def inspect(db, records, identity):
-    found = _find(records, identity)
+    found = _find_one(db, identity) if records is None else _find(records, identity)
     if found is None:
         # CharTool checks char_tank before constructing PlayerInfoView.
         return dict(state=0, char_tank=[], msg='Không tìm thấy nhân vật.')
@@ -164,14 +181,28 @@ def _ranked(db, records):
     return result
 
 
+def _rank_maintenance_due(db):
+    for table in ('rank_seasons', 'rank_entries', 'match_history', 'battle_char_stats', 'battle_tank_stats'):
+        if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone():
+            return True
+    season = ranked_matches.season_number()
+    bounds = db.execute('SELECT MIN(id),MAX(id),COUNT(*) FROM rank_seasons').fetchone()
+    if not bounds or bounds[1] is None:
+        return True
+    current = max(int(bounds[1]), season)
+    expected_min = max(1, current - 1)
+    return int(bounds[1]) < season or int(bounds[0]) < expected_min or int(bounds[2]) < (current - expected_min + 1)
+
+
 def http(name, qs):
     if name not in HTTP_ROUTES:
         return None
     if name == 'crankstatus.php' or name == 'cchallengerankquery.php' or (
             name in ('crankquery.php', 'ccharrankquery.php') and qs.get('rt', [''])[0] == '4'):
         return _rank_http(name, qs)
+    if name == 'ctoppowertanklist.php':
+        return b'[]', 'application/json; charset=utf-8'
     empty = (dict(state=0, char_tank=[], msg='Không tìm thấy nhân vật.') if name == 'observechar.php'
-             else [] if name == 'ctoppowertanklist.php'
              else dict(today_rank=0, yestoday_rank=0, total_rank=0) if name == 'ccharrankquery.php'
              else dict(amount=0, datas=[]) if name == 'cchallengerankquery.php'
              else dict(amount=0, rank=[]))
@@ -183,61 +214,76 @@ def http(name, qs):
             military_rank.build(0)
         with storage.connection() as db:
             db.execute('BEGIN')  # One consistent read of identity, appearance and garage.
-            records = _characters(db)
-            if name == 'observechar.php':
-                result = inspect(db, records, qs.get('charoid', [''])[0])
-            elif name in ('crankquery.php', 'ccharrankquery.php') and int(qs.get('rt', ['0'])[0]) == 11:
-                ranked = _ranked(db, records)
-                if name == 'ccharrankquery.php':
-                    found = _find(records, qs.get('char', [''])[0])
-                    rank = next((i for i, row in enumerate(ranked, 1)
-                                 if found and row[2] == found[0]), 0)
-                    result = dict(today_rank=rank, yestoday_rank=0, total_rank=rank)
-                elif qs.get('rd', ['0'])[0] == '0':
-                    page = max(0, int(qs.get('p', ['0'])[0]))
-                    size = max(1, min(100, int(qs.get('limit', ['10'])[0])))
-                    rows = []
-                    for i, (stars, _, ident, state, tank) in enumerate(ranked, 1):
-                        if not page * size <= i - 1 < (page + 1) * size:
-                            continue
-                        row = _public(db, ident, state)
-                        row.update(char_rank=i, char_point=stars, all_point=stars,
-                            military_name=military_rank.build(stars)['name'],
-                            char_teamname=row['team_name'], char_maintank=tank['tank_id'],
-                            char_maintank_l=tank['level'], char_maintank_e=tank.get('external_id', 0),
-                            halo_id=tank.get('halo_id', 0))
-                        rows.append(row)
-                    result = dict(amount=len(ranked), rank=rows)
+            try:
+                if name == 'observechar.php':
+                    result = inspect(db, None, qs.get('charoid', [''])[0])
+                elif name in ('crankquery.php', 'ccharrankquery.php') and int(qs.get('rt', ['0'])[0]) == 11:
+                    records = _characters(db)
+                    ranked = _ranked(db, records)
+                    if name == 'ccharrankquery.php':
+                        found = _find(records, qs.get('char', [''])[0])
+                        rank = next((i for i, row in enumerate(ranked, 1)
+                                     if found and row[2] == found[0]), 0)
+                        result = dict(today_rank=rank, yestoday_rank=0, total_rank=rank)
+                    elif qs.get('rd', ['0'])[0] == '0':
+                        page = max(0, int(qs.get('p', ['0'])[0]))
+                        size = max(1, min(100, int(qs.get('limit', ['10'])[0])))
+                        rows = []
+                        for i, (stars, _, ident, state, tank) in enumerate(ranked, 1):
+                            if not page * size <= i - 1 < (page + 1) * size:
+                                continue
+                            row = _public(db, ident, state)
+                            row.update(char_rank=i, char_point=stars, all_point=stars,
+                                military_name=military_rank.build(stars)['name'],
+                                char_teamname=row['team_name'], char_maintank=tank['tank_id'],
+                                char_maintank_l=tank['level'], char_maintank_e=tank.get('external_id', 0),
+                                halo_id=tank.get('halo_id', 0))
+                            rows.append(row)
+                        result = dict(amount=len(ranked), rank=rows)
+            finally:
+                if db.in_transaction:
+                    db.rollback()
     except (ValueError, TypeError, IndexError):
         result = empty
     return json.dumps(result, ensure_ascii=False, separators=(',', ':')).encode('utf8'), 'application/json; charset=utf-8'
 
 
 def _rank_http(name, qs):
-    """Public results only. Maintenance owns a short transaction, never combat."""
+    """Public results only. Maintenance owns a short transaction only when needed."""
     result = dict(amount=0, rank=[])
     try:
-        with storage.connection(write=True) as db:
-            current = ranked_matches.maintain(db)
-            records = _characters(db)
-            found = _find(records, qs.get('char', [''])[0])
-            owner = found[0] if found else None
-            requested = qs.get('season', ['current'])[0]
-            season = current - 1 if requested == 'previous' else current
-            rows = ranked_matches.rank_list(db, season, owner=owner)
-            if name == 'crankstatus.php':
-                result = ranked_matches.status(db, owner) if owner else dict(error='Không tìm thấy nhân vật.')
-            elif name == 'ccharrankquery.php':
-                own = next((r for r in rows if not r['is_bot'] and r['char_oid'] == owner), None)
-                result = dict(total_rank=own['char_rank'] if own else 0, today_rank=0, yestoday_rank=0)
-            elif name == 'cchallengerankquery.php':
-                winners = [r for r in rows if r['challenger']]
-                result = dict(amount=len(winners), datas=winners)
-            else:
-                page = max(0, int(qs.get('p', ['0'])[0]))
-                size = max(1, min(100, int(qs.get('limit', ['10'])[0])))
-                result = dict(amount=len(rows), rank=rows[page*size:(page+1)*size],
-                              season_id=season, current_season=current)
+        with storage.connection() as db:
+            need_write = _rank_maintenance_due(db)
+        if need_write:
+            with storage.connection(write=True) as wdb:
+                ranked_matches.maintain(wdb)
+        with storage.connection() as db:
+            db.execute('BEGIN')
+            try:
+                current = max(int(db.execute('SELECT COALESCE(MAX(id),1) FROM rank_seasons').fetchone()[0]),
+                              ranked_matches.season_number())
+                target_char = qs.get('char', [''])[0]
+                found = _find_one(db, target_char) if target_char else None
+                owner = found[0] if found else None
+                requested = qs.get('season', ['current'])[0]
+                season = current - 1 if requested == 'previous' else current
+                rows = ranked_matches.rank_list(db, season, owner=owner)
+                if name == 'crankstatus.php':
+                    result = ranked_matches.status(db, owner) if owner else dict(error='Không tìm thấy nhân vật.')
+                elif name == 'ccharrankquery.php':
+                    own = next((r for r in rows if not r['is_bot'] and r['char_oid'] == owner), None)
+                    result = dict(total_rank=own['char_rank'] if own else 0, today_rank=0, yestoday_rank=0)
+                elif name == 'cchallengerankquery.php':
+                    winners = [r for r in rows if r['challenger']]
+                    result = dict(amount=len(winners), datas=winners)
+                else:
+                    page = max(0, int(qs.get('p', ['0'])[0]))
+                    size = max(1, min(100, int(qs.get('limit', ['10'])[0])))
+                    result = dict(amount=len(rows), rank=rows[page*size:(page+1)*size],
+                                  season_id=season, current_season=current)
+            finally:
+                if db.in_transaction:
+                    db.rollback()
     except (ValueError, TypeError, IndexError):
         result = dict(amount=0, rank=[])
     return json.dumps(result, ensure_ascii=False, separators=(',', ':')).encode('utf8'), 'application/json; charset=utf-8'

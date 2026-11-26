@@ -208,16 +208,17 @@ class MapObject(PassiveMapObjectMixin, TankActions):
 
     def fire_turret(self,now):
         if not self.alive or now<self.turret_next_shot_at:return []
+        scouts=None
+        if self.arena.geometry.id==1:
+            from maya_map import visible_from
+            scouts=[self]+[a for a in self.arena.actors.values() if a.alive and a.camp==self.camp and not a.info.get('npc_template')]
         candidates=[]
         for target in self.arena.actors.values():
             if (target.camp not in (1,2) or target.camp==self.camp or target.info.get('map_object')
                     or not target.alive or target.is_untargetable()):continue
             types=target.buff_types(now)
             if 26 in types and 32 not in types:continue
-            if self.arena.geometry.id==1:
-                from maya_map import visible_from
-                scouts=[self]+[a for a in self.arena.actors.values() if a.alive and a.camp==self.camp and not a.info.get('npc_template')]
-                if not any(visible_from(self.arena,a,target,now) for a in scouts):continue
+            if scouts is not None and not any(visible_from(self.arena,a,target,now) for a in scouts):continue
             dest=target.position_at(now);distance=math.dist(self.position,dest)
             if not 0<distance<=int(self.stats['nFireRange']):continue
             if rect_contact(self.position,dest,self.arena.water_rects(now)) is not None:continue

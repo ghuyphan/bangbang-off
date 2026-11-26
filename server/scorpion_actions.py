@@ -24,7 +24,7 @@ class ScorpionActions(MarksCleanupMixin, TankActions):
         skill = 343211 if slot==0 and self.has_buff(343201,self.clock()) else SLOTS[slot]
         body = props(skill,slot,self.space_count if slot==2 else -1,
                      self.cooldowns[slot],self.space_next_charge if slot==2 else 0)
-        return (1579,body) if changed else (1572,body+struct.pack('<I',self.id))
+        return (1579,body) if changed and self.id==1 else (1572,body+struct.pack('<I',self.id))
 
     def _basic_slot(self):
         return ([self._cooldown(0,True)] if self.id==1 else [])+[self._cooldown(0)]

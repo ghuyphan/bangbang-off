@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import struct
 import time
 import uuid
@@ -190,7 +191,7 @@ def apply(state, mid, payload, db):
         db.commit()
         state.update(avatar=profile['avatar'], decorate_id=profile['decorate'])
         return packets, None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         message = str(exc) if isinstance(exc, ValueError) and not isinstance(exc, UnicodeError) else 'Yêu cầu shop không hợp lệ.'
         return [tip(mid, message)], message

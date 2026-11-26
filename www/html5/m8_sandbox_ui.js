@@ -39,20 +39,33 @@ function segmentedButton(ui, label, selected, shape, handler, {width = 96, heigh
 export async function openSandboxModal(ui) {
   if (ui.sandboxShade || ui.state?.phase !== 'ready' || !['lobby', 'room'].includes(ui.state?.play?.phase)) return;
   const focusBefore = document.activeElement;
+  const scope = {generation: ui.client.generation, accountId: ui.state.accountId};
   const surface = createSettingsSurface({width: 726, height: 520});
   ui.sandboxShade = surface.root;
+  ui.sandboxScope = scope;
+
+  const isCurrent = () => (
+    ui.sandboxShade === surface.root
+    && ui.client.generation === scope.generation
+    && ui.state?.accountId === scope.accountId
+    && ui.state?.phase === 'ready'
+    && ['lobby', 'room'].includes(ui.state?.play?.phase)
+  );
 
   const disposePortraits = root => {
     for (const p of root.querySelectorAll('.m8-portrait')) p.dispose?.();
   };
 
-  const close = () => {
+  const close = (restoreFocus = true) => {
     if (!ui.sandboxShade) return;
     disposePortraits(surface.stage);
     surface.dispose();
     ui.sandboxShade = null;
-    if (focusBefore?.isConnected) focusBefore.focus({preventScroll: true});
+    ui.sandboxScope = null;
+    ui.sandboxClose = null;
+    if (restoreFocus && focusBefore?.isConnected) focusBefore.focus({preventScroll: true});
   };
+  ui.sandboxClose = close;
 
   const panel = createNativePanel({
     assets: flashAssets(ui),
@@ -124,16 +137,19 @@ export async function openSandboxModal(ui) {
   };
 
   const withAction = async (label, fn) => {
-    if (busy) return;
+    if (busy || !isCurrent()) return;
     busy = true;
+    body.inert = true;
     setStatus(label);
     try {
       await fn();
+      if (!isCurrent()) return;
       await loadInfo();
     } catch (error) {
-      setStatus(error.message || 'Thao tác thất bại.', true);
+      if (isCurrent()) setStatus(error.message || 'Thao tác thất bại.', true);
     } finally {
       busy = false;
+      body.inert = false;
     }
   };
 
@@ -368,15 +384,16 @@ export async function openSandboxModal(ui) {
   };
 
   async function loadInfo() {
-    data = await ui.client.sandboxInfo();
-    if (!ui.sandboxShade) return;
+    const next = await ui.client.sandboxInfo();
+    if (!isCurrent()) return;
+    data = next;
     renderBody();
   }
 
   try {
     await loadInfo();
-    setStatus('');
+    if (isCurrent()) setStatus('');
   } catch (error) {
-    setStatus(error.message || 'Không tải được Sandbox.', true);
+    if (isCurrent()) setStatus(error.message || 'Không tải được Sandbox.', true);
   }
 }

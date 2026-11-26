@@ -5,68 +5,96 @@
   <meta http-equiv="Cache-Control" content="no-store">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Bang Bang Private</title>
+  <link rel="stylesheet" href="/flash-ui.css?v=flash-native-2">
   <style>
-    :root{color-scheme:dark;font-family:"Segoe UI",Arial,sans-serif}
-    *{box-sizing:border-box}
-    html,body{width:100%;height:100%;min-width:320px;min-height:480px;margin:0;overflow:hidden}
-    body{background:#d7ae65 url('assets/f_000022.jpg') center top / cover no-repeat;color:#f8fbff}
-    button,input{font:inherit}
-    .entry-shell{position:relative;width:100%;height:100%;min-height:480px}
-    .card{position:absolute;left:50%;bottom:clamp(10px,3vh,32px);width:min(356px,calc(100% - 32px));padding:19px 22px 17px;transform:translateX(-50%);border:1px solid rgba(255,222,142,.72);border-radius:20px;background:linear-gradient(145deg,rgba(7,34,42,.9),rgba(15,48,53,.8));box-shadow:0 22px 55px rgba(25,19,5,.38),inset 0 1px rgba(255,255,255,.14);backdrop-filter:blur(12px)}
+    html,body{width:100%;height:100%;min-width:320px;min-height:500px;margin:0;overflow:hidden}
+    .entry-shell{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;overflow-y:auto}
+    .entry-logo{width:min(310px,78vw)}
+    .entry-card{width:min(390px,100%)}
     .screen[hidden]{display:none!important}
-    .eyebrow{margin:0 0 4px;color:#ffd77a;font-size:11px;font-weight:800;letter-spacing:.2em;text-align:center}
-    h1{margin:0;color:#fff;font-size:25px;line-height:1.15;text-align:center;text-shadow:0 2px 16px rgba(0,0,0,.45)}
-    .hint{margin:6px 0 12px;color:#d8e9e7;font-size:12px;line-height:1.35;text-align:center}
-    label{display:block;margin:8px 0 5px;color:#f7e9c5;font-size:12px;font-weight:700}
-    input[type="text"],input[type="password"]{width:100%;height:40px;padding:0 12px;border:1px solid rgba(255,219,139,.42);border-radius:10px;outline:0;background:rgba(2,22,29,.72);color:#fff;font-size:14px}
-    :is(button,input,a):is(:focus,:focus-visible){outline:none}
-    *{-webkit-tap-highlight-color:transparent}
+    .field-label{display:block;margin:10px 0 5px;color:#fff4c2;font:700 12.5px Tahoma,Arial,sans-serif;text-shadow:var(--bb-shadow)}
+    .field-label:first-child{margin-top:0}
+    .entry-card input[type="text"],.entry-card input[type="password"]{width:100%;height:38px}
     .password-row{position:relative}
-    .password-row input{padding-right:62px}
-    .toggle-password{position:absolute;top:5px;right:5px;width:52px;height:30px;border:0;border-radius:8px;background:rgba(255,255,255,.1);color:#ffe4a5;font-size:11px;font-weight:800;cursor:pointer}
-    .form-meta{display:flex;align-items:center;justify-content:space-between;margin:9px 1px 0;color:#c9dcda;font-size:11px}
-    .remember{display:flex;align-items:center;gap:6px;margin:0;cursor:pointer}
-    .primary,.danger{width:100%;border-radius:11px;font-weight:900;cursor:pointer}
-    .primary{height:42px;margin-top:11px;border:1px solid #ffe09a;background:linear-gradient(180deg,#ffc752,#df8720);color:#17353b;font-size:14px}
-    .danger{height:36px;margin-top:8px;border:1px solid rgba(255,219,139,.75);background:linear-gradient(180deg,#b9443b,#812824);color:#fff9e9;font-size:12px}
-    button:disabled{cursor:wait;opacity:.65}
-    .message{min-height:16px;margin:7px 0 0;color:#ffd0c9;font-size:11px;text-align:center}
-    .message.success{color:#c8ffd7}
-    .welcome-card{padding-top:24px;padding-bottom:22px;text-align:center}
+    .password-row input{padding-right:64px}
+    .toggle-password{position:absolute;top:4px;right:4px;min-height:30px;height:30px;padding:0 10px;font-size:11.5px}
+    .form-meta{display:flex;align-items:center;justify-content:space-between;margin-top:11px;color:var(--bb-ice);font-size:12px}
+    .remember{display:inline-flex;align-items:center;gap:7px;cursor:pointer;font-weight:700}
+    .primary-actions{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:16px}
+    .sub-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .sub-links .flash-btn{min-height:30px;padding:4px 12px;font-size:12px}
+    .message{min-height:16px;margin:10px 0 0;color:#ffd2c4;font:700 12px/1.35 Tahoma,Arial,sans-serif;text-align:center}
+    .message.success{color:#bfffd3}
+    .welcome-card{text-align:center}
+    .welcome-account{display:inline-block;margin:4px auto 6px;padding:6px 16px;border-radius:6px;background:#042944;border:1.5px solid #7cd7fb;color:#ffe66d;font:700 15px Tahoma,Arial,sans-serif}
     #gameShell{position:relative;display:none;width:100%;height:100%;background:#000}
-    #game{width:100%;height:calc(100% - 28px);background:#000}
-    .game-toolbar{height:28px;padding:4px 12px;background:#15292e;font-size:12px;text-align:right}
-    .game-toolbar a,.bot-settings-link{color:#ffe09a}
+    #game{width:100%;height:calc(100% - 36px);background:#000}
+    .game-toolbar{height:36px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(180deg,#0f6ea3 0%,#05375c 100%);border-bottom:2px solid #85dcff}
+    .toolbar-brand{display:flex;align-items:center;gap:8px;color:#fff4c2;font:700 12.5px Tahoma,Arial,sans-serif}
+    .toolbar-brand img{height:21px;width:auto}
+    .toolbar-links{display:flex;align-items:center;gap:8px}
+    .toolbar-links .flash-btn{min-height:26px;height:26px;padding:2px 10px;font-size:11.5px}
   </style>
 </head>
-<body>
+<body class="flash-page">
   <main id="entry" class="entry-shell">
-    <form class="card screen" id="loginForm" novalidate>
-      <p class="eyebrow">BANG BANG PRIVATE</p>
-      <h1>Chào mừng trở lại</h1>
-      <p class="hint">37abc mở http://127.0.0.1:18083/ — server riêng trên máy này, không trỏ netzone.</p>
-      <label for="username">Tài khoản</label>
-      <input id="username" name="username" type="text" autocomplete="username" minlength="3" maxlength="32" required autofocus>
-      <label for="password">Mật khẩu</label>
-      <div class="password-row">
-        <input id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
-        <button id="togglePassword" class="toggle-password" type="button">Hiện</button>
+    <img class="flash-logo entry-logo" src="/rez/zh_CN/gui_summer/controls/login/90fc008dc8684aadd6f2736ca5d650e8.png" alt="BANG BANG">
+
+    <form class="flash-window entry-card screen" id="loginForm" novalidate>
+      <h1 class="flash-window-head">ĐĂNG NHẬP · FLASH</h1>
+      <div class="flash-window-body">
+        <label class="field-label" for="username">Tài khoản</label>
+        <input class="flash-input" id="username" name="username" type="text" autocomplete="username" minlength="3" maxlength="32" required autofocus placeholder="Nhập tài khoản">
+        <label class="field-label" for="password">Mật khẩu</label>
+        <div class="password-row">
+          <input class="flash-input" id="password" name="password" type="password" autocomplete="current-password" minlength="6" required placeholder="Nhập mật khẩu">
+          <button id="togglePassword" class="flash-btn is-quiet toggle-password" type="button">Hiện</button>
+        </div>
+        <div class="form-meta">
+          <label class="remember" for="rememberMe"><input class="flash-checkbox" id="rememberMe" type="checkbox"> Ghi nhớ tài khoản</label>
+          <span>Server local</span>
+        </div>
+        <div class="primary-actions">
+          <button id="submitButton" class="flash-sprite-btn" type="submit">Đăng nhập</button>
+        </div>
+        <div class="sub-links">
+          <a class="flash-btn is-quiet" href="/html5/">Mở bản HTML5 ↗</a>
+        </div>
+        <p id="loginError" class="message" role="alert"></p>
       </div>
-      <div class="form-meta"><label class="remember" for="rememberMe"><input id="rememberMe" type="checkbox"> Ghi nhớ tài khoản</label><span>Kết nối máy chủ local</span></div>
-      <button id="submitButton" class="primary" type="submit">Đăng nhập</button>
-      <p id="loginError" class="message" role="alert"></p>
     </form>
-    <section class="card screen welcome-card" id="welcomeScreen" hidden>
-      <p class="eyebrow">ĐĂNG NHẬP THÀNH CÔNG</p>
-      <h1>Chào mừng BBer</h1>
-      <p id="welcomeAccount" class="hint"></p>
-      <button id="enterGameButton" class="primary" type="button">Vào game</button>
-      <p><a class="bot-settings-link" href="/bots.html" target="_blank" rel="noopener">Thiết lập trận bot</a></p>
-      <button id="logoutButton" class="danger" type="button">Đăng xuất</button>
-      <p id="welcomeError" class="message"></p>
+
+    <section class="flash-window entry-card screen welcome-card" id="welcomeScreen" hidden>
+      <h1 class="flash-window-head">CHÀO MỪNG BBER</h1>
+      <div class="flash-window-body">
+        <p id="welcomeAccount" class="welcome-account"></p>
+        <div class="primary-actions">
+          <button id="enterGameButton" class="flash-sprite-btn" type="button">Vào game</button>
+          <button id="logoutButton" class="flash-sprite-btn is-red" type="button">Đăng xuất</button>
+        </div>
+        <div class="sub-links">
+          <a class="flash-btn is-quiet" href="/bots.html" target="_blank" rel="noopener">Thiết lập bot ↗</a>
+          <a class="flash-btn is-green" href="/html5/">Bản HTML5 ↗</a>
+        </div>
+        <p id="welcomeError" class="message"></p>
+      </div>
     </section>
   </main>
-  <section id="gameShell"><nav class="game-toolbar"><a href="/bots.html" target="_blank" rel="noopener">Thiết lập trận bot ↗</a></nav><div id="game"></div></section>
+
+  <section id="gameShell">
+    <nav class="game-toolbar">
+      <div class="toolbar-brand">
+        <img src="/rez/zh_CN/gui_summer/controls/login/90fc008dc8684aadd6f2736ca5d650e8.png" alt="">
+        <span>Bang Bang · Flash</span>
+      </div>
+      <div class="toolbar-links">
+        <a class="flash-btn is-quiet" href="/bots.html" target="_blank" rel="noopener">Thiết lập bot ↗</a>
+        <a class="flash-btn is-orange" href="/html5/">Bản HTML5 ↗</a>
+      </div>
+    </nav>
+    <div id="game"></div>
+  </section>
+
   <script>
     (function () {
       var loginForm = document.getElementById('loginForm');
@@ -81,7 +109,6 @@
       var gameShell = document.getElementById('gameShell');
       var entry = document.getElementById('entry');
       var pending = null;
-      // Allow loading directly from 127.0.0.1, localhost, or private host
 
       function trim(v) { return String(v || '').replace(/^\s+|\s+$/g, ''); }
       function enc(v) { return encodeURIComponent(String(v)); }
@@ -113,15 +140,30 @@
           + '&offlineBuild=PVP-SHOP-FRAGMENTS-R197-20260909'
           + '&cacheBust=' + Date.now();
         var movie = 'TankLoaderR150.swf?cacheBust=' + Date.now();
-        document.getElementById('game').innerHTML =
-          '<object id="bangbang" type="application/x-shockwave-flash" data="' + movie + '" width="100%" height="100%">'
-          + '<param name="movie" value="' + movie + '">'
-          + '<param name="FlashVars" value="' + vars + '">'
-          + '<param name="allowScriptAccess" value="sameDomain">'
-          + '<param name="allowFullScreen" value="true">'
-          + '<param name="wmode" value="direct">'
-          + '<embed src="' + movie + '" FlashVars="' + vars + '" width="100%" height="100%" type="application/x-shockwave-flash" allowFullScreen="true" wmode="direct">'
-          + '</object>';
+        var gameEl = document.getElementById('game');
+        var obj = document.createElement('object');
+        obj.id = 'bangbang';
+        obj.type = 'application/x-shockwave-flash';
+        obj.data = movie;
+        obj.width = '100%';
+        obj.height = '100%';
+        [['movie', movie], ['FlashVars', vars], ['allowScriptAccess', 'sameDomain'],
+          ['allowFullScreen', 'true'], ['wmode', 'direct']].forEach(function (pair) {
+          var param = document.createElement('param');
+          param.name = pair[0];
+          param.value = pair[1];
+          obj.appendChild(param);
+        });
+        var embed = document.createElement('embed');
+        embed.src = movie;
+        embed.setAttribute('FlashVars', vars);
+        embed.width = '100%';
+        embed.height = '100%';
+        embed.type = 'application/x-shockwave-flash';
+        embed.setAttribute('allowFullScreen', 'true');
+        embed.setAttribute('wmode', 'direct');
+        obj.appendChild(embed);
+        gameEl.replaceChildren(obj);
         pending = null;
         entry.style.display = 'none';
         gameShell.style.display = 'block';
@@ -157,7 +199,7 @@
         post('/api/logout', {}).catch(function () {});
         document.getElementById('game').innerHTML = '';
         gameShell.style.display = 'none';
-        entry.style.display = 'block';
+        entry.style.display = 'flex';
         show(loginForm);
       };
       document.getElementById('enterGameButton').onclick = function () {

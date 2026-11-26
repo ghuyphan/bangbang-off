@@ -3,7 +3,8 @@ import {M4Connection} from './m4.js';
 import {createMetaState,applyMetaPacket,snapshotMetaState} from './m8_meta_state.js';
 import {createCrystalState,applyCrystalPacket,snapshotCrystalState} from './m8_crystal_state.js';
 import {createAccountState,applyAccountPacket} from './m8_account_state.js';
-import {createFlowPresentation,reduceFlowPacket,beginLocalLoad,updateLocalLoad} from './m8_flow_state.js';
+import {createFlowPresentation,reduceFlowPacket,beginLocalLoad,updateLocalLoad,localLoadFraction} from './m8_flow_state.js';
+import {encodeLoadProgress} from './scene_protocol.js';
 import {encodePrimaryTank,encodeStrengthenTank,encodeAdvanceTank,encodeEquipSkin,encodeEquipHalo,encodeRenameCharacter,
   encodeUseCosmetic,encodePlayerSettingFlags,encodePlayerOptions} from './m8_meta_protocol.js';
 import {encodePurchase,encodeGuildAction} from './m8_account_protocol.js';
@@ -35,12 +36,28 @@ export class M8Connection extends M4Connection {
       const generation=this.generation;
       const begun=beginLocalLoad(this.state.flow,{generation:this.generation,
         sceneId:scene.sceneId,mapId:scene.mapId});
-      this.state.flow=begun.state;this.update();
+      this.state.flow=begun.state;
+      let lastSentPct=-1,lastSentAt=0;
+      const reportServer=(pct,force=false)=>{
+        if(generation!==this.generation||this.state.phase!=='ready'||!this.gate||scene!==this.state.play.scene)return;
+        if(pct===lastSentPct)return;
+        const now=performance.now();
+        if(!force&&pct>0&&pct<99&&pct-lastSentPct<4&&now-lastSentAt<150)return;
+        lastSentPct=pct;lastSentAt=now;
+        this.gate.send(encodeLoadProgress(scene.sceneId,accountId,Math.max(0,this.state.latencyMs||0),pct));
+      };
+      this.update();
+      reportServer(0,true);
       const token=begun.token;
       const progress=values=>{
         if(generation!==this.generation||scene!==this.state.play.scene)return;
         const next=updateLocalLoad(this.state.flow,token,values);
-        if(next!==this.state.flow){this.state.flow=next;this.update();}
+        if(next!==this.state.flow){
+          this.state.flow=next;
+          const pct=Math.min(99,Math.round(localLoadFraction(next.localLoad)*100));
+          reportServer(pct,values?.stage==='interface'||values?.stage==='waiting-server');
+          this.update();
+        }
       };
       try {
         const prepared=await prepareScene(scene,accountId,progress);
@@ -112,16 +129,27 @@ export class M8Connection extends M4Connection {
   }
   async sandboxInfo() {
     const res=await fetch('/api/sandbox/info',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:'{}'});
-    const data=await res.json();
-    if(!res.ok||!data.success)throw new Error(data.message||'Không tải được bảng quà Sandbox.');
+    const text=await res.text();
+    let data=null;
+    try{data=text?JSON.parse(text):{};}catch{data=null;}
+    if(!res.ok||!data?.success)throw new Error(data?.message||`Không tải được bảng quà Sandbox (${res.status}).`);
     return data;
   }
   async grantSandbox(payload) {
+    const generation=this.generation;
     const res=await fetch('/api/sandbox/grant',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify(payload)});
-    const data=await res.json();
-    if(!res.ok||!data.success)throw new Error(data.message||'Không gửi được quà Sandbox.');
-    for(const mailId of data.mail_ids||[]) {
-      await this.claimMailbox(mailId);
+    const text=await res.text();
+    let data=null;
+    try{data=text?JSON.parse(text):{};}catch{data=null;}
+    if(!res.ok||!data?.success)throw new Error(data?.message||`Không gửi được quà Sandbox (${res.status}).`);
+    const mailIds=data.mail_ids||[];
+    for(let i=0;i<mailIds.length;i++) {
+      if(generation!==this.generation)throw new Error('Phiên đã thay đổi; kiểm tra Hòm thư để nhận các gói còn lại.');
+      try {
+        await this.claimMailbox(mailIds[i]);
+      } catch (error) {
+        throw new Error(`Đã gửi quà vào Hòm thư nhưng nhận tự động bị gián đoạn (${i}/${mailIds.length}): ${error.message}`);
+      }
     }
     return data;
   }
@@ -271,9 +299,19 @@ export class M8Connection extends M4Connection {
       'cGuildJoinList.php','cGuildInfo.php','cTeamInfo.php','cTeamMember.php','cGuildList.php','cTeamServerList.php'];
     if(!allowed.includes(route))throw new Error('Danh mục chưa được hỗ trợ.');
     const generation=this.generation;
-    const response=await fetch('/'+route+'?'+new URLSearchParams(params),{credentials:'same-origin',cache:'no-store'});
-    if(!response.ok)throw new Error(`Không đọc được dữ liệu (${response.status}).`);
-    const body=await response.text();
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),15000);
+    let response,body;
+    try {
+      response=await fetch('/'+route+'?'+new URLSearchParams(params),{credentials:'same-origin',cache:'no-store',signal:controller.signal});
+      if(!response.ok)throw new Error(`Không đọc được dữ liệu (${response.status}).`);
+      body=await response.text();
+    } catch (error) {
+      if(error.name==='AbortError')throw new Error('Quá thời gian chờ tải dữ liệu.');
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
     if(generation!==this.generation)throw new Error('Phiên đã thay đổi. Vui lòng mở lại màn này.');
     if(!body.trim())return null; // Native missing Guild/team lookups return an empty JSON response.
     if(body.trim().startsWith('<')) {
@@ -282,6 +320,10 @@ export class M8Connection extends M4Connection {
       return {amount:Number(xml.documentElement.getAttribute('amount')||xml.querySelector('amount')?.textContent||0),
         rows:[...xml.querySelectorAll('row')].map(row=>Object.fromEntries([...row.children].map(c=>[c.tagName,c.textContent])))};
     }
-    return JSON.parse(body);
+    try {
+      return JSON.parse(body);
+    } catch {
+      throw new Error('Dữ liệu danh mục không hợp lệ.');
+    }
   }
 }

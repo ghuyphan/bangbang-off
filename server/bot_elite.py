@@ -109,10 +109,12 @@ def observe(arena, actor, brain, now):
                                     and target.damage_immune('energy', now))
         control_ms = 0
         projectile_guard_ms = 0
+        from combat_data import buff_meta, database_path
+        db_key = str(database_path())
         for (owner, template), (_, end) in target.active_buffs.items():
             if owner != target.id or end <= now:
                 continue
-            if active_buff_effect_types((template,)) & {30, 36, 62}:
+            if buff_meta(template, db_key)[0] in (30, 36, 62):
                 control_ms = max(control_ms, min(3000, end - now))
             if (template in _PROJECTILE_GUARDS
                     and (template != 386111 or target.info['tank_id'] in (10000111, 10000055))):
@@ -279,16 +281,7 @@ def basic_aim(arena, actor, sample, now):
 
 
 def _can_recover(actor, now):
-    tank = actor.info['tank_id']
-    if tank in legacy.bot_ai19.TANKS:
-        return legacy.bot_ai19.can_recover(actor, now)
-    if tank in legacy.bot_ai16.TANKS:
-        return legacy.bot_ai16.can_recover(actor, now)
-    if tank in legacy.bot_ai17.TANKS:
-        return legacy.bot_ai17.can_recover(actor, now)
-    if tank in legacy.bot_ai11.TANKS:
-        return legacy.bot_ai11.can_recover(actor)
-    return tank not in legacy.bot_ai10.TANKS or legacy.bot_ai10.can_recover(actor)
+    return legacy.can_recover(actor, now)
 
 
 def pressure(pos, allies, tanks, now):
@@ -551,7 +544,7 @@ def _combat_goal(arena, actor, allies, tanks, target, order, desired, blocked, n
             proposed = arena.geometry.clamp_tank_position(
                 (pos[0] + math.cos(away + offset) * 96,
                  pos[1] + math.sin(away + offset) * 96))
-            point = arena.geometry.walk_end(pos, proposed, water)
+            point = arena.geometry.walk_end(pos, proposed, water + arena.enemy_tank_rects(actor, now, pos, proposed))
             if (math.dist(pos, point) >= 48 and exposure(point) < current_exposure
                     and arena.geometry.can_walk_to(point)):
                 moving.append(point)
@@ -612,7 +605,7 @@ def _flag_hold_arrival(arena, actor, brain, order, now):
     def inward(point):
         return (math.dist(point, center) <= RADIUS
                 and all(math.dist(point, friend) >= 64 for friend in friends)
-                and arena.geometry.walk_end(pos, point, water) == point)
+                and arena.geometry.walk_end(pos, point, water + arena.enemy_tank_rects(actor, now, pos, point)) == point)
 
     legal_steps = {(pos[0]+dx*24, pos[1]+dy*24) for dx, dy in legacy.DIRECTIONS[:8]
                    if inward((pos[0]+dx*24, pos[1]+dy*24))}
@@ -637,7 +630,7 @@ def _flag_hold_arrival(arena, actor, brain, order, now):
                           (pos[0]+24*dx, pos[1]+24*dy))
                          for i, (dx, dy) in enumerate(legacy.DIRECTIONS[:8]))
         return next((p for distance, _, p in choices if distance < math.dist(pos, waypoint)
-                     and arena.geometry.walk_end(pos, p, water) == p), None)
+                     and arena.geometry.walk_end(pos, p, water + arena.enemy_tank_rects(actor, now, pos, p)) == p), None)
 
     for point in sorted(candidates, key=lambda p: (math.dist(p, goal), math.dist(p, center), p)):
         path = list(nav.path(pos, point, blockers=blockers))

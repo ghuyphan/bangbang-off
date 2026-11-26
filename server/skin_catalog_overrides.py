@@ -18,8 +18,12 @@ from __future__ import annotations
 
 from copy import deepcopy
 import json
+import threading
 import skin_catalog_m34
 import skin_catalog_m35
+
+_CACHE_LOCK = threading.Lock()
+_LOAD_CACHE = {}
 
 SUPPORT_SETTING = 'skin_support_phase1'
 EFFECT_SETTING = 'skin_effect_maps'
@@ -124,12 +128,37 @@ def item_matches(template_id, tank, exterior):
     return allowed is None or int(template_id) in allowed
 
 
+def _db_file(db):
+    try:
+        rows = db.execute('PRAGMA database_list').fetchall()
+        for row in rows:
+            if row[1] == 'main':
+                return str(row[2] or '')
+    except Exception:
+        return ''
+    return ''
+
+
 def load(db):
     """Read on the caller's existing connection; never write static settings."""
-    values = []
-    for key in (SUPPORT_SETTING, EFFECT_SETTING):
-        row = db.execute('SELECT value FROM settings WHERE name=?', (key,)).fetchone()
-        values.append(json.loads(row[0]) if row else {})
+    raw_rows = {
+        row[0]: row[1]
+        for row in db.execute(
+            'SELECT name,value FROM settings WHERE name IN (?,?)',
+            (SUPPORT_SETTING, EFFECT_SETTING),
+        )
+    }
+    support_raw = raw_rows.get(SUPPORT_SETTING)
+    effect_raw = raw_rows.get(EFFECT_SETTING)
+    db_file = _db_file(db)
+    cache_key = (db_file, support_raw, effect_raw) if db_file else None
+    if cache_key is not None:
+        with _CACHE_LOCK:
+            cached = _LOAD_CACHE.get(cache_key)
+        if cached is not None:
+            return deepcopy(cached)
+
+    values = [json.loads(support_raw) if support_raw else {}, json.loads(effect_raw) if effect_raw else {}]
     # Checking exact rows prevents a custom item-to-tank mapping from being
     # accidentally opened by a code-only update. Last ordinal is native policy.
     for (tank, exterior), items in APPROVED_ITEMS.items():
@@ -141,7 +170,12 @@ def load(db):
                 raise ValueError(f'M33: vật phẩm skin {item} khác nguồn đã kiểm.')
     skin_catalog_m34.validate_source_rows(db)
     skin_catalog_m35.validate_source_rows(db)
-    return effective_settings(*values)
+    result = effective_settings(*values)
+    if cache_key is not None:
+        with _CACHE_LOCK:
+            _LOAD_CACHE.clear()
+            _LOAD_CACHE[cache_key] = deepcopy(result)
+    return result
 
 
 def item_template(db, template_id):

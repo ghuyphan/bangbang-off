@@ -138,6 +138,10 @@ def apply(state, mid, payload, db):
         recipients.update(events)
         results = {ident: events.get(ident, []) + snapshot(db, ident, connected) for ident in recipients}
         results[storage.profile_id()] = immediate + results[storage.profile_id()]
+        for packets in results.values():
+            for _, body in packets:
+                if len(body) + 8 > 65535:
+                    raise ValueError('Dữ liệu Guild vượt quá giới hạn gói tin.')
         db.commit()
         for ident, packets in results.items():
             if ident != storage.profile_id(): deliver(ident, packets)

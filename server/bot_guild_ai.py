@@ -16,11 +16,10 @@ def busy(actor, now):
         return True
     # A borrowed kit or a pending native follow-up retains its own policy.
     import bot_ai
-    for n in range(5, 20):
-        module = getattr(bot_ai, 'bot_ai%02d' % n, None)
-        if (module and actor.info['tank_id'] in module.TANKS and hasattr(module, 'recast')
-                and any(module.recast(actor, slot, now) for slot in (1, 2, 10))):
-            return True
+    module = bot_ai.module_for(actor.info['tank_id'])
+    if (module and hasattr(module, 'recast')
+            and any(module.recast(actor, slot, now) for slot in (1, 2, 10))):
+        return True
     return False
 
 

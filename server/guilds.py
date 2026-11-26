@@ -6,7 +6,6 @@ Boss/war, daily gifts, upkeep and automatic leader replacement are deferred.
 from datetime import datetime
 from functools import lru_cache
 import json
-import sqlite3
 import struct
 import time
 import uuid
@@ -172,11 +171,18 @@ def spend_card(db, ident):
     bags = inventory.load(db)
     for container, items in bags.items():
         for item in items:
-            if item['template_id'] == ident and item['count'] > 0:
+            if (item['template_id'] == ident and item['count'] > 0
+                    and not (item.get('ext_flag', 0) & 2) and not item.get('life_time', 0)):
                 item['count'] -= 1
+                if item['count'] == 0:
+                    items.remove(item)
+                    inventory.save(bags, db)
+                    return [(1103, struct.pack('<BH', int(container), 1)
+                             + struct.pack('<I', len(item['uuid'].encode('utf-8')))
+                             + item['uuid'].encode('utf-8'))]
                 inventory.save(bags, db)
                 return [(1100, inventory.list_payload(container, [item], notify_type=2))]
-    raise ValueError('Bạn chưa có thẻ cần thiết. Hãy mua thẻ trước.')
+    raise ValueError('Bạn chưa có thẻ cần thiết hoặc thẻ đang bị khóa.')
 
 
 def join(db, g, target, tid, now, merit=0):

@@ -24,9 +24,15 @@ export class NativeChannel {
 
   open() {
     return new Promise((resolve, reject) => {
-      let ready = false;
+      let settled = false;
+      const fail = error => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        reject(error);
+      };
       const timer = setTimeout(() => {
-        reject(new Error(`${this.role}: quá thời gian chờ kết nối.`));
+        fail(new Error(`${this.role}: quá thời gian chờ kết nối.`));
         this.close();
       }, PHASE_TIMEOUT);
       const url = new URL('/html5/ws', location.href);
@@ -46,7 +52,8 @@ export class NativeChannel {
         this.onPacket(packet, this.role);
         for (const waiter of [...this.waiters]) waiter.check();
       }, () => {
-        ready = true;
+        if (settled) return;
+        settled = true;
         clearTimeout(timer);
         resolve(this);
       });
@@ -64,12 +71,12 @@ export class NativeChannel {
         }
       };
       this.socket.onerror = () => {
-        if (!ready) reject(new Error(`${this.role}: không mở được kết nối; kiểm tra phiên đăng nhập và server.`));
+        fail(new Error(`${this.role}: không mở được kết nối; kiểm tra phiên đăng nhập và server.`));
       };
       this.socket.onclose = event => {
         clearTimeout(timer);
         const error = this.failure || new Error(`${this.role}: kết nối đã đóng (${event.code}).`);
-        if (!ready) reject(error);
+        fail(error);
         this.rejectWaiters(error);
         this.resolveClosed();
         this.onClosed(error, this.intentionalClose, this.role);
@@ -123,11 +130,24 @@ export class NativeChannel {
   }
 }
 
-export async function webRequest(path, payload = {}) {
-  const response = await fetch(path, {method: 'POST', credentials: 'same-origin', cache: 'no-store',
-    headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)});
-  if (!response.ok) throw new Error(`HTTP ${response.status}: không gửi được yêu cầu.`);
-  return response.json();
+export async function webRequest(path, payload = {}, timeoutMs = 15000) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(path, {method: 'POST', credentials: 'same-origin', cache: 'no-store',
+      headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload), signal: controller.signal});
+    const text = await response.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : {}; } catch { data = null; }
+    if (!response.ok) throw new Error(data?.message || `HTTP ${response.status}: không gửi được yêu cầu.`);
+    if (data === null) throw new Error('Máy chủ trả về dữ liệu không hợp lệ.');
+    return data;
+  } catch (error) {
+    if (error.name === 'AbortError') throw new Error('Quá thời gian chờ phản hồi từ máy chủ.');
+    throw error;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 /** Authenticated lobby transport shared by M2 and the M3 room client. */

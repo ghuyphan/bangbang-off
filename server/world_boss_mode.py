@@ -340,7 +340,7 @@ class WorldBossNpc(PveNpc):
             packets=self.shoot(1020092,start,dest,now,target.max_hp*D('.05'),school='true',basic=True)
             # Tag the just-created flight, preserving native collision/defenses.
             for _,_,cb,args in reversed(self.arena.pending):
-                if cb.__self__ is self and args and args[0]=='flight' and args[1][0]['begin']==now:
+                if getattr(cb,'__self__',None) is self and args and args[0]=='flight' and args[1][0]['begin']==now:
                     args[1][0]['hp_fraction']=D('.05')
             return packets
         if math.dist(start,target.position_at(now))>100 or target not in list(targets(self,start,100,now)):return []

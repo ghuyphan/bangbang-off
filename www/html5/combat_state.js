@@ -1006,9 +1006,9 @@ export function beginPredictedStep(state, direction, now, geometry, preferredAxi
   settleMotion(actor, now);
   if (actor.motion) return null;
   const start = visualPosition(actor, now);
-  const canWalk = (x, y) => geometry.canWalk(x, y, actor, state) === true;
+  const canWalk = (x, y) => geometry.canWalk(x, y, actor, state, now) === true;
   const canStep = (from, to) => typeof geometry.canStep === 'function'
-    ? geometry.canStep(from, to, actor, state) === true : canWalk(to.x, to.y);
+    ? geometry.canStep(from, to, actor, state, now) === true : canWalk(to.x, to.y);
   const [dx, dy] = MOVE_DIRECTIONS[direction];
   let actual = direction;
   if (!canWalk(start.x, start.y)) {

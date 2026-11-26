@@ -87,6 +87,8 @@ def death(arena,actor,now):
 
 
 def completed(arena,rec):
+    if rec['index'] in arena.pk['pve']['stopped_rules']:
+        return True
     expected=sum(objective(rec,t) for t in rec['templates'])*(rec['repeat']+1)
     return arena.pk['pve']['rule_kills'].get(rec['index'],0)>=expected
 
@@ -144,7 +146,8 @@ def ai(arena,now):
                 key=lambda a:(math.dist(pos,a.position_at(now)),a.id),default=None)
             if tpl in SAWS:
                 brain['goal']=_patrol(arena,actor,now)
-                if target and math.dist(pos,target.position_at(now))<=72 and now>=actor.cooldowns[0]:
+                if (target and math.dist(pos,target.position_at(now))<=72 and now>=actor.cooldowns[0]
+                        and not actor.blocked('attack',now) and not actor.skill_sealed(0,now)):
                     actor.cooldowns[0]=now+actor.fire_interval(now)
                     packets+=actor._shot(target.position_at(now),now,target)
             elif target:

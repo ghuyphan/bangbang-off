@@ -18,7 +18,7 @@ class HikariActions(SpeedLockMixin, TankActions):
         self.e_count,self.e_next_charge = 2,0
         self.ready = self.temple = None
 
-    def _cooldown(self, slot):
+    def _cooldown(self, slot, changed=False):
         body = props(SLOTS[slot],slot,self.e_count if slot==1 else -1,
                      0 if slot==2 and self.temple else self.cooldowns[slot],
                      self.e_next_charge if slot==1 else 0)

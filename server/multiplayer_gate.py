@@ -68,6 +68,8 @@ class MultiplayerGate:
 
     def mark_ready(self):
         self.ready = True
+        if self.skip_legacy_resume:
+            self._register()
         return self.skip_legacy_resume
 
     @property
@@ -275,8 +277,11 @@ class MultiplayerGate:
         cbs, _ = self._briefs(dict(room, bots=self.state['bots']))
         self.conn.sendall(self.wire.make_start_game(scene_id=self.state['battle']['scene_id'],
             map_id=room['map_id'], room_type=room['room_type'], char_data=cbs, back_data=[], enter_type=0))
+        rates = self.battles.loading_rates(self.profile)
+        if rates:
+            self._send(rates)
         self.started_room = room['room_id']
-        self.conn.settimeout(.02)
+        self.conn.settimeout(.005)
 
     def _create(self, payload=None):
         self._refresh_profile()
@@ -407,6 +412,7 @@ class MultiplayerGate:
         if room is None:
             return
         started = None
+        created_match = False
         try:
             humans = {}
             for member in room['members']:
@@ -419,15 +425,17 @@ class MultiplayerGate:
                 humans[member['profile_id']] = state
             config = dict(room['config'], owner_id=room['owner_id'])
             started = self.battles.start(room['room_id'], config, humans, room['bots'])
-            for member in room['members']:
+            created_match = bool(started)
+            live_room = self.hub.start_battle(room['room_id'], claim['claim_id'])
+            for member in live_room['members']:
                 if not member['connected']:
                     self.battles.disconnect(member['profile_id'])
-            self.hub.start_battle(room['room_id'], claim['claim_id'])
         except Exception:
-            if started is not None:
+            still_owner = self.hub.release_selection_claim(room['room_id'], claim['claim_id'])
+            if created_match and still_owner:
                 self.battles.abort_start(room['room_id'], started['match_uuid'])
-            self.hub.release_selection_claim(room['room_id'], claim['claim_id'])
-            self.hub.close_room(room['room_id'], reason='start_failed')
+            if still_owner:
+                self.hub.close_room(room['room_id'], reason='start_failed')
             raise
 
     def _clear_local(self, *, battle_exit=False, reason='left', actor=None):
@@ -507,7 +515,8 @@ class MultiplayerGate:
         if room is None:
             if self.managed:
                 left = next((e for e in events if e['kind'] == 'room_left'), {})
-                self._clear_local(reason=left.get('reason', 'left'), actor=left.get('actor_id'))
+                self._clear_local(battle_exit=bool(self.started_room),
+                                  reason=left.get('reason', 'left'), actor=left.get('actor_id'))
         elif room['phase'] == 'waiting' and not self.started_room:
             if self.selection_room:
                 self._restore_primary()
@@ -703,7 +712,7 @@ class MultiplayerGate:
                 scene, account, delay, progress = struct.unpack('<IIII', payload)
                 if account != self.profile or scene != (self.state.get('battle') or {}).get('scene_id'):
                     raise ValueError('Tiến trình tải không thuộc trận hiện tại.')
-                self.battles.loaded(self.profile, progress)
+                self.battles.loaded(self.profile, progress, delay)
             elif mid == 552:
                 if len(payload) != 4 or struct.unpack('<I', payload)[0] != (self.state.get('battle') or {}).get('scene_id'):
                     raise ValueError('Trận không còn hợp lệ.')

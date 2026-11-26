@@ -24,7 +24,7 @@ SOURCE_SHA256 = {
 
 def enabled(arena):
     """Enable only frozen new-run rules on the exact reviewed native layout."""
-    profile = arena.state.get('battle', {}).get('pve_balance') or {}
+    profile = (arena.state.get('battle') or {}).get('pve_balance') or {}
     version = profile.get('local_mechanics_version')
     expected = SOURCE_SHA256.get(arena.geometry.id)
     return (type(version) is int and version == VERSION

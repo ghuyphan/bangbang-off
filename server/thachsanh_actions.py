@@ -21,7 +21,7 @@ class ThachSanhActions(TankActions):
     def _cooldown(self, slot, changed=False):
         skill = 338311 if slot==0 and self.has_buff(338302,self.clock()) else SLOTS[slot]
         body = props(skill,slot,-1,self.cooldowns[slot])
-        return (1579,body) if changed else (1572,body+struct.pack('<I',self.id))
+        return (1579,body) if changed and self.id==1 else (1572,body+struct.pack('<I',self.id))
 
     def _basic_slot(self):
         # S1579 has no owner ID: it changes the local player's button only.

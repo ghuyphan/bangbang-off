@@ -14,6 +14,7 @@
 .m84-room-title{text-align:center;font-size:15px;line-height:24px}
 .m84-room-player-name{font-size:13px}.m84-room-ping{font:700 10px/18px Tahoma,Arial,sans-serif;color:#72ff00;text-align:right;text-shadow:0 1px 1px #004600}
 .m84-room-roster{pointer-events:none}.m84-room-card{pointer-events:auto}.m84-room-card>.m8-art{pointer-events:none}
-.m84-cancel-label{font-size:10px;text-align:center;line-height:20px}
+.m84-cancel-label{font-size:11px;text-align:center;line-height:20px}
+.m81337-room-map-btn .m8-flash-btn-label{font-size:11.5px;padding:0 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .m84-find-status{font:12px/18px Tahoma,Arial,sans-serif;text-align:center;white-space:normal}
 .m84-native-chat button[aria-disabled=true],.m84-native-sidebar button[aria-disabled=true],.m84-room-card button[aria-disabled=true]{cursor:default}

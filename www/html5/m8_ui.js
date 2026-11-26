@@ -7,7 +7,6 @@ import {playBattleGateOpening} from './m86_gate_transition.js';
 import {M8UIAssets} from './m8_assets.js';
 import {place,element,actionButton,assetImage,field,selectInput,textInput,note,numberText,setText,flashSpriteButton} from './m8_ui_helpers.js';
 import {selectedPrimaryTank} from './m8_meta_state.js';
-import {openSimulatedTopup} from './m81345_shop_ui.js';
 import {selectionSecondsLeft} from './m8_flow_state.js';
 import {M81Settings} from './m81_settings.js';
 import {createSettingsSurface} from './m85_settings_host.js';
@@ -28,7 +27,7 @@ const LOGIN_LOGO_URL='/rez/zh_CN/gui_summer/controls/login/90fc008dc8684aadd6f27
 const busyPhases=new Set(['web','auth','gate','sync','reconnecting']);
 const screenNames={lobby:'Sảnh',hall:'Đấu trường',garage:'Tank',crystals:'Ngọc',inventory:'Túi đồ',
   shop:'Cửa hàng',profile:'Hồ sơ',military:'Quân hàm',leaderboard:'Xếp hạng',guild:'Guild',companions:'Trợ thủ',mailbox:'Hòm thư',worldboss:'Boss Thế Giới',pve:'PvE đơn',room:'Phòng',selecting:'Chọn tank',loading:'Đang vào trận'};
-export function outsideStageSize(screen){return screen==='loading'?{width:1000,height:618}:screen==='shop'?{width:1020,height:620}:['guild','hall','room'].includes(screen)?{width:1018,height:618}:{width:1000,height:600};}
+export function outsideStageSize(screen){return screen==='loading'?{width:1000,height:618}:screen==='shop'?{width:1020,height:620}:['hall','room'].includes(screen)?{width:1018,height:618}:{width:1000,height:600};}
 
 export class M8UI {
   constructor({host,client,run,getBattleView=()=>null}) {
@@ -41,8 +40,10 @@ export class M8UI {
     this.modalShade=element('div',null,'m83-outside-shade');this.modalShade.hidden=true;
     this.content=element('div',null,'m8-content');this.header=element('header',null,'m8-header');
     this.footer=element('nav',null,'m8-footer');this.footer.setAttribute('aria-label','Menu sảnh');
-    this.status=element('div',null,'m8-status');this.status.setAttribute('role','status');
-    this.error=element('div',null,'m8-error');this.error.setAttribute('role','alert');this.error.hidden=true;
+    this.statusText=element('span',null,'m8-banner-text');
+    this.status=element('div',null,'m8-status');this.status.setAttribute('role','status');this.status.hidden=true;this.status.append(this.statusText);
+    this.errorText=element('span',null,'m8-banner-text');this._dismissedError='';
+    this.error=element('div',null,'m8-error');this.error.setAttribute('role','alert');this.error.hidden=true;this.error.append(this.errorText);
     this.back=actionButton('Về sảnh',()=>this.navigate('lobby'),{className:'m8-back',testId:'m8-back'});
     this.stage.append(nativeMenuFilters(),this.worldBackground,this.underlay,this.content,this.header,this.footer,this.modalShade,this.back,this.status,this.error);
     this.roomInvitations=createRoomInvitationBanner(this);this.stage.append(this.roomInvitations.root);
@@ -59,7 +60,7 @@ export class M8UI {
       else this.navigate('login');
       this.update(this.state);
     })
-      .catch(error=>{this.status.textContent=error.message;this.content.append(actionButton('Tải lại',()=>location.reload()));});
+      .catch(error=>{this.statusText.textContent=error.message;this.status.hidden=false;this.content.append(actionButton('Tải lại',()=>location.reload()));});
     this.clock=setInterval(()=>this.updateCountdown(),200);
   }
   resize() {
@@ -97,6 +98,14 @@ export class M8UI {
     return button;
   }
   buildChrome() {
+    const tip=this.assets.get('public.tip');
+    if(tip){this.status.prepend(assetImage(tip,'','m8-banner-icon'));this.error.prepend(assetImage(tip,'','m8-banner-icon'));}
+    const closeAsset=this.assets.get('public.close');
+    const closeError=actionButton(closeAsset?'':'×',()=>{this._dismissedError=this.errorText.textContent||'';this.error.hidden=true;},
+      {className:'m8-banner-close',title:'Đóng thông báo',testId:'m8-error-close'});
+    closeError.setAttribute('aria-label','Đóng thông báo');
+    if(closeAsset)closeError.append(assetImage(closeAsset,''));
+    this.error.append(closeError);
     this.worldBackground.style.backgroundImage=`url("${this.assets.get('lobby.background').url}")`;
     this.characterChrome=createFlashCharacterChrome(this.assets,()=>this.navigate('profile'));
     this.wallet=element('div',null,'m8-wallet');this.currencyViews=[];
@@ -106,11 +115,6 @@ export class M8UI {
       const view=createNativeCurrency(this.assets,row);this.currencyViews.push({key:row.key,...view});
       this.wallet.append(view.host,plus);
     }
-    this.payment=this.imageButton('currency.payment','Nạp Xu mô phỏng',async()=>{
-      if(this.state?.play?.phase!=='lobby')return;
-      await this.navigate('shop');
-      if(this.screen==='shop'&&this.controller)await openSimulatedTopup(this.controller);
-    },0,(31-this.assets.ui.assets['currency.payment'].height)/2);this.payment.disabled=true;this.wallet.append(this.payment);
     this.settings=actionButton('Cài đặt',()=>this.showSettings(),{testId:'m8-settings'});
     this.exit=this.imageButton('public.returnSmall','Đăng xuất',()=>{
       if(this.pveRoomController?.interactionLocked)return;
@@ -155,7 +159,15 @@ export class M8UI {
     this.bottomBar.append(this.art('chrome.bar_01',0,0),this.bottomBarMiddle,this.bottomBarRight);this.stage.insertBefore(this.bottomBar,this.footer);this.resize();
   }
 
-  async navigate(screen) {
+  clearRoomModals() {
+    this.createShade?.remove();
+    this.findShade?.remove();
+    this.createShade=null;this.createConfirm=null;this.findShade=null;
+    if(this.content){for(const child of this.content.children)child.inert=false;}
+    if(this.underlay){for(const child of this.underlay.children)child.inert=false;}
+  }
+
+  async navigate(screen,options={}) {
     if(!this.loaded)return;
     const noTank=this.state?.phase==='ready'&&!this.state.meta.tanks.length;
     const openingFirstShop=noTank&&['hall','pve','worldboss','garage'].includes(screen);
@@ -187,7 +199,8 @@ export class M8UI {
     if(modal&&previousScreen==='pve'){
       this.pvePageController=this.controller;this.controller=null;
     }
-    this.controller?.dispose();this.controller=null;this.loadingView?.dispose();this.loadingView=null;this.selectionInfo?.dispose();this.selectionInfo=null;this.selectionExtras?.dispose();this.selectionExtras=null;this.selectionTileCleanups=[];this.createShade=null;this.createConfirm=null;this.findShade=null;
+    this.clearRoomModals();
+    this.controller?.dispose();this.controller=null;this.loadingView?.dispose();this.loadingView=null;this.selectionInfo?.dispose();this.selectionInfo=null;this.selectionExtras?.dispose();this.selectionExtras=null;this.selectionTileCleanups=[];
     if(modal&&['lobby','hall','room','pve'].includes(previousScreen)){
       this.modalReturnFocus=document.activeElement;
       this.underlayStage=outsideStageSize(previousScreen);this.underlayScreen=previousScreen;
@@ -236,7 +249,7 @@ export class M8UI {
         const {M8AccountUI}=await import('./m8_account_ui.js');if(this.screenToken!==token)return;
         const accountReturn=previousScreen==='worldboss'?'worldboss':'lobby';
         this.controller=new M8AccountUI({host:this.content,client:this.client,catalog:this.assets.account,
-          assets:this.assets,run:this.run,section:screen,onClose:()=>this.navigate(accountReturn),onSection:section=>{this.screen=section;this.menuAudio.setScreen(section,this.state?.play?.phase);this.host.dataset.screen=section;this.resize();this.updateChrome(section);}});
+          assets:this.assets,run:this.run,section:screen,rankKind:options.rankKind,onClose:()=>this.navigate(accountReturn),onSection:section=>{this.screen=section;this.menuAudio.setScreen(section,this.state?.play?.phase);this.host.dataset.screen=section;this.resize();this.updateChrome(section);}});
       }
     } catch(error){if(token===this.screenToken)this.content.append(note(error.message,'error'));}
     if(this.state)this.renderCurrent();
@@ -251,7 +264,7 @@ export class M8UI {
     this.footer.hidden=!['lobby','hall','room','pve'].includes(chromeScreen);this.footer.inert=modal||!!this.pveRoomController?.interactionLocked;
     if(this.exit){const label=chromeScreen==='room'?'Rời phòng':['hall','pve'].includes(chromeScreen)?'Về sảnh':'Đăng xuất';this.exit.setAttribute('aria-label',label);this.exit.title=label;}
     if(this.bottomBar)this.bottomBar.hidden=this.footer.hidden;
-    this.back.hidden=['hall','garage','inventory','military','crystals','guild','shop','profile','leaderboard'].includes(screen)||!['garage','crystals','inventory','shop','profile','military','leaderboard','guild','hall'].includes(screen);
+    this.back.hidden=true;
     for(const node of this.footer.children)node.classList.toggle('selected',node.dataset.screen===screen);
   }
   update(state) {
@@ -259,6 +272,9 @@ export class M8UI {
     if(this.settingsScope&&(this.settingsScope.generation!==this.client.generation
         ||this.settingsScope.accountId!==state.accountId||state.phase!=='ready'
         ||this.settingsScope.phase!==state.play.phase))this.closeSettings?.(false);
+    if(this.sandboxScope&&(this.sandboxScope.generation!==this.client.generation
+        ||this.sandboxScope.accountId!==state.accountId||state.phase!=='ready'
+        ||!['lobby','room'].includes(state.play.phase)))this.sandboxClose?.(false);
     this.settingsController?.update(state);
     this.roomInvitations.update();
     if(!this.loaded)return;
@@ -281,10 +297,27 @@ export class M8UI {
     if(this.mailboxButton){const unread=Number(state.mailbox?.unread)||0;setSpriteText(this.mailboxButton,unread?`Hòm thư (${unread>99?'99+':unread})`:'Hòm thư');this.mailboxButton.disabled=state.phase!=='ready'||!!state.play.busy;}
     if(this.sandboxButton){this.sandboxButton.disabled=state.phase!=='ready'||!!state.play.busy||!['lobby','room'].includes(state.play.phase);}
     if(this.fullscreenButton){const fs=!!(document.fullscreenElement||document.webkitFullscreenElement);setSpriteText(this.fullscreenButton,fs?'Thu nhỏ':'Toàn màn');}
-    setText(this.status,state.phase==='ready'?(state.play.busy?'Đang chờ server…':''):(state.message||''));
-    this.status.hidden=!this.status.textContent;
-    setText(this.error,state.play.error||'');this.error.hidden=!this.error.textContent;
-    this.payment.disabled=state.phase!=='ready'||phase!=='lobby'||!state.play.setup?.classic;
+    if(state.phase==='ready'&&state.play.busy){
+      if(!this._busyNoticeTimer&&!this._busyNoticeVisible){
+        this._busyNoticeTimer=setTimeout(()=>{
+          this._busyNoticeTimer=0;
+          if(this.state?.phase==='ready'&&this.state?.play?.busy){
+            this._busyNoticeVisible=true;setText(this.statusText,'Đang chờ server…');this.status.hidden=false;
+          }
+        },2500);
+      }
+      setText(this.statusText,this._busyNoticeVisible?'Đang chờ server…':'');
+    }else{
+      if(this._busyNoticeTimer){clearTimeout(this._busyNoticeTimer);this._busyNoticeTimer=0;}
+      this._busyNoticeVisible=false;
+      const important=state.phase!=='ready'&&state.phase!=='idle'?(state.message||''):(state.phase==='error'||state.phase==='disconnected'?(state.message||''):'');
+      setText(this.statusText,important);
+    }
+    this.status.hidden=!this.statusText.textContent;
+    const errorMsg=state.play.error||'';
+    if(errorMsg!==this._dismissedError)this._dismissedError='';
+    setText(this.errorText,errorMsg);
+    this.error.hidden=!errorMsg||errorMsg===this._dismissedError;
     this.exit.disabled=busyPhases.has(state.phase);
     this.renderCurrent();
   }
@@ -584,5 +617,5 @@ export class M8UI {
     }catch(error){close(false);throw error;}
   }
   snapshot(){return {screen:this.screen,loaded:!!this.loaded,portraitAnimations:this.assets.animations.size,audio:this.menuAudio.snapshot()};}
-  dispose(){this.mapPickerDispose?.();this.closeSettings?.(false);this.menuAudio.dispose();this.selectionExtras?.dispose();this.selectionInfo?.dispose();clearInterval(this.clock);this.resizeObserver.disconnect();this.controller?.dispose();this.pvePageController?.dispose();this.pveRoomController?.dispose();this.loadingView?.dispose();this.assets.dispose();}
+  dispose(){clearTimeout(this._busyNoticeTimer);this._busyNoticeTimer=0;this.mapPickerDispose?.();this.closeSettings?.(false);this.sandboxClose?.(false);this.clearRoomModals();this.menuAudio.dispose();this.selectionExtras?.dispose();this.selectionInfo?.dispose();clearInterval(this.clock);this.resizeObserver.disconnect();this.controller?.dispose();this.pvePageController?.dispose();this.pveRoomController?.dispose();this.loadingView?.dispose();this.assets.dispose();}
 }

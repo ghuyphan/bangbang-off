@@ -1,6 +1,31 @@
 <!doctype html>
-<html lang="vi"><meta charset="utf-8"><title>Bang Bang Private</title>
-<body style="font-family:sans-serif;background:#102226;color:#ffe39b;padding:40px">
-<h1>Private-01</h1>
-<p>Trang fallback (charge / loginFail / bulletin). Game không dùng trang này khi socket ổn.</p>
-</body></html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Bang Bang Private</title>
+  <link rel="stylesheet" href="/flash-ui.css?v=flash-native-2">
+  <style>
+    .offline-shell{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px 16px}
+    .offline-logo{width:min(300px,76vw)}
+    .offline-card{width:min(420px,100%);text-align:center}
+    .offline-card p{margin:0;color:var(--bb-ice)}
+    .offline-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+  </style>
+</head>
+<body class="flash-page">
+  <main class="offline-shell">
+    <img class="flash-logo offline-logo" src="/rez/zh_CN/gui_summer/controls/login/90fc008dc8684aadd6f2736ca5d650e8.png" alt="BANG BANG">
+    <section class="flash-window offline-card">
+      <h1 class="flash-window-head">PRIVATE-01</h1>
+      <div class="flash-window-body">
+        <p>Trang fallback (charge / loginFail / bulletin).</p>
+        <div class="offline-actions">
+          <a class="flash-btn is-orange" href="/html5/">Vào HTML5</a>
+          <a class="flash-btn is-quiet" href="/">Trang Flash</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -8,17 +8,12 @@ import storage
 import tank_upgrade
 from combat_data import table_row
 
-VOUCHER_SLOT = 5
-TOPUP_PACKS = {1: 60, 3: 210, 5: 400}
-
 
 def _needed_exp(db, level):
     row = db.execute('SELECT iNeedExp FROM client_CharLevelTemplate_table '
                      'WHERE CAST(nLevel AS INTEGER)=?', (level,)).fetchone()
     if row is not None and int(row[0]) > 0:
         return int(row[0])
-    if level >= 40:
-        return 0
     return 0
 
 
@@ -31,7 +26,7 @@ def reward_match(db, state, arena, outcome):
     won = outcome == 'win'
     with storage.for_profile(state['char_id']):
         wallet = cosmetic_shop.snapshot(db)
-        for slot, amount in ((1, 50), (2, 140 if won else 90), (VOUCHER_SLOT, 1)):
+        for slot, amount in ((1, 50), (2, 140 if won else 90)):
             wallet['currency'][slot] = min(0x7fffffff, wallet['currency'][slot] + amount)
         cosmetic_shop._set(db, cosmetic_shop.PROFILE, wallet)
         grant_upgrade_materials(db, state)

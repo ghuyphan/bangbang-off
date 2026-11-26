@@ -163,20 +163,57 @@ export function createBattleGeometry(map, catalog) {
     return rectangles;
   }
 
+  function enemyTankRectangles(state, actor, now = null, from = null, to = null) {
+    if (!state || !actor) return [];
+    const cur = from ?? (now != null ? visualPosition(actor, now) : [actor.x, actor.y]);
+    const curPt = Array.isArray(cur) ? cur : [cur.x, cur.y];
+    const segStart = from ? curPt : null;
+    const toPt = to ? (Array.isArray(to) ? to : [to.x, to.y]) : null;
+    const rects = [];
+    let actorChecked = false;
+    for (const other of Object.values(state.actors ?? {})) {
+      if (!other || other.objectId === actor.objectId || other.camp === actor.camp) continue;
+      if (other.removed || other.dead || other.hp <= 0) continue;
+      const pos = now != null ? visualPosition(other, now) : other;
+      const rect = [pos.x - 36, pos.y - 36, pos.x + 36, pos.y + 36];
+      if (toPt) {
+        if (rectContact(segStart ?? toPt, toPt, [rect]) == null) continue;
+        // Allow separating if tanks already overlap instead of locking in place.
+        if (rectContact(curPt, curPt, [rect]) != null
+            && Math.hypot(toPt[0] - pos.x, toPt[1] - pos.y) > Math.hypot(curPt[0] - pos.x, curPt[1] - pos.y)) {
+          continue;
+        }
+      }
+      if (now != null) {
+        if (!actorChecked) {
+          actorChecked = true;
+          const actorFlags = nativeControlFlags(actor, buffCatalog, now, skillCatalog);
+          if (actorFlags.disappeared || actorFlags.flying) return [];
+        }
+        if (!visibleToSelf(other, state, now)) continue;
+        const flags = nativeControlFlags(other, buffCatalog, now, skillCatalog);
+        if (flags.disappeared || flags.flying || (flags.invisible && !flags.revealed)) continue;
+      }
+      rects.push(rect);
+    }
+    return rects;
+  }
+
   function clearPose(point, rectangles) {
     return terrainClear(...point) && rectContact(point, point, rectangles) == null;
   }
 
-  function canWalk(x, y, actor, state) {
+  function canWalk(x, y, actor, state, now = null) {
     if (!Number.isFinite(x) || !Number.isFinite(y) || (state && !state.objectsReady)) return false;
-    return clearPose([x, y], liveRectangles(state));
+    const point = [x, y];
+    return clearPose(point, liveRectangles(state).concat(enemyTankRectangles(state, actor, now, null, point)));
   }
 
-  function canStep(from, to, actor, state) {
+  function canStep(from, to, actor, state, now = null) {
     if (state && !state.objectsReady) return false;
     const start = [from.x, from.y], end = [to.x, to.y];
     if (![...start, ...end].every(Number.isFinite)) return false;
-    const rectangles = liveRectangles(state);
+    const rectangles = liveRectangles(state).concat(enemyTankRectangles(state, actor, now, start, end));
     if (!clearPose(start, rectangles) || !clearPose(end, rectangles)
         || rectContact(start, end, rectangles) != null || rectContact(start, end, exterior) != null) return false;
     if (terrainContact(start, end) == null) return true;

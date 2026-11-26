@@ -19,7 +19,7 @@ class FoxActions(ActionLockMixin, TankActions):
         self.ready = self.foxfire = None
         self.fire_count = 0
 
-    def _cooldown(self,slot):
+    def _cooldown(self,slot,changed=False):
         count = self.e_count if slot==1 else self.space_count if slot==2 else -1
         charge = self.e_next_charge if slot==1 else self.space_next_charge if slot==2 else 0
         return 1572,props(SLOTS[slot],slot,count,self.cooldowns[slot],charge)+struct.pack('<I',self.id)

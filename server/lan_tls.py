@@ -2,6 +2,7 @@
 from ipaddress import IPv4Address, IPv4Network
 import os
 from pathlib import Path
+import re
 import shutil
 import socket
 import subprocess
@@ -69,7 +70,7 @@ def _cert_valid_for(cert, address, min_seconds=604800):
                        check=True, capture_output=True)
         text = subprocess.check_output(['/usr/bin/openssl', 'x509', '-in', str(cert), '-noout', '-text'],
                                        text=True, stderr=subprocess.DEVNULL)
-        return f'IP Address:{address}' in text
+        return re.search(rf'IP Address:{re.escape(address)}(?:,|\s|$)', text) is not None
     except (OSError, subprocess.CalledProcessError):
         return False
 
@@ -80,6 +81,7 @@ def certificates(directory, address):
     directory.chmod(0o700)
     ca = directory / 'ca'
     ca.mkdir(exist_ok=True, mode=0o700)
+    ca.chmod(0o700)
     cert, key = directory / 'server.pem', directory / 'server-key.pem'
     public = directory / 'BangBang-LAN-CA.cer'
     root_pem = ca / 'rootCA.pem'

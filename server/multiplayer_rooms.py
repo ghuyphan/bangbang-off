@@ -950,14 +950,21 @@ class RoomHub:
         for ident, reservation in list(self._reservations.items()):
             if now - reservation['created'] > 30:
                 self.release_rank_group(ident)
-        for room in self._rooms.values():
+        for room in list(self._rooms.values()):
             if room['phase'] not in ('selecting', 'battle'):
                 continue
-            for seat in self._human_seats(room):
+            humans = self._human_seats(room)
+            for seat in humans:
                 if (not seat['connected'] and seat['disconnected_at'] is not None
                         and not seat['grace_reported'] and now - seat['disconnected_at'] >= self.reconnect_grace):
                     seat['grace_reported'] = True
                     self._broadcast(room, 'peer_grace_expired', account_id=seat['account_id'])
+            if humans and all(not seat['connected'] and seat['grace_reported'] for seat in humans):
+                for seat in humans:
+                    self._membership.pop(seat['account_id'], None)
+                    self._events.pop(seat['account_id'], None)
+                self._rooms.pop(room['room_id'], None)
+                self._presence()
 
     def _snapshot(self, peer, request_id='', action='status', ok=True, error=None):
         profile = peer['profile_id']

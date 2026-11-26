@@ -764,7 +764,13 @@ export class BattleInput {
         aim = this.aim ? {...this.aim} : null;
       }
       const sent = this.sendCast(slot, now, false, aim);
-      this.clearTouchAim();
+      this.touchSkillSlot = 0;
+      if (this.touchFire) {
+        this.touchAimVector = null;
+        this.touchAutoAim = true;
+      } else {
+        this.clearTouchAim();
+      }
       return sent;
     }
     return this.castFromButton(slot, now);
@@ -772,7 +778,13 @@ export class BattleInput {
 
   cancelTouchSkill() {
     this.hoverSkill(null, this.now());
-    this.clearTouchAim();
+    this.touchSkillSlot = 0;
+    if (this.touchFire) {
+      this.touchAimVector = null;
+      this.touchAutoAim = true;
+    } else {
+      this.clearTouchAim();
+    }
   }
 
   direction() {

@@ -6,8 +6,34 @@ from storage import connection
 from account_lifecycle import account_lock, blocked, valid_user
 
 
+_PBKDF2_PREFIX = 'pbkdf2_sha256$'
+_PBKDF2_ITERATIONS = 200_000
+
+
 def hash_pw(password, salt):
-    return hashlib.sha256((salt+password).encode('utf-8')).hexdigest()
+    digest = hashlib.pbkdf2_hmac(
+        'sha256', password.encode('utf-8'), salt.encode('utf-8'), _PBKDF2_ITERATIONS
+    ).hex()
+    return f'{_PBKDF2_PREFIX}{_PBKDF2_ITERATIONS}${digest}'
+
+
+def verify_pw(stored, password, salt):
+    if isinstance(stored, str) and stored.startswith(_PBKDF2_PREFIX):
+        parts = stored.split('$', 2)
+        if len(parts) != 3:
+            return False, False
+        try:
+            rounds = int(parts[1])
+        except ValueError:
+            return False, False
+        if rounds <= 0:
+            return False, False
+        expected = hashlib.pbkdf2_hmac(
+            'sha256', password.encode('utf-8'), salt.encode('utf-8'), rounds
+        ).hex()
+        return secrets.compare_digest(parts[2], expected), rounds < _PBKDF2_ITERATIONS
+    legacy = hashlib.sha256((salt + password).encode('utf-8')).hexdigest()
+    return secrets.compare_digest(str(stored or ''), legacy), True
 
 
 class Store:
@@ -17,9 +43,11 @@ class Store:
     def _mint(self, db, username):
         if not valid_user(db, username):
             return None, None
-        token,cookie = secrets.token_hex(16),secrets.token_hex(16)
-        db.execute('INSERT INTO sessions VALUES (?,?,?,?)',(token,username,cookie,time.time()+300))
-        return token,cookie
+        now = time.time()
+        db.execute('DELETE FROM sessions WHERE exp<?', (now,))
+        token, cookie = secrets.token_hex(16), secrets.token_hex(16)
+        db.execute('INSERT INTO sessions VALUES (?,?,?,?)', (token, username, cookie, now + 300))
+        return token, cookie
 
     def login(self, username, password):
         username = username.strip()
@@ -37,8 +65,14 @@ class Store:
                 salt = secrets.token_hex(8)
                 db.execute('INSERT INTO users VALUES (?,?,?,?)',
                            (username,salt,hash_pw(password,salt),int(time.time())))
-            elif user['pw']!=hash_pw(password,user['salt']):
-                return {'success':False,'message':'Sai tài khoản hoặc mật khẩu.'}
+            else:
+                ok, upgrade = verify_pw(user['pw'], password, user['salt'])
+                if not ok:
+                    return {'success':False,'message':'Sai tài khoản hoặc mật khẩu.'}
+                if upgrade:
+                    salt = secrets.token_hex(8)
+                    db.execute('UPDATE users SET salt=?,pw=? WHERE username=?',
+                               (salt, hash_pw(password, salt), username))
             token,cookie = self._mint(db,username)
         return dict(success=True,username=username,loginToken=token,cookie=cookie)
 

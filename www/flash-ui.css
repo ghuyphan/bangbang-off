@@ -1,0 +1,212 @@
+/* Shared Bang Bang Flash UI theme.
+   Single-layer Flash windows (no nested box-in-a-box), crisp beveled chrome,
+   and non-distorted Flash buttons. Compatible with strict 'self' CSP. */
+:root{
+  color-scheme:dark;
+  font-family:Tahoma,Arial,sans-serif;
+  --bb-ink:#ffffff;
+  --bb-gold:#ffe66d;
+  --bb-gold-soft:#fff4c2;
+  --bb-ice:#d8f4ff;
+  --bb-muted:#a9daf2;
+  --bb-line:rgba(124,215,251,.34);
+  --bb-border:#7cd7fb;
+  --bb-shadow:0 1px 2px #022038;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+:is(button,input,select,textarea,a,summary):is(:focus,:focus-visible){outline:2px solid #ffe97d;outline-offset:2px}
+
+body.flash-page{
+  margin:0;
+  min-width:320px;
+  min-height:100vh;
+  background:#030c1d;
+  color:var(--bb-ink);
+  font:13.5px/1.45 Tahoma,Arial,sans-serif;
+  position:relative;
+  overflow-x:hidden;
+}
+body.flash-page::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:url("/rez/zh_CN/gui_summer/controls/login/7df23d326a52c3dc573f636f74dcc6a9.jpg") center/cover no-repeat;
+  transform:scale(1.03);
+  pointer-events:none;
+}
+body.flash-page::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:radial-gradient(ellipse at center,rgba(4,28,52,.22) 0%,rgba(2,11,24,.74) 100%);
+  pointer-events:none;
+}
+
+.flash-logo{
+  display:block;
+  max-width:100%;
+  height:auto;
+  pointer-events:none;
+  user-select:none;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.78));
+}
+
+/* Single clean Flash-styled window (never breaks at any width/height) */
+.flash-window{
+  position:relative;
+  background:linear-gradient(180deg,#0f6ea3 0%,#084b78 52%,#05375c 100%);
+  border:2px solid #8be0ff;
+  border-radius:10px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 0 0 2px #042540,0 12px 30px rgba(0,0,0,.62);
+  overflow:hidden;
+}
+.flash-window-head{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  padding:8px 16px;
+  background:linear-gradient(180deg,#25a9e0 0%,#0e6da6 100%);
+  border-bottom:2px solid #85dcff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45);
+  color:#fff;
+  font:700 15.5px/1.2 Tahoma,Arial,sans-serif;
+  text-align:center;
+  text-shadow:0 1px 2px #033054;
+  letter-spacing:.4px;
+}
+.flash-window-body{padding:16px 18px}
+
+/* Flash buttons: exact sprite PNGs at natural aspect OR non-distorting CSS bevels */
+.flash-sprite-btn{
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:154px;
+  height:40px;
+  padding:0 14px;
+  border:0;
+  background:url("/html5/assets_m8/public_orange120_1c305c2c5f2f.png") center/100% 100% no-repeat;
+  color:#fff;
+  font:700 14px/1 Tahoma,Arial,sans-serif;
+  text-shadow:0 1px 2px #7a2c00;
+  text-decoration:none;
+  cursor:pointer;
+  transition:filter .1s ease,transform .06s ease;
+}
+.flash-sprite-btn.is-blue{
+  background-image:url("/html5/assets_m8/public_blue100_ff0beeb3136a.png");
+  text-shadow:0 1px 2px #002e4f;
+}
+.flash-sprite-btn.is-red{
+  background-image:url("/html5/assets_m8/public_red120_a03025f09e08.png");
+  text-shadow:0 1px 2px #580b06;
+}
+.flash-sprite-btn:hover:not(:disabled){filter:brightness(1.12);text-decoration:none}
+.flash-sprite-btn:active:not(:disabled){transform:translate(1px,1px)}
+.flash-sprite-btn:disabled{filter:grayscale(.75) brightness(.85);opacity:.72;cursor:default}
+
+.flash-btn{
+  appearance:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-height:32px;
+  padding:5px 13px;
+  border:1.5px solid #9ae6ff;
+  border-radius:6px;
+  background:linear-gradient(180deg,#259cd4 0%,#0c6297 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 2px 4px rgba(0,20,40,.45);
+  color:#fff;
+  font:700 12.5px/1.2 Tahoma,Arial,sans-serif;
+  text-shadow:0 1px 2px #022a47;
+  text-decoration:none;
+  cursor:pointer;
+  transition:filter .1s ease,transform .06s ease;
+}
+.flash-btn.is-orange{
+  border-color:#ffe39a;
+  background:linear-gradient(180deg,#ffae42 0%,#e25c12 100%);
+  text-shadow:0 1px 2px #6b2600;
+}
+.flash-btn.is-green{
+  border-color:#a8f79e;
+  background:linear-gradient(180deg,#4fc746 0%,#1f821c 100%);
+  text-shadow:0 1px 2px #0b3c08;
+}
+.flash-btn.is-red{
+  border-color:#ffb6aa;
+  background:linear-gradient(180deg,#e45a4a 0%,#9f2217 100%);
+  text-shadow:0 1px 2px #4e0904;
+}
+.flash-btn.is-quiet{
+  border-color:#68b9de;
+  background:linear-gradient(180deg,#0e5886 0%,#073a5e 100%);
+}
+.flash-btn:hover:not(:disabled){filter:brightness(1.12);text-decoration:none}
+.flash-btn:active:not(:disabled){transform:translate(1px,1px)}
+.flash-btn:disabled{filter:grayscale(.65);opacity:.55;cursor:default}
+
+/* Native Flash inputs, selects, checkboxes */
+.flash-input{
+  background:#042944;
+  border:1.5px solid #6ec9f0;
+  border-radius:5px;
+  color:#fff;
+  font:13.5px Tahoma,Arial,sans-serif;
+  padding:7px 10px;
+  box-shadow:inset 0 2px 4px rgba(0,10,22,.6);
+}
+.flash-input::placeholder{color:#8ecce8;opacity:.85}
+.flash-input:focus{border-color:#ffe66d;outline:none}
+
+.flash-select{
+  color-scheme:light;
+  background:linear-gradient(#f7fcff,#d9effb);
+  border:1.5px solid #2b86b8;
+  border-radius:5px;
+  color:#083857;
+  font:700 12.5px Tahoma,Arial,sans-serif;
+  padding:6px 8px;
+}
+.flash-select option,.flash-select optgroup{background:#fff;color:#111}
+.flash-select option:checked{background:#147bbd;color:#fff}
+
+.flash-checkbox{
+  appearance:none;
+  width:20px;
+  height:20px;
+  margin:0;
+  border:0;
+  background:url("/html5/assets_m8/public_checkbox_5ce4a6d27553.png") center/contain no-repeat;
+  cursor:pointer;
+  flex:none;
+}
+.flash-checkbox:checked{
+  background-image:url("/html5/assets_m8/public_checkboxChecked_4b4389fc927c.png");
+}
+
+.flash-notice{
+  padding:8px 12px;
+  border-radius:6px;
+  background:linear-gradient(180deg,#0e6499 0%,#06355e 100%);
+  border:1.5px solid #7cd7fb;
+  color:#fff4c2;
+  font:700 12.5px/1.4 Tahoma,Arial,sans-serif;
+  text-shadow:0 1px 2px #021c33;
+}
+.flash-notice.is-error{
+  background:linear-gradient(180deg,#8b2b1e 0%,#5c160f 100%);
+  border-color:#ffcf82;
+  color:#fff6dc;
+}
+.flash-notice:empty{display:none}
+
+.flash-scroll::-webkit-scrollbar{width:8px;height:8px}
+.flash-scroll::-webkit-scrollbar-track{background:#042944;border-radius:4px}
+.flash-scroll::-webkit-scrollbar-thumb{background:#3faee0;border:1px solid #96e4ff;border-radius:4px}

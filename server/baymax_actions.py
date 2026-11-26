@@ -24,7 +24,7 @@ class BaymaxActions(SpeedLockMixin, BlockedLockMixin, MpResourceMixin, TankActio
         body = props(347421 if slot==10 and self.link else SLOTS[slot],slot,
                      self.e_count if slot==1 else -1,self.cooldowns[slot],
                      self.e_next_charge if slot==1 else 0)
-        return (1579,body) if changed else (1572,body+struct.pack('<I',self.id))
+        return (1579,body) if changed and self.id==1 else (1572,body+struct.pack('<I',self.id))
 
     def _link_slot(self):
         # S1579 has no owner and changes the local player's button.

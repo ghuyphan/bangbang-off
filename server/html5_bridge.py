@@ -23,13 +23,17 @@ import base64
 import hashlib
 import json
 import secrets
+import selectors
 import socket
 import ssl
 import struct
-import threading
 import time
 from http import HTTPStatus
 from urllib.parse import parse_qs, urlsplit
+
+from server_logging import get_logger
+
+log = get_logger("html5")
 
 GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 TCP_DESTINATION = ("127.0.0.1", 49119)
@@ -104,6 +108,47 @@ def _read_ws(stream):
     return final, opcode, bytes(payload)
 
 
+def _pop_ws_frame(buf):
+    """Pop one masked RFC 6455 frame from `buf`, or return None if incomplete."""
+    if len(buf) < 2:
+        return None
+    first, second = buf[0], buf[1]
+    final, opcode = bool(first & 0x80), first & 0x0F
+    if first & 0x70 or opcode not in (0, 1, 2, 8, 9, 10):
+        raise WebSocketError("Unsupported WebSocket flags or opcode")
+    if not second & 0x80:
+        raise WebSocketError("Client frames must be masked")
+    n = second & 127
+    pos = 2
+    if n == 126:
+        if len(buf) < 4:
+            return None
+        n, = struct.unpack_from("!H", buf, 2)
+        if n < 126:
+            raise WebSocketError("Noncanonical WebSocket length")
+        pos = 4
+    elif n == 127:
+        if len(buf) < 10:
+            return None
+        n, = struct.unpack_from("!Q", buf, 2)
+        if n <= 65535 or n >= 1 << 63:
+            raise WebSocketError("Invalid WebSocket length")
+        pos = 10
+    if n > MAX_FRAME:
+        raise WebSocketError("WebSocket message too large", 1009)
+    if opcode in (8, 9, 10) and (not final or n > 125):
+        raise WebSocketError("Invalid WebSocket control frame")
+    end = pos + 4 + n
+    if len(buf) < end:
+        return None
+    key = buf[pos:pos + 4]
+    payload = bytearray(buf[pos + 4:end])
+    for i in range(n):
+        payload[i] ^= key[i % 4]
+    del buf[:end]
+    return final, opcode, bytes(payload)
+
+
 def _validate_close(payload):
     if len(payload) == 1:
         raise WebSocketError("Invalid close payload")
@@ -153,16 +198,22 @@ class SessionLease:
         self.username = session["username"]
         self.cookie = session["cookie"]
         self.database = getattr(store, "path", None)
+        self._active_until = 0.0
 
     def _row(self, sql, args):
         import storage
         with storage.connection(self.database) as db:
             return db.execute(sql, args).fetchone()
 
-    def active(self):
+    def active(self, *, force=False):
+        now = time.monotonic()
+        if not force and now < self._active_until:
+            return True
         row = self._row("SELECT username FROM sessions WHERE cookie=? AND exp>=? LIMIT 1",
                         (self.cookie, time.time()))
-        return row is not None and secrets.compare_digest(row[0], self.username)
+        ok = row is not None and secrets.compare_digest(row[0], self.username)
+        self._active_until = now + 1.0 if ok else 0.0
+        return ok
 
     def token_owner(self, token):
         row = self._row("SELECT username FROM sessions WHERE token=? AND exp>=? LIMIT 1",
@@ -616,6 +667,7 @@ def handle_websocket(handler, *, session, store):
     try:
         active = lease.active()
     except Exception:
+        log.exception("[html5] Session check failed during WebSocket upgrade")
         handler.send_error(HTTPStatus.SERVICE_UNAVAILABLE, "Session service unavailable")
         return
     if not active:
@@ -624,7 +676,6 @@ def handle_websocket(handler, *, session, store):
     try:
         native = socket.create_connection(TCP_DESTINATION, timeout=3)
         native.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-        native.settimeout(min(1.0, SESSION_CHECK_INTERVAL))
     except OSError:
         handler.send_error(HTTPStatus.BAD_GATEWAY, "Native TCP service unavailable")
         return
@@ -644,74 +695,54 @@ def handle_websocket(handler, *, session, store):
     finally:
         handler.protocol_version = previous
     handler.close_connection = True
-    handler.connection.settimeout(CLIENT_IDLE_TIMEOUT)
-    write_lock = threading.Lock()
-    closed = threading.Event()
-    close_sent = False
-    guard = NativeGuard(role, lease)
-
-    def send_ws(data, opcode=2):
-        nonlocal close_sent
-        with write_lock:
-            if close_sent:
-                return
-            if opcode == 8:
-                close_sent = True
-            handler.wfile.write(_pack_ws(data, opcode))
-            handler.wfile.flush()
-
-    def send_close(code, reason):
-        try:
-            send_ws(struct.pack("!H", code) + reason.encode("utf-8")[:100], 8)
-        except OSError:
-            pass
-
-    def stop_browser():
-        try:
-            handler.connection.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
-
-    def from_native():
-        next_check = time.monotonic() + SESSION_CHECK_INTERVAL
-        code, reason = 1011, "Native connection closed"
-        try:
-            while not closed.is_set():
-                now = time.monotonic()
-                if now >= next_check:
-                    if not lease.active():
-                        code, reason = 1008, "Web session expired"
-                        break
-                    next_check = now + SESSION_CHECK_INTERVAL
-                try:
-                    data = native.recv(16384)
-                except socket.timeout:
-                    continue
-                if not data:
-                    break
-                send_ws(data)
-        except (OSError, EOFError):
-            pass
-        except Exception:
-            code, reason = 1011, "Session service unavailable"
-        finally:
-            if not closed.is_set():
-                send_close(code, reason)
-                closed.set()
-                stop_browser()
-
-    thread = threading.Thread(target=from_native, name="bb-html5-" + role.lower(), daemon=True)
-    thread.start()
-    fragment = None
+    client = handler.connection
     try:
-        while not closed.is_set():
-            final, opcode, payload = _read_ws(handler.rfile)
+        client.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    except OSError:
+        pass
+    client.setblocking(False)
+    native.setblocking(False)
+    try:
+        buffered = handler.rfile.read(65536)
+    except (OSError, ValueError):
+        buffered = b""
+    ws_in = bytearray(buffered or b"")
+    ws_out = bytearray()
+    tcp_out = bytearray()
+    guard = NativeGuard(role, lease)
+    fragment = None
+    close_sent = False
+    closing = False
+    next_check = time.monotonic() + SESSION_CHECK_INTERVAL
+    last_rx = time.monotonic()
+
+    def queue_ws(data, opcode=2):
+        nonlocal close_sent
+        if close_sent:
+            return
+        if opcode == 8:
+            close_sent = True
+        ws_out.extend(_pack_ws(data, opcode))
+
+    def queue_close(code, reason):
+        nonlocal closing
+        closing = True
+        queue_ws(struct.pack("!H", code) + reason.encode("utf-8")[:100], 8)
+
+    def process_ws_frames():
+        nonlocal fragment, closing
+        while not closing:
+            frame = _pop_ws_frame(ws_in)
+            if frame is None:
+                return
+            final, opcode, payload = frame
             if opcode == 8:
                 _validate_close(payload)
-                send_ws(payload, 8)
-                break
+                queue_ws(payload, 8)
+                closing = True
+                return
             if opcode == 9:
-                send_ws(payload, 10)
+                queue_ws(payload, 10)
                 continue
             if opcode == 10:
                 continue
@@ -734,21 +765,122 @@ def handle_websocket(handler, *, session, store):
                 payload, fragment = bytes(fragment), None
             if not lease.active():
                 raise WebSocketError("Web session expired", 1008)
-            for frame in guard.feed(payload):
-                native.sendall(frame)
+            for out_frame in guard.feed(payload):
+                tcp_out.extend(out_frame)
+
+    def read_client():
+        nonlocal last_rx
+        while not closing:
+            try:
+                chunk = client.recv(16384)
+            except (ssl.SSLWantReadError, ssl.SSLWantWriteError, BlockingIOError):
+                return True
+            if not chunk:
+                return False
+            last_rx = time.monotonic()
+            ws_in.extend(chunk)
+            if len(ws_in) > MAX_FRAME * 2:
+                raise WebSocketError("WebSocket buffer exceeded", 1009)
+            process_ws_frames()
+        return True
+
+    def flush_ws_out():
+        while ws_out:
+            try:
+                sent = client.send(ws_out[:65536])
+            except (ssl.SSLWantReadError, ssl.SSLWantWriteError, BlockingIOError):
+                return
+            if sent <= 0:
+                raise EOFError("Client write closed")
+            del ws_out[:sent]
+
+    def flush_tcp_out():
+        while tcp_out:
+            try:
+                sent = native.send(tcp_out[:65536])
+            except BlockingIOError:
+                return
+            if sent <= 0:
+                raise EOFError("Native write closed")
+            del tcp_out[:sent]
+
+    sel = selectors.DefaultSelector()
+    try:
+        sel.register(client, selectors.EVENT_READ, "client")
+        sel.register(native, selectors.EVENT_READ, "native")
+        process_ws_frames()
+        while True:
+            if closing and not ws_out:
+                break
+            now = time.monotonic()
+            if not closing and now - last_rx >= CLIENT_IDLE_TIMEOUT:
+                queue_close(1001, "Connection idle timeout")
+                continue
+            if not closing and now >= next_check:
+                if not lease.active():
+                    queue_close(1008, "Web session expired")
+                    continue
+                next_check = now + SESSION_CHECK_INTERVAL
+            if isinstance(client, ssl.SSLSocket) and client.pending() > 0 and not closing:
+                if not read_client():
+                    break
+                continue
+            client_events = (0 if closing else selectors.EVENT_READ) | (selectors.EVENT_WRITE if ws_out else 0)
+            native_events = (0 if closing else selectors.EVENT_READ) | (selectors.EVENT_WRITE if tcp_out else 0)
+            if client_events:
+                sel.modify(client, client_events, "client")
+            elif sel.get_key(client).events:
+                sel.modify(client, 0, "client")
+            if native_events:
+                sel.modify(native, native_events, "native")
+            elif sel.get_key(native).events:
+                sel.modify(native, 0, "native")
+            timeout = min(1.0, SESSION_CHECK_INTERVAL, max(0.05, next_check - now))
+            for key, mask in sel.select(timeout=timeout):
+                if key.data == "client":
+                    if mask & selectors.EVENT_READ and not read_client():
+                        ws_out.clear()
+                        closing = True
+                        break
+                    if mask & selectors.EVENT_WRITE:
+                        flush_ws_out()
+                elif key.data == "native":
+                    if mask & selectors.EVENT_READ and not closing:
+                        while True:
+                            try:
+                                chunk = native.recv(16384)
+                            except BlockingIOError:
+                                break
+                            if not chunk:
+                                queue_close(1011, "Native connection closed")
+                                break
+                            queue_ws(chunk)
+                    if mask & selectors.EVENT_WRITE:
+                        flush_tcp_out()
+            if ws_out:
+                flush_ws_out()
+            if tcp_out and not closing:
+                flush_tcp_out()
     except WebSocketError as exc:
-        send_close(exc.code, str(exc))
-    except socket.timeout:
-        send_close(1001, "Connection idle timeout")
+        queue_close(exc.code, str(exc))
     except (EOFError, OSError):
         pass
     except Exception:
-        send_close(1011, "Session service unavailable")
+        log.exception("[html5] Unexpected WebSocket relay error for role=%s", role)
+        queue_close(1011, "Session service unavailable")
     finally:
-        closed.set()
+        if ws_out:
+            deadline = time.monotonic() + 0.2
+            while ws_out and time.monotonic() < deadline:
+                try:
+                    flush_ws_out()
+                except (OSError, EOFError):
+                    break
+                if ws_out:
+                    time.sleep(0.01)
+        sel.close()
         try:
             native.shutdown(socket.SHUT_RDWR)
         except OSError:
             pass
         native.close()
-        thread.join(timeout=2)

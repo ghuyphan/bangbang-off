@@ -141,11 +141,12 @@ export class BattleView {
       },
       onSettings: () => {
         this.input.releaseAll('settings');
-        if (this.onOpenSettings) this.onOpenSettings();
+        if (this.onOpenSettings && !this.touch?.isTouchViewport?.()) this.onOpenSettings();
         else {
           $('robo-settings').hidden = !$('robo-settings').hidden;
           $('robo-sound').textContent = this.audio.enabled ? 'Tắt âm thanh' : 'Bật âm thanh';
           if ($('robo-aim-assist')) $('robo-aim-assist').textContent = `Hỗ trợ ngắm: ${this.input.aimAssist ? 'BẬT' : 'TẮT'}`;
+          if ($('robo-mobile-zoom')) $('robo-mobile-zoom').textContent = MOBILE_ZOOM_LABELS[this.mobileZoomMode];
         }
       }});
     this.postmatch = new M86Postmatch({host: $('battle-stage'), client,
@@ -164,10 +165,13 @@ export class BattleView {
       portraitCopyAvailability: (accountId, now) => this.input.portraitCopyAvailability(accountId, now),
       onExit: () => this.run(async () => { this.input.releaseAll(); await client.leaveRoom(); }),
       onSettings: () => {
-        if(this.onOpenSettings){this.input.releaseAll('settings');this.onOpenSettings();return;}
+        if (this.onOpenSettings && !this.touch?.isTouchViewport?.()) {
+          this.input.releaseAll('settings'); this.onOpenSettings(); return;
+        }
         this.input.releaseAll(); $('robo-settings').hidden = !$('robo-settings').hidden;
         $('robo-sound').textContent = this.audio.enabled ? 'Tắt âm thanh' : 'Bật âm thanh';
         if ($('robo-aim-assist')) $('robo-aim-assist').textContent = `Hỗ trợ ngắm: ${this.input.aimAssist ? 'BẬT' : 'TẮT'}`;
+        if ($('robo-mobile-zoom')) $('robo-mobile-zoom').textContent = MOBILE_ZOOM_LABELS[this.mobileZoomMode];
       },
       onSelectAccount: accountId => {
         if (this.client.state.phase === 'ready' && this.input.castFromPortrait(accountId)) return;
@@ -245,24 +249,23 @@ export class BattleView {
     $('robo-renderer').value = rendererPreference();
     $('robo-renderer-apply').onclick = () => this.run(async () => {
       saveRendererPreference($('robo-renderer').value);
-      this.input.releaseAll(); window.location.reload();
+      this.input.releaseAll(); window.location.replace(battleReloadUrl(window.location.href));
     });
     $('robo-settings-close').onclick = () => { $('robo-settings').hidden = true; this.input.activate(); };
     $('robo-exit').onclick = () => run(async () => {
       this.input.releaseAll(); $('robo-settings').hidden = true; await client.leaveRoom();
     });
-    window.addEventListener('keydown', event => {
+    this._onWindowKeyDown = event => {
       if (event.key === 'Escape' && this.roboActive) $('robo-settings').hidden = true;
-    });
-    const unlockRoboSound = () => {
+      if (/^(Key[WASDER]|Space|Arrow(Up|Down|Left|Right))$/.test(event.code)) this._unlockRoboSound();
+    };
+    window.addEventListener('keydown', this._onWindowKeyDown);
+    this._unlockRoboSound = () => {
       if (this.roboActive && this.roboSoundWanted && this.input.active && !this.audio.enabled) {
         this.audio.setEnabled(true).catch(error => this.message(error.message));
       }
     };
-    this.canvas.addEventListener('pointerdown', unlockRoboSound);
-    window.addEventListener('keydown', event => {
-      if (/^(Key[WASDER]|Space|Arrow(Up|Down|Left|Right))$/.test(event.code)) unlockRoboSound();
-    });
+    this.canvas.addEventListener('pointerdown', this._unlockRoboSound);
     for (const node of document.querySelectorAll('[data-skill-slot]')) {
       node.onclick = () => this.input.castFromButton(Number(node.dataset.skillSlot));
       let pointerInside=false;
@@ -277,7 +280,8 @@ export class BattleView {
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe($('battle-stage'));
     this.drawSequence = this.drawSequence.bind(this);
-    this.frame = this.frame.bind(this); this.raf = requestAnimationFrame(this.frame);
+    this.frame = this.frame.bind(this);
+    this.raf = 0;
   }
 
   message(text) { $('battle-input-message').textContent = text; this.messageAt = performance.now(); }
@@ -288,6 +292,9 @@ export class BattleView {
       ? (render?.supported || render?.phase === 'ready' || render?.phase === 'error')
       : (render?.phase === 'error' || (render?.phase === 'ready' && !render?.supported));
     $('battle-panel').hidden = !inScene || !showPanel;
+    if (!$('battle-panel').hidden && !this.raf) {
+      this.raf = requestAnimationFrame(this.frame);
+    }
     if (render?.phase === 'error' || (render?.phase === 'ready' && !render.supported)) {
       $('battle-scope').textContent = render.message;
     }
@@ -352,6 +359,8 @@ export class BattleView {
     const rect = $('battle-stage').getBoundingClientRect();
     if (!(rect.width > 0 && rect.height > 0)) return;
     this.width = rect.width; this.height = rect.height;
+    const tbScale = Math.max(0.76, Math.min(1.14, this.width / 500, this.height / 420));
+    $('battle-stage').style.setProperty('--tb-scale', tbScale.toFixed(3));
     const ratio = Math.min(devicePixelRatio || 1, 2);
     this.surface.resize(this.width, this.height, ratio);
     this.overlay.width = Math.round(this.width * ratio); this.overlay.height = Math.round(this.height * ratio);
@@ -378,11 +387,11 @@ export class BattleView {
     y: (y - this.camera.y) * this.camera.zoom + this.height / 2 + this.shakeOffset.y}; }
 
   frame(now) {
-    this.raf = requestAnimationFrame(this.frame);
     const state = this.client.combat;
     if (!state || !this.geometry || $('battle-panel').hidden || !this.prepared?.supported) {
-      this.lastFrameAt = null; return;
+      this.raf = 0; this.lastFrameAt = null; return;
     }
+    this.raf = requestAnimationFrame(this.frame);
     // Do not count blank frames or auto-reactivate movement while the browser
     // is restoring a real GL loss. Native networking continues unchanged.
     if (this.surface.lost) {
@@ -1401,6 +1410,19 @@ export class BattleView {
       robo: this.roboActive ? {camera: this.roboCamera.snapshot(), hud: this.roboHud.snapshot(),
         world: this.roboWorld.snapshot()} : null,
       spectator: this.spectator.snapshot(), team: this.teamHud.snapshot(), postmatch: this.postmatch.snapshot()};
+  }
+
+  dispose() {
+    if (this.raf) cancelAnimationFrame(this.raf);
+    this.raf = 0;
+    document.removeEventListener('fullscreenchange', this._onFullscreenChange);
+    document.removeEventListener('webkitfullscreenchange', this._onFullscreenChange);
+    window.removeEventListener('keydown', this._onWindowKeyDown);
+    this.canvas.removeEventListener('pointerdown', this._unlockRoboSound);
+    this.resizeObserver.disconnect();
+    this.input?.destroy?.();
+    this.touch?.dispose?.();
+    this.postmatch?.dispose?.();
   }
 }
 

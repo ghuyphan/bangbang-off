@@ -62,9 +62,9 @@ export class RoboCamera {
     this.fitMinView = !!fitMinView;
     const shrink = fitMinView && (this.stageWidth < MIN_VIEW_WIDTH || this.stageHeight < MIN_VIEW_HEIGHT);
     if (shrink) {
-      const baseZoom = Math.max(0.48, Math.min(0.88, Number(stageWidth) / 880, Number(stageHeight) / 540));
+      const baseZoom = Math.max(0.42, Math.min(0.88, Number(stageWidth) / 920, Number(stageHeight) / 540));
       const factor = ZOOM_FACTOR[zoomMode] ?? 1;
-      this.zoom = Math.max(0.42, Math.min(1, baseZoom * factor));
+      this.zoom = Math.max(0.40, Math.min(1, baseZoom * factor));
     } else {
       this.zoom = 1;
     }

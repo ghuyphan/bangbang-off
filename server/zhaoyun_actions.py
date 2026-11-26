@@ -22,7 +22,7 @@ class ZhaoYunActions(SpeedLockMixin, TankActions):
         self.ready=self.channel=self.dash=None
         self.r_visual=None
 
-    def _cooldown(self,slot):
+    def _cooldown(self,slot,changed=False):
         count=self.e_count if slot==1 else self.r_count if slot==10 else -1
         next_charge=self.e_next_charge if slot==1 else self.r_next_charge if slot==10 else 0
         return 1572,props(SLOTS[slot],slot,count,self.cooldowns[slot],next_charge)+struct.pack('<I',self.id)

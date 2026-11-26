@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import struct
 import time
 
@@ -80,16 +81,22 @@ def apply(state, message_id, payload, db):
         if not required:
             raise ValueError('Missing upgrade recipe')
         containers = inventory.load(db)
+        material_bags = ('2', '3')
         for item_id, count in required.items():
-            available = sum(item['count'] for items in containers.values() for item in items
-                            if item['template_id'] == item_id)
+            available = sum(
+                item['count'] for bag_key in material_bags for item in containers.get(bag_key, [])
+                if item['template_id'] == item_id
+                and not (item.get('ext_flag', 0) & 2) and not item.get('life_time', 0)
+            )
             if available < count:
                 raise ValueError(f'Not enough material {item_id}')
         changed = []
         for item_id, count in required.items():
-            for container, items in containers.items():
+            for container in material_bags:
+                items = containers.get(container, [])
                 for item in items:
-                    if item['template_id'] != item_id or count == 0:
+                    if (item['template_id'] != item_id or count == 0
+                            or (item.get('ext_flag', 0) & 2) or item.get('life_time', 0)):
                         continue
                     taken = min(count, item['count'])
                     item['count'] -= taken
@@ -105,22 +112,32 @@ def apply(state, message_id, payload, db):
             record['n_exp'] = 0
         selected = (state.get('selected_tank_uuid') == uuid or
                     not state.get('selected_tank_uuid') and state['tank_id'] == record['tank_id'])
-        new_state = dict(state)
-        if selected:
-            new_state.update(selected_tank_uuid=uuid, tank_level=record['level'],
-                             tank_strength=record['stth_level'])
         db.execute('UPDATE garage SET data=? WHERE profile_id=? AND uuid=?',
                    (json.dumps(record, ensure_ascii=False, separators=(',', ':')),
                     storage.profile_id(), uuid))
+        stars = None
         if message_id == 203:
-            new_state['military_star'] = military_rank.stars(db)
-            military_rank.record_stars(db, storage.profile_id(), new_state['military_star'])
+            stars = military_rank.stars(db)
+            military_rank.record_stars(db, storage.profile_id(), stars)
         inventory.save(containers, db)
-        db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
-                   (json.dumps(new_state, ensure_ascii=False, separators=(',', ':')),
-                    time.time_ns() // 1_000_000, storage.profile_id()))
+        world_row = db.execute('SELECT state FROM worlds WHERE profile_id=?', (storage.profile_id(),)).fetchone()
+        if world_row is not None:
+            saved = json.loads(world_row[0])
+            if stars is not None:
+                saved['military_star'] = stars
+            if selected and not state.get('tank_selection'):
+                saved.update(selected_tank_uuid=uuid, tank_level=record['level'],
+                             tank_strength=record['stth_level'])
+            db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
+                       (json.dumps(saved, ensure_ascii=False, separators=(',', ':')),
+                        time.time_ns() // 1_000_000, storage.profile_id()))
         db.commit()
-        state.update(new_state)
+        if stars is not None:
+            state['military_star'] = stars
+        if selected:
+            state.update(selected_tank_uuid=uuid)
+            if not state.get('tank_selection'):
+                state.update(tank_level=record['level'], tank_strength=record['stth_level'])
         # Refresh affected containers: this also removes empty stacks correctly.
         packets = [(1100, inventory.list_payload(c, containers[str(c)], 3))
                    for c in sorted({c for c, _ in changed})]
@@ -130,7 +147,7 @@ def apply(state, message_id, payload, db):
         visible = dict(record, ext_flag=(record['ext_flag'] & ~2) | (2 if selected else 0))
         packets.append((1151, tank_instance_payload(visible) + bytes([op])))
         return record, packets, None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         raw = uuid.encode('utf-8')
         failure = struct.pack('<H', len(raw)) + raw + struct.pack('<I', 5 if message_id == 204 else 3)

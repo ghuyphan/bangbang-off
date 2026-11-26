@@ -20,7 +20,7 @@ from battle_map import BattleMap
 from battle_participants import human, private, other_viewers
 import boosters
 import bot_loadouts
-from combat_data import table_row, tank_stats, active_buff_effect_types
+from combat_data import table_row, tank_stats, active_buff_effect_types, buff_meta, database_path
 from combat_geometry import actor_contact, circle_contact, point_at, rect_contact
 from combat_math import D, Shield, apply_damage, damage_amount, heal, quantize
 from combat_protocol import move_event, skill_event, scene, stop_move
@@ -200,6 +200,7 @@ class BattleArena:
             self.bot=None
             self.bot_attacks=False
             install(self,self.clock())
+            self._grant_initial_spawn_protection()
             return
         if self.geometry.id in PVE_MAPS:
             from pve_rules import install as install_pve
@@ -207,6 +208,7 @@ class BattleArena:
             self.bot=None
             self.bot_attacks=False  # NPC scripts use the map tick, never the PvP roster.
             install_pve(self,self.clock())
+            self._grant_initial_spawn_protection()
             return
         if self.geometry.id in (1,4,7,9,10,12,14,17,18,19,20,21,30,40,34,35,36,37,50,70,169,170):
             from bot_setup import room_bots
@@ -288,6 +290,7 @@ class BattleArena:
             ready=self.pk.get('intro_until',self.clock())
             self.queue(ready if self.geometry.id in (1,4,9,10,12,14,17,21,30,40,34,35,36,37,50,70,169,170) else ready+50,self._map_tick)
             for actor in self.actors.values():self.queue(ready,actor.on_spawn)
+            self._grant_initial_spawn_protection()
             if self.bot_attacks:self.queue(ready+200,self._pk_tick)
             return
         bot = state['bot']
@@ -300,6 +303,15 @@ class BattleArena:
             self.queue(self.clock(),actor.on_spawn)
         if bot_attacks:
             self.queue(self.clock()+1000, self._bot_attack)
+
+    def _grant_initial_spawn_protection(self):
+        """Grant 2s post-intro spawn protection to tank actors in PK/PvE/World Boss."""
+        if not self.pk or self.tank_test:
+            return
+        ready = self.pk.get('intro_until', self.clock())
+        for actor in self.actors.values():
+            if not actor.info.get('npc_template'):
+                actor.pk_safe_until = ready + 2000
 
     def new_id(self, object_type):
         self.serial += 1
@@ -316,6 +328,33 @@ class BattleArena:
         return tuple((x-36,y-36,x+36,y+36) for actor in actors
                      if (wall:=getattr(actor,'water_wall',None)) and wall['end']>now
                      for _,(x,y) in wall['blocks'])
+
+    def enemy_tank_rects(self,actor,now,start=None,dest=None,radius=None):
+        """72x72 solid boxes for visible enemy tanks; allies remain passable."""
+        if actor.info.get('npc_template') or actor.in_stasis() or actor.info.get('pve_flying'):
+            return ()
+        rects=[]
+        team_visible=None
+        for other in self.actors.values():
+            if (other is actor or other.camp==actor.camp or not other.alive
+                    or other.info.get('npc_template') or other.in_stasis()):
+                continue
+            pos=other.position_at(now)
+            if radius is not None and start is not None and math.dist(start,pos)>radius:
+                continue
+            rect=(pos[0]-36,pos[1]-36,pos[0]+36,pos[1]+36)
+            if start is not None and dest is not None:
+                if rect_contact(start,dest,(rect,),35.999) is None:
+                    continue
+                # Allow separating if tanks already overlap instead of locking in place.
+                if rect_contact(start,start,(rect,),35.999) is not None and math.dist(dest,pos)>math.dist(start,pos):
+                    continue
+            if team_visible is None:
+                from bot_ai import team_visible
+            if not team_visible(self,actor,other,now):
+                continue
+            rects.append(rect)
+        return tuple(rects)
 
     def clip_motion(self,start,dest,now):
         dest = self.geometry.clip_tank_motion(start,dest)
@@ -577,6 +616,8 @@ class TankActions:
         self.stat_loans = {}  # Groot links: signed flat modifiers, never base-stat edits.
         self.last_interval = int(self.stats['iFireInterv'])
         self.last_attack = None
+        if self.info.get('tank_id') in (10000073, 10000055):
+            self.arena._has_emergency_check = True
 
     @property
     def enemy(self):
@@ -649,10 +690,12 @@ class TankActions:
 
     def blink_destination(self,start,dest):
         if self.effect_blocked():return start
+        now = self.clock()
         dest = self.arena.geometry.clear_tank_landing(self.arena.geometry.clamp_tank_position(start),self.arena.geometry.clip_tank_motion(start,dest))
-        if rect_contact(dest,dest,self.arena.water_rects(self.clock()),36-.001) is None:
+        blockers = self.arena.water_rects(now)+self.arena.enemy_tank_rects(self,now,dest,dest)
+        if rect_contact(dest,dest,blockers,36-.001) is None:
             return dest
-        return self.arena.free_position(dest,self.clock()) or start
+        return self.arena.free_position(dest,now,extra=self.arena.enemy_tank_rects(self,now,dest,radius=180)) or start
 
     def has_buff(self, template, now):
         return self.active_buffs.get((self.id,template),(0,0))[1] > now
@@ -681,6 +724,7 @@ class TankActions:
 
     def attr_bonus(self, attributes, now):
         value = crystal_combat.bonus(self, attributes)
+        db_key = str(database_path())
         for (owner,template),(_,end) in self.active_buffs.items():
             if self.arena.geometry.id == 40002 and 483 <= template <= 489:
                 continue  # World Boss energy is a flat attack bonus plus 5%.
@@ -688,12 +732,12 @@ class TankActions:
                 continue  # Frozen Guild passives are already in base stats.
             if owner!=self.id or end<=now or template in (416412,416413,416415,416416,388112,336106,344207,358923,305110,305111,305112,305314,381203,381204,391103,391104,391105,330122):
                 continue  # Borrowed values are in stat_loans, these buffs show stacks.
-            row = table_row('BuffTemplate_table.xml',nBuffId=template)
-            attribute = 10 if template==358607 else int(row.get('nTypeParam',0))
-            if row.get('nEffectType')=='201' and attribute in attributes:
-                amount = D(row.get('fEffectValA','0'))+D(row.get('iStackAdd','0'))*(self.buff_stacks.get(template,1)-1)
-                if row.get('fTimeEffectValA') and int(row.get('iCoolTime',0))>0:
-                    changed = amount+D(row['fTimeEffectValA'])*((now-self.buff_started[template])//int(row['iCoolTime']))
+            effect_type, type_param, _, _, _, _, cool_time, _, _, val_a_dec, stack_add_dec, time_val_dec = buff_meta(template, db_key)
+            attribute = 10 if template==358607 else type_param
+            if effect_type==201 and attribute in attributes:
+                amount = val_a_dec+stack_add_dec*(self.buff_stacks.get(template,1)-1)
+                if time_val_dec is not None and cool_time>0:
+                    changed = amount+time_val_dec*((now-self.buff_started[template])//cool_time)
                     amount = max(D(0),changed) if amount>0 else min(D(0),changed)
                 value += amount
         return value
@@ -735,8 +779,9 @@ class TankActions:
 
     def cleanse(self, now):
         packets = []
+        db_key = str(database_path())
         for (owner,template) in list(self.active_buffs):
-            if owner==self.id and (table_row('BuffTemplate_table.xml',nBuffId=template).get('iAspect')=='-1'
+            if owner==self.id and (buff_meta(template,db_key)[8]=='-1'
                     or template in (344207,344211,368305,368405) and self.buff_sources.get(template)!=self.id):
                 packets.extend(self.remove_buff(template,now))
         # Naruto's approved hit counter survives CC immunity, independently
@@ -771,11 +816,11 @@ class TankActions:
 
     @staticmethod
     def defense_buff(template):
-        row = table_row('BuffTemplate_table.xml',nBuffId=template)
         if template in (350302,367406,368302,314101,383323,381307):
             return True
-        return (row.get('nEffectType')=='201' and int(row.get('nTypeParam',0)) in (2,6,7)
-                and D(row.get('fEffectValA','0'))>0) or template in (331224,363309,304302,304312,307303,323122,321302,322214,322305,338105,338306,364303,365403,380147,380401,311312,347104,347303,339204,339113,318202,336401,336503,344110,344113,335315,8190103,8190421,8190422,356112,*range(328231,328236),*range(316311,316315),*range(316321,316325),*range(316331,316335))
+        effect_type, type_param, _, _, _, _, _, _, _, val_a_dec, _, _ = buff_meta(template)
+        return (effect_type==201 and type_param in (2,6,7)
+                and val_a_dec>0) or template in (331224,363309,304302,304312,307303,323122,321302,322214,322305,338105,338306,364303,365403,380147,380401,311312,347104,347303,339204,339113,318202,336401,336503,344110,344113,335315,8190103,8190421,8190422,356112,*range(328231,328236),*range(316311,316315),*range(316321,316325),*range(316331,316335))
 
     def strip_defenses(self, now):
         packets = []
@@ -785,9 +830,9 @@ class TankActions:
         return packets
 
     def buff_types(self, now):
-        active = [t for (owner,t),(_,end) in self.active_buffs.items()
-                  if owner==self.id and end>now]
-        return active_buff_effect_types(active)
+        db_key = str(database_path())
+        return {buff_meta(t, db_key)[0] for (owner,t),(_,end) in self.active_buffs.items()
+                if owner==self.id and end>now}
 
     def _speed(self, now):
         if self.in_stasis() or (getattr(self,'dracula_ritual',None) or getattr(self,'caocao_hostage',None)) or 36 in self.buff_types(now):
@@ -795,33 +840,33 @@ class TankActions:
             return 0
         bonuses, slows = [float(crystal_combat.bonus(self, (11,)))], []
         flat = 0
+        db_key = str(database_path())
         for (owner, template), (_, end) in self.active_buffs.items():
             if owner != self.id or end <= now:
                 continue
             if 500101 <= template <= 508109 or 510801 <= template <= 510839:
                 continue
-            row = table_row('BuffTemplate_table.xml',nBuffId=template)
+            effect_type, type_param, val_type, val_a_f, stack_add_f, time_val_f, cool_time, *_ = buff_meta(template, db_key)
             if template==30106:
                 flat+=72  # Pickup is a flat speed bonus, not +7200%.
                 continue
             source=self.arena.actors.get(self.buff_sources.get(template))
-            if (template==50347 and source and row.get('nEffectType')=='201'
-                    and row.get('nTypeParam')=='11' and row.get('iValType')=='1'):
+            if (template==50347 and source and effect_type==201
+                    and type_param==11 and val_type==1):
                 from pve_dooku import enabled as local_dooku_enabled
                 if local_dooku_enabled(source):
                     # Dooku's native slow is flat -110, not -11000%. Scope
                     # this to the new-run source; legacy and other buffs keep
                     # their established speed aggregation and expiry rules.
-                    flat+=float(row.get('fEffectValA',0))
+                    flat+=val_a_f
                     continue
             if (template==247 and self.info.get('pve_npc') or template==50311 and source
                     and source.info.get('pve_npc') and getattr(source,'shot_skill',0)==1000065):
                 flat-=min(100,int(self.stats['iSpeed']))
                 continue  # Source-approved flat slow of shield/nuclear PvE NPCs.
             if template in (391103,391104,391105,330122):continue  # V1 uses the explicit linear missing-HP bonus.
-            if row.get('nEffectType')=='201' and (row.get('nTypeParam')=='11' or template==381203) and template!=358607:
-                value = float(row.get('fEffectValA',0))
-                value += float(row.get('iStackAdd',0))*(self.buff_stacks.get(template,1)-1)
+            if effect_type==201 and (type_param==11 or template==381203) and template!=358607:
+                value = val_a_f + stack_add_f*(self.buff_stacks.get(template,1)-1)
                 if template==310122:
                     value=-.4
                 if template==341212:
@@ -832,9 +877,8 @@ class TankActions:
                     value=-.5  # Q41: seven skill hits, constant slow for two seconds.
                 if template==350112:
                     value=.05*self.buff_stacks.get(template,1)  # Q35, not the old 10% speed.
-                if template not in (362107,384223) and row.get('fTimeEffectValA') and int(row.get('iCoolTime',0))>0:
-                    changed = value+float(row['fTimeEffectValA'])*\
-                              ((now-self.buff_started[template])//int(row['iCoolTime']))
+                if template not in (362107,384223) and time_val_f and cool_time>0:
+                    changed = value+time_val_f*((now-self.buff_started[template])//cool_time)
                     value = max(0,changed) if value>0 else min(0,changed)
                 (slows if value < 0 else bonuses).append(value)
         return round(max(0,int(self.stats['iSpeed'])*max(0,1+sum(bonuses)+min(slows,default=0))+flat)*float(guild_combat.weaken_factor(self,(11,),now)))
@@ -847,7 +891,8 @@ class TankActions:
             return True
         types = self.buff_types(now)
         forced_basic = action=='attack' and getattr(self.arena,'forced_basic_actor',None)==self.id
-        charm = any(self.has_buff(t,now) and table_row('BuffTemplate_table.xml',nBuffId=t)['nEffectType']=='62'
+        db_key = str(database_path()) if forced_basic else None
+        charm = any(self.has_buff(t,now) and buff_meta(t,db_key)[0]==62
                     and not (forced_basic and t==314304) for t in self.buff_started) if forced_basic else 62 in types
         if 30 in types or charm:  # stun/knockup or server-controlled charm
             return True
@@ -864,13 +909,14 @@ class TankActions:
             return True
         # SkillTool.getBanSlots: silence excludes common attack; masks E/Space/R.
         mask = {0:1, 1:2, 2:4, 10:8, 4:16}.get(slot,0)
+        if not mask:
+            return False
+        db_key = str(database_path())
         for (owner,template),(_,end) in self.active_buffs.items():
-            if owner!=self.id or end<=now or not mask:
+            if owner!=self.id or end<=now:
                 continue
-            row = table_row('BuffTemplate_table.xml',nBuffId=template)
-            effect = int(row['nEffectType'])
+            effect, _, _, _, _, _, _, bits, *_ = buff_meta(template, db_key)
             if effect==66 or effect==35 and slot!=0:
-                bits = int(row.get('fEffectValB',0))
                 if bits==0 or bits & mask:
                     return True
         return False
@@ -984,6 +1030,7 @@ class TankActions:
             self.buff_versions[template] = self.buff_versions.get(template,0)+1
         self.buff_started.pop(template,None)
         self.buff_stacks.pop(template,None)
+        self.buff_sources.pop(template,None)
         self.shields = tuple(s for s in self.shields if s.shield_id!=str(template))
         packets = ([(1559,struct.pack('<II',self.id,old[0]))] if old else [])+self.sync_speed(now)
         if template==323301:
@@ -1069,6 +1116,7 @@ class TankActions:
             self.athena_shield = None
             self.buff_started.clear()
             self.buff_stacks.clear()
+            self.buff_sources.clear()
             packets.append(self.shield_packet(now))
             if self.arena.pk:
                 packets.extend(pk_rules.death(self.arena,self,now))
@@ -1365,9 +1413,10 @@ class TankActions:
             packets.extend(target.on_basic_damage(self,hit,now))
         if not basic and hit.potential_damage>0:
             packets.extend(target.on_skill_damage(self,hit,now))
-        for actor in self.arena.actors.values():
-            if actor.info['tank_id']==10000073:
-                packets.extend(actor._emergency(now))
+        if getattr(self.arena, '_has_emergency_check', False):
+            for actor in self.arena.actors.values():
+                if actor.info['tank_id']==10000073:
+                    packets.extend(actor._emergency(now))
         return packets, hit.hp_loss > 0
 
     def on_shield_break(self, template, now):
@@ -1627,7 +1676,8 @@ class TankActions:
                 return packets
             dx,dy = DIRECTIONS[direction]
             dest = x+24*dx,y+24*dy
-            if self._speed(now)>0:
+            speed = self._speed(now)
+            if speed>0:
                 start=(x,y)
                 water=self.arena.water_rects(now)
                 geom=self.arena.geometry
@@ -1636,6 +1686,7 @@ class TankActions:
                              and geom.can_walk_to(dest)
                              and rect_contact(dest,dest,water,35.999) is None
                              and rect_contact(start,dest,water,35.999) is None
+                             and rect_contact(start,dest,self.arena.enemy_tank_rects(self,now,start,dest),35.999) is None
                              and geom._walk_contact(start,dest,objects=True) is None
                              and rect_contact(start,dest,geom._playable_exterior,35.999) is None
                              and math.dist(self.position_at(now),start)<=24)
@@ -1658,21 +1709,21 @@ class TankActions:
                     self.position,self.motion=current,None
                     packets.append(stop_move(self.scene_id,self.id,current))
                     return packets
-                end=dest if edge_escape else geom.walk_end(start,dest,water)
+                end=dest if edge_escape else geom.walk_end(start,dest,water+self.arena.enemy_tank_rects(self,now,start,dest))
                 if end!=dest and dx and dy and geom.can_walk_to(start):
                     for cand_dir in ((1 if dy<0 else 5),(7 if dx<0 else 3)):
                         cdx,cdy=DIRECTIONS[cand_dir]
                         cand_dest=(x+24*cdx,y+24*cdy)
-                        if geom.walk_end(start,cand_dest,water)==cand_dest:
+                        if geom.walk_end(start,cand_dest,water+self.arena.enemy_tank_rects(self,now,start,cand_dest))==cand_dest:
                             dest,end,actual_dir=cand_dest,cand_dest,cand_dir
                             break
                 if end==dest:
-                    duration=max(1,round(math.dist(start,end)*1000/self._speed(now)))
+                    duration=max(1,int(math.dist(start,end))*1000//int(speed))
                     self.position,self.motion=end,(start,end,now,now+duration)
                     self.motion_kind=0
                     if self.arena.state.get('multiplayer_players') and human(self):
                         packet=stop_move(self.scene_id,self.id,end) if actual_dir==8 else scene(moves=(
-                            struct.pack('<IhhhBB',self.id,*start,self._speed(now),actual_dir,0),))
+                            struct.pack('<IhhhBB',self.id,*start,speed,actual_dir,0),))
                         packets.append(other_viewers(self,packet))
                 else:
                     # Correct genuinely blocked steps only. Walking uses the

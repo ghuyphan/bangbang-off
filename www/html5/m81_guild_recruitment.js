@@ -1,7 +1,7 @@
 // CorpsRecruitSettingFrame: native 472×359, exact embedded bitmap skins.
 // Native LadderTool dropdown source is unavailable: retain explicit numeric
 // native-contract limit editor (0 disables requirement), never invent ranks.
-import {at,element,assetImage,note} from './m8_ui_helpers.js';
+import {at,element,assetImage} from './m8_ui_helpers.js';
 export function renderGuildRecruitment(ui,host,account,send,recruitmentFlags) {
  const edits=ui.recruitEdits ||= {level:false,description:false};
  const g=account.guild,assets=ui.assets?.panels?.assets||{},panel=element('section',null,'m81-guild-recruitment');
@@ -16,7 +16,7 @@ export function renderGuildRecruitment(ui,host,account,send,recruitmentFlags) {
  levelSave.hidden=!edits.level;levelSave.setAttribute('aria-label','Lưu cấp tối thiểu');panel.append(at(skin(levelSave,'btn_confirm_t'),366,18));
  const levelEdit=ui.button('Chỉnh sửa cấp tối thiểu',()=>{edits.level=true;level.readOnly=false;levelEdit.hidden=true;levelSave.hidden=false;level.focus();},{disabled:!ui.canMutate(),testId:'guild-level-edit'});levelEdit.setAttribute('aria-label','Chỉnh sửa cấp tối thiểu');levelEdit.hidden=!!edits.level;panel.append(at(skin(levelEdit,'btn_edit_t'),366,18));
  const ladder=ui.input('gm-limit-3',g.minLadder,{type:'number'});ladder.min='0';ladder.max='100000';ladder.setAttribute('aria-label','Giới hạn xếp hạng native (0: không yêu cầu)');ladder.title='Danh sách nhãn hạng gốc chưa có; giá trị lớn hơn 0 sẽ chặn gia nhập khi xếp hạng chưa mở.';
- Object.assign(ladder.style,{background:'#123b52',color:'#fff',border:'1px solid #1b91b4',font:'bold 14px Tahoma,sans-serif'});panel.append(at(ladder,130,60,225,26));
+ Object.assign(ladder.style,{background:'#053b60',color:'#fff',border:'1.5px solid #6bd0f8',font:'bold 14px Tahoma,sans-serif'});panel.append(at(ladder,130,60,225,26));
  const ladderSave=send(ui,'Lưu giới hạn xếp hạng','Xếp hạng chưa mở: giá trị lớn hơn 0 sẽ chặn gia nhập.','setting',()=>{const value=Number(ladder.value);if(!Number.isInteger(value)||value<0||value>100000)throw new Error('Giới hạn: 0–100.000.');return {kind:3,value};},{testId:'guild-ladder-save'});ladderSave.setAttribute('aria-label','Lưu giới hạn xếp hạng');panel.append(at(skin(ladderSave,'btn_confirm_t'),366,58));
  for(const [bit,label,y] of [[1,'Tự động tiếp nhận',102],[2,'Đóng đơn xin vào',142],[4,'Cho thành viên mời người',182]]){
   const on=!!(g.settings&bit),b=send(ui,(on?'Tắt: ':'Bật: ')+label,'Thay đổi quyền tuyển thành viên.','setting',()=>{const current=ui.snapshot.account?.guild,uuid=ui.snapshot.meta?.character?.charUuid;if(!current||!uuid||![current.leaderUuid,current.viceLeaderUuid].includes(uuid))throw new Error('Bạn không còn quyền chỉnh tuyển thành viên.');return {kind:1,value:recruitmentFlags(current.settings,bit,!on)};},{testId:`guild-setting-${bit}`});
@@ -26,5 +26,5 @@ export function renderGuildRecruitment(ui,host,account,send,recruitmentFlags) {
  Object.assign(desc.style,{boxSizing:'border-box',background:'transparent',border:'none',resize:'none',color:'#fff',font:'14px Tahoma,sans-serif'});desc.addEventListener('input',()=>ui.fields['gm-recruit']=desc.value);panel.append(at(desc,30,252,408,92));
  const save=send(ui,'Lưu lời tuyển thành viên','Lưu nội dung tuyển thành viên.','recruit',()=>{if(new TextEncoder().encode(desc.value).length>1000||/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(desc.value))throw new Error('Tối đa 1.000 byte UTF-8, không chứa ký tự điều khiển.');edits.description=false;return{text:desc.value};},{testId:'guild-save-recruit'});save.hidden=!edits.description;save.setAttribute('aria-label','Lưu lời tuyển thành viên');panel.append(at(skin(save,'btn_confirm_t'),367,201));
  const edit=ui.button('Sửa giới thiệu tuyển thành viên',()=>{edits.description=true;desc.readOnly=false;edit.hidden=true;save.hidden=false;desc.focus();},{disabled:!ui.canMutate(),testId:'guild-recruit-edit'});edit.setAttribute('aria-label','Sửa giới thiệu tuyển thành viên');edit.hidden=!!edits.description;panel.append(at(skin(edit,'btn_edit_dec_t'),346,201));
- host.append(panel,note('Xếp hạng thi đấu chưa mở: yêu cầu hạng lớn hơn 0 sẽ chặn gia nhập.'));return panel;
+ host.append(panel);return panel;
 }

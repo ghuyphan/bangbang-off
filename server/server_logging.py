@@ -37,7 +37,7 @@ def set_file_logging(enabled):
             handler.setLevel(logging.INFO)
             handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(message)s'))
             logger.addHandler(handler)
-            logger.setLevel(min(logging.INFO, logging._nameToLevel[_base_level]))
+            logger.setLevel(min(logging.INFO, logging.getLevelNamesMapping()[_base_level]))
             _handler = handler
             logger.info('Diagnostic file logging enabled')
         elif not enabled and _handler is not None:

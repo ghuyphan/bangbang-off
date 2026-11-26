@@ -72,7 +72,7 @@ class BlockedLockMixin:
         return super().blocked(action, now)
 
 
-class ActionLockMixin(SpeedLockMixin, BlockedLockMixin):
+class ActionLockMixin:
     """Block both movement and actions while `_lock_attrs` is truthy."""
 
     _lock_attrs = ('ready',)
@@ -80,12 +80,12 @@ class ActionLockMixin(SpeedLockMixin, BlockedLockMixin):
     def _speed(self, now):
         if any(getattr(self, attr, None) for attr in self._lock_attrs):
             return 0
-        return super(SpeedLockMixin, self)._speed(now)
+        return super()._speed(now)
 
     def blocked(self, action, now):
         if any(getattr(self, attr, None) for attr in self._lock_attrs):
             return True
-        return super(BlockedLockMixin, self).blocked(action, now)
+        return super().blocked(action, now)
 
 
 class SlotCooldownMixin:

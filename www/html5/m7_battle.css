@@ -6,7 +6,7 @@ body.m7-robo-active{overflow:hidden}
 #battle-panel.robo-native>.battle-toolbar,#battle-panel.robo-native>.battle-team,
 #battle-panel.robo-native>.battle-hud,#battle-panel.robo-native>.input-message,
 #battle-panel.robo-native>.battle-controls,#battle-panel.robo-native>#battle-asset-status{display:none}
-#battle-panel.robo-native .battle-stage{position:absolute;inset:0;width:max(100vw,1000px);height:max(100vh,600px);min-height:600px;max-height:none;border:0;border-radius:0;box-shadow:none;outline:none}
+#battle-panel.robo-native .battle-stage{position:absolute;inset:0;width:max(100vw,1000px);height:max(100dvh,600px);min-height:600px;max-height:none;border:0;border-radius:0;box-shadow:none;outline:none}
 #battle-panel.robo-native #battle-canvas,#battle-panel.robo-native #battle-overlay{border:0;border-radius:0}
 #robo-hud-host{position:absolute;inset:0;pointer-events:none;z-index:2;font-family:Tahoma,Arial,sans-serif}
 #battle-panel.robo-native #battle-paused{inset:auto auto 87px 50%;transform:translateX(-50%);z-index:3;pointer-events:none;background:#101010aa;border-radius:0;padding:5px 12px;font:12px Tahoma,Arial,sans-serif}

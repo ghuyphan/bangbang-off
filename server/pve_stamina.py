@@ -9,6 +9,7 @@ outcome because native C78 does not carry an idempotency key.
 from __future__ import annotations
 
 import json
+import sqlite3
 import struct
 
 import cosmetic_shop
@@ -107,7 +108,7 @@ def apply(state, payload, db):
         packets = [(1039, struct.pack('<HH6i', 2, 0, *wallet['currency'])), notify(value)]
         db.commit()
         return packets, None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         message = str(exc) if isinstance(exc, ValueError) and not isinstance(exc, UnicodeError) else 'Yêu cầu mua thể lực không hợp lệ.'
         return [cosmetic_shop.tip(REQUEST, message)], message

@@ -1,4 +1,5 @@
 import {bindSupplementCannon} from './m81314_file_timeline.js';
+import {fetchVerifiedJson} from './m8_ui_helpers.js';
 
 // M81319's three explicitly approved native kits. This sidecar supplies art
 // and typed preload bindings only; packets and the native server own unlocks,
@@ -18,14 +19,9 @@ const visualFields=new Set(['resources','body','cannon','engine','rendererBindin
 export async function loadM81319Tanks(url='./m81319_tanks_catalog.json',{refresh=false}={}){
   if(refresh)loads.delete(url);
   if(!loads.has(url))loads.set(url,(async()=>{
-    const response=await fetch(url,{cache:'no-store'});
-    if(!response.ok)throw new Error('Không tải được tài nguyên ba tank bổ sung.');
-    const bytes=await response.arrayBuffer();
-    const sha256=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))]
-      .map(value=>value.toString(16).padStart(2,'0')).join('');
-    const catalog=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
+    const {catalog,sha256,bytes}=await fetchVerifiedJson(url,'Không tải được tài nguyên ba tank bổ sung.');
     validateM81319Tanks(catalog,catalog.source?.m6CatalogSha256);
-    return {catalog,sha256,bytes:bytes.byteLength};
+    return {catalog,sha256,bytes};
   })().catch(error=>{loads.delete(url);throw error;}));
   return loads.get(url);
 }

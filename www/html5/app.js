@@ -288,7 +288,10 @@ byId('confirm-tank').onclick = () => run(() => client.confirmTank());
 byId('cancel-selection').onclick = byId('leave-room').onclick = () => run(() => client.leaveRoom());
 window.addEventListener('pagehide', () => { client.disconnect(false); });
 document.querySelector('.diagnostics').ontoggle = () => lastState && render(lastState);
-setInterval(countdown, 250);
+setInterval(() => {
+  if (document.hidden || lastState?.play?.phase === 'scene') return;
+  countdown();
+}, 250);
 const diagnostics = Object.freeze({snapshot: () => client.snapshot()});
 Object.defineProperty(window, 'bbM2', {value: diagnostics, writable: false});
 Object.defineProperty(window, 'bbM3', {value: diagnostics, writable: false});
@@ -307,5 +310,7 @@ Promise.all([fetch('./tank_catalog.json', {cache: 'no-store'}), fetch('./m3_asse
     if (!responses.every(response => response.ok)) throw new Error('Không tải được danh mục hiển thị.');
     [catalog, assets] = await Promise.all(responses.map(response => response.json()));
     renderingKey = ''; hallKey = ''; if (lastState) render(lastState);
-  }).catch(() => {});
+  }).catch(error => {
+    console.warn('[app] Failed to load display catalogs:', error);
+  });
 client.restore();

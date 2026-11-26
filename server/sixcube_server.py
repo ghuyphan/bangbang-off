@@ -59,17 +59,19 @@ log = get_logger('sixcube')
 if sys.stdout and hasattr(sys.stdout, "reconfigure"):
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
+    except (OSError, ValueError):
         pass
 if sys.stderr and hasattr(sys.stderr, "reconfigure"):
     try:
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
+    except (OSError, ValueError):
         pass
 
 ROOT = Path(__file__).resolve().parents[1]
 LOG_DIR = ROOT / "data" / "packet_log"
 LISTEN_PORT = 49119
+_DUMP_LOCK = threading.Lock()
+_TCP_LOG_MAX_BYTES = 5 * 1024 * 1024
 
 # Global template frames from captured session entering lobby
 GATE_TEMPLATES: list[bytes] = []
@@ -83,7 +85,6 @@ def _dump(addr, direction: str, data: bytes, tag: str = "") -> None:
     # Skip parsing, hex conversion and disk access entirely outside debug mode.
     if not log.isEnabledFor(logging.DEBUG):
         return
-    LOG_DIR.mkdir(parents=True, exist_ok=True)
     stamp = time.strftime("%Y%m%d_%H%M%S")
     prefix = f"[{tag}] " if tag else ""
     private = direction == 'C->S' and any(
@@ -93,9 +94,16 @@ def _dump(addr, direction: str, data: bytes, tag: str = "") -> None:
     line = f"{stamp} {prefix}{direction} {addr} len={len(data)} {rendered}\n"
     preview = rendered[:140]
     log.debug('[sixcube] %s%s %s %sb %s', prefix, direction, addr, len(data), preview)
+    log_path = LOG_DIR / "tcp.log"
     try:
-        with (LOG_DIR / "tcp.log").open("a", encoding="utf-8") as fh:
-            fh.write(line)
+        with _DUMP_LOCK:
+            LOG_DIR.mkdir(parents=True, exist_ok=True)
+            if log_path.exists() and log_path.stat().st_size >= _TCP_LOG_MAX_BYTES:
+                backup = LOG_DIR / "tcp.log.1"
+                backup.unlink(missing_ok=True)
+                os.replace(log_path, backup)
+            with log_path.open("a", encoding="utf-8") as fh:
+                fh.write(line)
     except OSError:
         log.exception('[sixcube] Packet trace unavailable')
 
@@ -149,20 +157,13 @@ def build_server_list(host: str, port: int) -> bytes:
 # ==============================================================================
 # TANK DATABASE & ROOM SERIALIZERS
 # ==============================================================================
-TANKS_DB: dict[str, dict] = {}
 
 
-def load_tank_database() -> dict[str, dict]:
-    global TANKS_DB
+def preload_battle_caches() -> None:
     preload_combat_data()
     with storage.connection() as db:
         skin_effects.preload(db)
     map101_tank_bounds()  # Cache SQLite wall data before the first movement/skill.
-    tanks = {}
-    for record in storage.garage():
-        tanks[record['uuid']] = tanks[str(record['tank_id'])] = record
-    TANKS_DB = tanks
-    return tanks
 
 
 def serialize_player_brief(
@@ -583,6 +584,8 @@ def _client_handler(conn: socket.socket, addr) -> None:
     economy_context = economy_actions.session()  # Ephemeral GATE generation, never checkpointed.
     shop_context = normal_shop.session()  # Separate proof secret; never checkpointed.
     selection_deadline = None
+    next_battle_tick = 0.0
+    last_battle_checkpoint = 0.0
     multiplayer_gate = None
     pending_pve_sync = []
     boss_ready = False
@@ -592,7 +595,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
     boss_notice_state = None
 
     def checkpoint():
-        nonlocal saved_arena
+        nonlocal saved_arena, last_battle_checkpoint
         if not owns_world:
             return
         if session_state.get('multiplayer_room_id'):
@@ -615,6 +618,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
                 before_write=lambda db:pve_progress.complete(db,session_state,arena)) or [])
         else:
             ranked_matches.checkpoint(session_state,arena,saved_arena,world_db)
+        last_battle_checkpoint = time.monotonic()
 
     def send_actions(packets):
         if pending_pve_sync:
@@ -664,9 +668,19 @@ def _client_handler(conn: socket.socket, addr) -> None:
                     _dump(addr, 'S->C', data, tag='GUILD-NOTIFY')
         battle = session_state["battle"]
         if battle and battle.get("entered") and battle.get("actions"):
-            packets = battle["actions"].tick()
-            checkpoint()
-            send_actions(packets)
+            now = time.monotonic()
+            if now >= next_battle_tick:
+                next_battle_tick = max(next_battle_tick + 0.02, now)
+                arena = battle["actions"]
+                packets = arena.tick()
+                if arena.pk and arena.pk['finished']:
+                    checkpoint()
+                    send_actions(packets)
+                else:
+                    send_actions(packets)
+                    if now - last_battle_checkpoint >= 0.5:
+                        checkpoint()
+                conn.settimeout(max(0.002, min(0.02, next_battle_tick - time.monotonic())))
 
     def deliver_boss_rewards():
         # Reuse the GATE owner connection, commit bag + receipt together, and
@@ -764,6 +778,32 @@ def _client_handler(conn: socket.socket, addr) -> None:
                 "ob_num": 2,
             }
             configure_room(session_state,world_db)
+
+    def room_char_change_packet():
+        pb = serialize_player_brief(
+            acct_id=session_state["char_id"],
+            char_uuid=session_state["char_uuid"],
+            name=session_state["name"],
+            level=session_state["level"],
+            vip_level=session_state["vip_level"],
+            avatar=session_state.get("avatar", 0),
+            decorate_id=session_state.get("decorate_id", 0),
+            military_star=session_state.get("military_star", 0),
+            elo=session_state.get("elo", 1000),
+            elo_section=session_state.get("elo_section", 1),
+            pre_elo_section=session_state.get("pre_elo_section", 1),
+            booster_attack=session_state.get("booster_attack", 0),
+        )
+        ob = serialize_other_brief(
+            tank_id=session_state["tank_id"],
+            tank_level=session_state["tank_level"],
+            tank_external=session_state["tank_ext"],
+            halo_id=session_state.get("halo_id", 0),
+            skin_frame_type=session_state.get("skin_frame_type", 0),
+            command_skill=guild_combat.command(session_state.get("guild_build", {})),
+            **boosters.other_brief(session_state, world_db),
+        )
+        return make_room_char_change(pb, ob)
 
     def send_selection(resuming=False):
         nonlocal selection_deadline
@@ -901,8 +941,11 @@ def _client_handler(conn: socket.socket, addr) -> None:
             enter_type=0,
         )
         checkpoint()
-        conn.sendall(prefix + f_start)
-        _dump(addr, "S->C", prefix + f_start, tag="GATE-START-GAME")
+        init_rates = make_loaded_rate(session_state["char_id"], delay=15, loaded=session_state["battle"]["loaded"])
+        for bot in room_bots(session_state):
+            init_rates += make_loaded_rate(bot["acct_id"], delay=10, loaded=100)
+        conn.sendall(prefix + f_start + init_rates)
+        _dump(addr, "S->C", prefix + f_start + init_rates, tag="GATE-START-GAME")
         log.info(
             f"[sixcube] {addr} [GATE] Loading battle scene {r['room_id']}, map {r['map_id']}, {len(cbs)} fighters (not entered yet)",
         )
@@ -1173,8 +1216,10 @@ def _client_handler(conn: socket.socket, addr) -> None:
                             _dump(addr, 'S->C', data, tag='GUILD')
                         if not error and session_state.get('tank_selection'):
                             session_state['guild_build'] = guilds.battle_build(world_db)
+                            checkpoint()
                             notify_selection()
                         log.log(logging.WARNING if error else logging.INFO, f'[sixcube] Guild C{mid}: {error or "saved"}')
+                        continue
 
                     elif mid == 75:
                         changed,packets,error=character_rename.apply(session_state,payload,world_db)
@@ -1193,16 +1238,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
                         _dump(addr,'S->C',reply,tag='GATE-COSMETIC-SHOP')
                         if error:log.warning(f'[sixcube] Cosmetic shop: {error}')
                         elif mid == 153 and session_state.get('room'):
-                            pb=serialize_player_brief(acct_id=session_state['char_id'],char_uuid=session_state['char_uuid'],
-                                name=session_state['name'],level=session_state['level'],vip_level=session_state['vip_level'],
-                                avatar=session_state['avatar'],decorate_id=session_state['decorate_id'],
-                                military_star=session_state.get('military_star',0),
-                                booster_attack=session_state.get('booster_attack',0))
-                            ob=serialize_other_brief(tank_id=session_state['tank_id'],tank_level=session_state['tank_level'],
-                                tank_external=session_state['tank_ext'],halo_id=session_state.get('halo_id',0),
-                                skin_frame_type=session_state.get('skin_frame_type',0),
-                                **boosters.other_brief(session_state,world_db))
-                            conn.sendall(make_room_char_change(pb,ob))
+                            conn.sendall(room_char_change_packet())
                         continue  # Profile/inventory committed atomically; no battle checkpoint.
 
                     elif mid == 0x0034:
@@ -1326,12 +1362,13 @@ def _client_handler(conn: socket.socket, addr) -> None:
                             rooms_to_send.append(r_info)
                         else:
                             # Always have persistent 5v5 Room 1001 with Bot Gundam waiting!
+                            setup_mode = load_setup(world_db)['mode']
                             r_info = serialize_room_info(
                                 room_id=1001,
                                 num=1,
                                 max_num=10,
-                                map_id=MODE_MAPS[load_setup(world_db)['mode']],
-                                mode=1 if load_setup(world_db)['mode']=='test' else 3,
+                                map_id=MODE_MAPS[setup_mode],
+                                mode=1 if setup_mode=='test' else 3,
                                 state=0,
                                 room_type=1,
                                 name="Trận bot local - thiết lập trên web",
@@ -1356,82 +1393,55 @@ def _client_handler(conn: socket.socket, addr) -> None:
                             send_actions([cosmetic_shop.tip(mid,'Yêu cầu vào màn PvE không hợp lệ.')])
                         else:enter_solo_pve(struct.unpack_from('<I',payload)[0],mid)
 
-                    elif mid == 0x0258:
-                        # RequestCreateRoom (600) -> Send EnterRoomOk (1700)
-                        r_type = payload[0] if len(payload) > 0 else 1
-                        r_mode = payload[1] if len(payload) > 1 else 1
-                        map_id = struct.unpack_from("<I", payload, 2)[0] if len(payload) >= 6 else 101
-                        if r_type==4 or map_id>=200:
-                            enter_solo_pve(map_id if r_type==4 else None,mid)
-                            continue
-                        if session_state["battle"]:
-                            continue
-                        password = struct.unpack_from("<I", payload, 6)[0] if len(payload) >= 10 else 0
-                        off = 10
-                        sz_name = "Phong 5v5 [Bot Gundam]"
-                        if len(payload) >= off + 2:
-                            slen = struct.unpack_from("<H", payload, off)[0]
-                            off += 2
-                            if len(payload) >= off + slen:
-                                parsed = payload[off : off + slen].decode("utf-8", "ignore")
-                                if parsed:
-                                    sz_name = parsed
-                        session_state["room"] = {
-                            "room_id": 1001,
-                            "name": sz_name,
-                            "map_id": map_id if map_id != 0 else 101,
-                            "mode": r_mode if r_mode != 0 else 1,
-                            "room_type": 1,  # 5v5
-                            "state": 0,  # RST_WAIT
-                            "camp": 1,  # CAMP_A
-                            "ready": 1,
-                            "max_num": 10,
-                            "min_num": 2,
-                            "ob_num": 2,
-                        }
-                        configure_room(session_state,world_db)
-                        _, rcbs = get_room_char_briefs(session_state)
-                        f_enter_ok = make_enter_room_ok(
-                            room_id=session_state["room"]["room_id"],
-                            create_id=session_state["char_id"],
-                            max_num=session_state["room"]["max_num"],
-                            min_num=session_state["room"]["min_num"],
-                            ob_num=session_state["room"]["ob_num"],
-                            name=session_state["room"]["name"],
-                            room_type=session_state["room"]["room_type"],
-                            mode=session_state["room"]["mode"],
-                            char_vec=rcbs,room_config=serialize_room_config(session_state['room']['map_id']),
-                        )
-                        conn.sendall(f_enter_ok)
-                        _dump(addr, "S->C", f_enter_ok, tag="GATE-ENTER-ROOM-OK")
-                        log.info(
-                            f"[sixcube] {addr} [GATE] === CREATED & ENTERED 5v5 ROOM 1001 ({sz_name})! CharCount={len(rcbs)} ===",
-                        )
-
-                    elif mid == 0x0259:
-                        # RequestJoinRoom (601) -> Join room & send EnterRoomOk (1700)
-                        r_id = struct.unpack_from("<I", payload, 0)[0] if len(payload) >= 4 else 1001
-                        r_type = payload[4] if len(payload) >= 5 else 1
-                        if r_type==4:
-                            send_actions([cosmetic_shop.tip(mid,'PvE tổ đội chưa mở; hãy chọn màn PvE đơn.')])
-                            continue
-                        r_mode = payload[5] if len(payload) >= 6 else 1
-                        map_id = struct.unpack_from("<I", payload, 6)[0] if len(payload) >= 10 else 101
-                        if session_state["room"] is None:
+                    elif mid in (0x0258, 0x0259):
+                        if mid == 0x0258:
+                            # RequestCreateRoom (600) -> Send EnterRoomOk (1700)
+                            r_type = payload[0] if len(payload) > 0 else 1
+                            r_mode = payload[1] if len(payload) > 1 else 1
+                            map_id = struct.unpack_from("<I", payload, 2)[0] if len(payload) >= 6 else 101
+                            if r_type == 4 or map_id >= 200:
+                                enter_solo_pve(map_id if r_type == 4 else None, mid)
+                                continue
+                            if session_state["battle"]:
+                                continue
+                            off = 10
+                            sz_name = "Phong 5v5 [Bot Gundam]"
+                            if len(payload) >= off + 2:
+                                slen = struct.unpack_from("<H", payload, off)[0]
+                                off += 2
+                                if len(payload) >= off + slen:
+                                    parsed = payload[off : off + slen].decode("utf-8", "ignore")
+                                    if parsed:
+                                        sz_name = parsed
+                            room_id = 1001
+                            create_room = True
+                        else:
+                            # RequestJoinRoom (601) -> Join room & send EnterRoomOk (1700)
+                            r_id = struct.unpack_from("<I", payload, 0)[0] if len(payload) >= 4 else 1001
+                            r_type = payload[4] if len(payload) >= 5 else 1
+                            if r_type == 4:
+                                send_actions([cosmetic_shop.tip(mid, 'PvE tổ đội chưa mở; hãy chọn màn PvE đơn.')])
+                                continue
+                            r_mode = payload[5] if len(payload) >= 6 else 1
+                            map_id = struct.unpack_from("<I", payload, 6)[0] if len(payload) >= 10 else 101
+                            sz_name = "Phong 5v5 [Bot Gundam]"
+                            room_id = r_id if r_id != 0 else 1001
+                            create_room = session_state["room"] is None
+                        if create_room:
                             session_state["room"] = {
-                                "room_id": r_id if r_id != 0 else 1001,
-                                "name": "Phong 5v5 [Bot Gundam]",
+                                "room_id": room_id,
+                                "name": sz_name,
                                 "map_id": map_id if map_id != 0 else 101,
                                 "mode": r_mode if r_mode != 0 else 1,
-                                "room_type": 1,
-                                "state": 0,
-                                "camp": 1,
+                                "room_type": 1,  # 5v5
+                                "state": 0,  # RST_WAIT
+                                "camp": 1,  # CAMP_A
                                 "ready": 1,
                                 "max_num": 10,
                                 "min_num": 2,
                                 "ob_num": 2,
                             }
-                            configure_room(session_state,world_db)
+                            configure_room(session_state, world_db)
                         _, rcbs = get_room_char_briefs(session_state)
                         f_enter_ok = make_enter_room_ok(
                             room_id=session_state["room"]["room_id"],
@@ -1442,11 +1452,12 @@ def _client_handler(conn: socket.socket, addr) -> None:
                             name=session_state["room"]["name"],
                             room_type=session_state["room"]["room_type"],
                             mode=session_state["room"]["mode"],
-                            char_vec=rcbs,room_config=serialize_room_config(session_state['room']['map_id']),
+                            char_vec=rcbs,
+                            room_config=serialize_room_config(session_state['room']['map_id']),
                         )
                         conn.sendall(f_enter_ok)
-                        _dump(addr, "S->C", f_enter_ok, tag="GATE-JOIN-ROOM-OK")
-                        log.info(f"[sixcube] {addr} [GATE] Joined 5v5 room 1001 (chars={len(rcbs)})")
+                        _dump(addr, "S->C", f_enter_ok, tag="GATE-ENTER-ROOM-OK" if mid == 0x0258 else "GATE-JOIN-ROOM-OK")
+                        log.info(f"[sixcube] {addr} [GATE] Entered 5v5 room {session_state['room']['room_id']} (chars={len(rcbs)})")
 
                     elif mid == 0x00C8:
                         if session_state["battle"] or session_state.get('tank_selection'):
@@ -1502,7 +1513,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
                             **boosters.other_brief(session_state,world_db),
                         )
                         if session_state["room"] is not None:
-                            f_change = make_room_char_change(pb, ob)
+                            f_change = room_char_change_packet()
                             conn.sendall(f_change)
                             _dump(addr, "S->C", f_change, tag="GATE-ROOM-CHAR-CHANGE")
                             for bot in rerolled_bots:
@@ -1525,26 +1536,22 @@ def _client_handler(conn: socket.socket, addr) -> None:
                         if record is not None:
                             tanks_db[record['uuid']] = tanks_db[str(record['tank_id'])] = record
                             if session_state.get('tank_selection'):
-                                chosen = next(r for r in storage.garage()
-                                              if r['uuid'] == session_state['match_tank_uuid'])
-                                prebattle_selection.use_tank(session_state, chosen)
-                                notify_selection()
+                                chosen = next(
+                                    (r for r in garage_for_state(session_state)
+                                     if r['uuid'] == session_state.get('match_tank_uuid')),
+                                    None,
+                                )
+                                if chosen is not None:
+                                    prebattle_selection.use_tank(session_state, chosen)
+                                    notify_selection()
                         for packet_id, body in packets:
                             response = _frame(packet_id,body)
                             conn.sendall(response)
                             _dump(addr,'S->C',response,tag='GATE-TANK-SKIN' if mid==207 else 'GATE-TANK-UPGRADE')
                         if record is not None and session_state.get('room') and (mid==203 or session_state.get('selected_tank_uuid')==record['uuid']):
-                            pb=serialize_player_brief(acct_id=session_state['char_id'],char_uuid=session_state['char_uuid'],
-                                name=session_state['name'],level=session_state['level'],vip_level=session_state['vip_level'],
-                                avatar=session_state.get('avatar',0),decorate_id=session_state.get('decorate_id',0),
-                                military_star=session_state.get('military_star',0),
-                                booster_attack=session_state.get('booster_attack',0))
-                            ob=serialize_other_brief(tank_id=session_state['tank_id'],tank_level=session_state['tank_level'],
-                                tank_external=session_state['tank_ext'],halo_id=session_state.get('halo_id',0),
-                                skin_frame_type=session_state.get('skin_frame_type',0),
-                                **boosters.other_brief(session_state,world_db))
-                            conn.sendall(make_room_char_change(pb,ob))
+                            conn.sendall(room_char_change_packet())
                         log.log(logging.WARNING if error else logging.INFO, f'[sixcube] tank {"skin" if mid==207 else "upgrade"} C{mid}: {error or "saved"}')
+                        continue
 
                     elif mid == 0x025A:
                         # RequestRoomOp (602) -> Ready, Cancel, Camp switch, Leave, Kick, Start
@@ -1670,7 +1677,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
                         battle = session_state["battle"]
                         if char_id != session_state["char_id"] or loaded > 100:
                             continue
-                        if scene_id and (battle is None or scene_id != battle["scene_id"]):
+                        if (scene_id or battle is not None) and (battle is None or scene_id != battle["scene_id"]):
                             continue
                         if battle and scene_id == battle["scene_id"]:
                             battle["loaded"] = loaded
@@ -1707,7 +1714,14 @@ def _client_handler(conn: socket.socket, addr) -> None:
                                 session_state['military_star']=military_rank.stars(world_db)
                                 session_state['military_build']=military_rank.build(session_state['military_star'])
                                 # Guild/booster builds were frozen before S1705.
-                            actions = restore_arena(session_state,saved_arena) if saved_arena else BattleArena(session_state,bot_attacks=True)
+                            if saved_arena:
+                                actions = restore_arena(session_state,saved_arena)
+                            else:
+                                from multiplayer_battle import prepare_navigation, install_navigation
+                                nav_seed = prepare_navigation(session_state.get('room') or {},
+                                    {session_state['char_id']: session_state}, session_state.get('bots') or ())
+                                actions = BattleArena(session_state,bot_attacks=True)
+                                install_navigation(actions, nav_seed)
                             if actions.geometry.id==world_boss_store.MAP:
                                 from world_boss_mode import synchronize
                                 synchronize(actions,world_boss_store.current(world_db),world_boss_store.now_ms())
@@ -1732,6 +1746,8 @@ def _client_handler(conn: socket.socket, addr) -> None:
                         battle["entered"] = True
                         battle["actions"] = actions
                         if actions:
+                            next_battle_tick = time.monotonic() + 0.02
+                            last_battle_checkpoint = time.monotonic()
                             conn.settimeout(0.02)
                         log.info(f"[sixcube] {addr} [BATTLE-ENTRY] scene={scene_id} snapshot sent; awaiting client verification")
 
@@ -1739,10 +1755,16 @@ def _client_handler(conn: socket.socket, addr) -> None:
                         # Dispatch only tanks with implemented base mechanics.
                         battle = session_state["battle"]
                         if battle and battle.get("entered") and battle.get("actions"):
-                            packets = battle["actions"].handle(mid,payload)
-                            checkpoint()
-                            send_actions(packets)
-                            continue  # Already committed before the combat reply.
+                            arena = battle["actions"]
+                            packets = arena.handle(mid,payload)
+                            if arena.pk and arena.pk['finished']:
+                                checkpoint()
+                                send_actions(packets)
+                            else:
+                                send_actions(packets)
+                                if time.monotonic() - last_battle_checkpoint >= 0.5:
+                                    checkpoint()
+                            continue
 
                     elif mid in (509, 512, 613):
                         # Original RequestExitBattle / RequestSurrenderVotation.
@@ -1783,7 +1805,6 @@ def _client_handler(conn: socket.socket, addr) -> None:
                             battle['forfeit']=True
                         if actions and actions.pk:
                             ranked_matches.start_metadata(session_state)
-                            checkpoint()
                         clear_match_selection()
                         session_state['battle'] = session_state['room'] = None
                         session_state['bot']['in_room'] = True
@@ -1806,6 +1827,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
                         reply += _frame(1017,b'')  # NotifyBackToMain has no fields.
                         conn.sendall(reply)
                         _dump(addr,'S->C',reply,tag='BATTLE-EXIT')
+                        continue
 
                     elif mid == 0x025B:
                         if (session_state.get('room') or {}).get('room_type')==4:
@@ -1870,7 +1892,7 @@ def _client_handler(conn: socket.socket, addr) -> None:
         log.info(f"[sixcube] {addr} [{role}] closed (init={saw_init_net})")
 
 
-def _serve(bind="0.0.0.0", ready=None) -> None:
+def _serve(bind="0.0.0.0", ready=None, errors=None) -> None:
     global GATE_TEMPLATES
     from cpp_backend import initialize as initialize_acceleration
     initialize_acceleration()
@@ -1880,31 +1902,39 @@ def _serve(bind="0.0.0.0", ready=None) -> None:
     world_boss_store.initialize()
     ranked_matches.initialize()
     GATE_TEMPLATES = load_templates()
-    load_tank_database()
+    preload_battle_caches()
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if sys.platform == "win32":
-        try:
-            sock.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
-        except Exception:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        if sys.platform == "win32":
+            try:
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+            except OSError:
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        else:
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    else:
-        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    try:
-        sock.bind((bind, LISTEN_PORT))
-    except OSError as exc:
-        log.exception("[sixcube] bind :%s failed", LISTEN_PORT)
-        return
-    sock.listen(32)
-    if ready is not None:
-        ready.set()
-    log.info(f"[sixcube] listening :{LISTEN_PORT} (AUTH/GATE/CHAT ready)")
-    while True:
         try:
-            conn, addr = sock.accept()
-            threading.Thread(target=_client_handler, args=(conn, addr), daemon=True).start()
-        except Exception as exc:
-            log.exception("[sixcube] accept error")
+            sock.bind((bind, LISTEN_PORT))
+        except OSError as exc:
+            log.exception("[sixcube] bind :%s failed", LISTEN_PORT)
+            if errors is not None:
+                errors.append(exc)
+            if ready is not None:
+                ready.set()
+            return
+        sock.listen(32)
+        if ready is not None:
+            ready.set()
+        log.info(f"[sixcube] listening :{LISTEN_PORT} (AUTH/GATE/CHAT ready)")
+        while True:
+            try:
+                conn, addr = sock.accept()
+                threading.Thread(target=_client_handler, args=(conn, addr), daemon=True).start()
+            except OSError as exc:
+                import errno as _errno
+                if exc.errno in (_errno.EBADF, _errno.EINVAL):
+                    break
+                log.exception("[sixcube] accept error")
+                time.sleep(0.05)
 
 
 def start_sixcube(bind="0.0.0.0") -> None:
@@ -1912,9 +1942,12 @@ def start_sixcube(bind="0.0.0.0") -> None:
     from cpp_backend import initialize as initialize_acceleration
     initialize_acceleration()
     ready = threading.Event()
-    threading.Thread(target=_serve, args=(bind, ready), daemon=True).start()
+    errors: list[Exception] = []
+    threading.Thread(target=_serve, args=(bind, ready, errors), daemon=True).start()
     if bind == "127.0.0.1" and not ready.wait(60):
         raise RuntimeError("Native local server did not become ready; see the error above")
+    if errors:
+        raise RuntimeError(f"Native server failed to bind :{LISTEN_PORT}: {errors[0]}") from errors[0]
 
 
 if __name__ == "__main__":

@@ -61,7 +61,7 @@ def apply(state, payload, db):
         if cards[0]['count'] == 0:
             bags['2'].remove(cards[0])
         inventory.save(bags, db)
-        new_state = dict(state, name=name)
+        new_state = dict(saved, name=name)
         db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
                    (json.dumps(new_state, ensure_ascii=False, separators=(',', ':')),
                     time.time_ns() // 1_000_000, storage.profile_id()))

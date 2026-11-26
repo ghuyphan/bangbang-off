@@ -223,12 +223,17 @@ export class RoboWorld {
     const view = this.view, surface = view.surface, self = state.actors[String(state.selfObjectId)];
     const map = this.catalog?.maps?.[String(state.mapId)], background = this.image(map?.minimap);
     if (!background || !self) return;
-    const compact = !!view.touch?.isTouchViewport?.() && (view.width < 1000 || view.height < 600);
-    const hudScale = view.roboHud?.scale || 1;
-    const size = compact ? Math.round(142 * hudScale) : 200;
-    const left = compact ? 6 : 0;
-    const top = compact ? Math.round(20 * hudScale) : view.height - 211;
-    const iconScale = compact ? Math.max(0.65, size / 200) : 1;
+    const compact = !!view.touch?.isTouchViewport?.();
+    const cs = compact && view.roboHud?.root ? getComputedStyle(view.roboHud.root) : null;
+    const safeLeft = parseFloat(cs?.paddingLeft) || 0;
+    const safeTop = parseFloat(cs?.paddingTop) || 0;
+    const size = compact ? Math.round(clamp(Math.min(view.width, view.height) * 0.24, 84, 134)) : 200;
+    const left = compact ? Math.round(safeLeft + 8) : 0;
+    const top = compact ? Math.round(safeTop + 22) : view.height - 211;
+    if (compact && view.roboHud?.root) {
+      view.roboHud.root.style.setProperty('--m7-minimap-bottom', `${top + size + 6}px`);
+    }
+    const iconScale = compact ? Math.max(0.62, size / 200) : 1;
     const screenImage = (image, x, y, width = image.width, height = image.height) =>
       surface.draw(image, {sw: image.width, sh: image.height, x: x + width / 2,
         y: y + height / 2, width, height});
@@ -274,7 +279,7 @@ export class RoboWorld {
           const frame=sequence.frames[index],asset=frame.asset||(frame.assetIndex!=null?sequence.assets?.[frame.assetIndex]:null)||sequence.asset;
           const image=this.image(asset);
           if(image)surface.draw(image,{sx:frame.sx,sy:frame.sy,sw:frame.w,sh:frame.h,
-            x:left+object.x*sx,y:top+object.y*sy,width:frame.w,height:frame.h});
+            x:left+object.x*sx,y:top+object.y*sy,width:frame.w*iconScale,height:frame.h*iconScale});
         }
       }
     }

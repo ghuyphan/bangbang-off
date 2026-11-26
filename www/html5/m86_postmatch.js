@@ -693,5 +693,6 @@ export class M86Postmatch {
     });
   }
   reset(){this.flow.reset();}
+  dispose(){document.removeEventListener('visibilitychange',this.onVisibility);this.clearStage();this.resizeObserver.disconnect();this.flow.reset();}
   snapshot(){return {...this.flow.snapshot(),catalogLoaded:!!this.catalog,nativeTimeline:true};}
 }

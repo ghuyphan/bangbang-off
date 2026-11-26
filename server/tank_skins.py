@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 import struct
 import time
 
@@ -103,20 +104,25 @@ def apply(state, payload, db):
         record['external_id'] = external
         selected = (state.get('selected_tank_uuid') == uuid or
                     not state.get('selected_tank_uuid') and state['tank_id'] == record['tank_id'])
-        new_state = dict(state)
-        if selected:
-            new_state.update(selected_tank_uuid=uuid, tank_ext=external)
         db.execute('UPDATE garage SET data=? WHERE profile_id=? AND uuid=?',
                    (json.dumps(record, ensure_ascii=False, separators=(',', ':')),
                     storage.profile_id(), uuid))
-        db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
-                   (json.dumps(new_state, ensure_ascii=False, separators=(',', ':')),
-                    time.time_ns() // 1_000_000, storage.profile_id()))
+        world_row = db.execute('SELECT state FROM worlds WHERE profile_id=?', (storage.profile_id(),)).fetchone()
+        if world_row is not None:
+            saved = json.loads(world_row[0])
+            if selected and not state.get('tank_selection'):
+                saved.update(selected_tank_uuid=uuid, tank_ext=external)
+            db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
+                       (json.dumps(saved, ensure_ascii=False, separators=(',', ':')),
+                        time.time_ns() // 1_000_000, storage.profile_id()))
         db.commit()
-        state.update(new_state)
+        if selected:
+            state.update(selected_tank_uuid=uuid)
+            if not state.get('tank_selection'):
+                state['tank_ext'] = external
         visible = dict(record, ext_flag=(record['ext_flag'] & ~2) | (2 if selected else 0))
         return record, [(1151, tank_instance_payload(visible) + b'\x0a')], None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         # Native SystemTip 3997 is SHOW_ON_UI with content "%s". S1153 only
         # recognizes upgrade/strengthen failures and cannot explain skin errors.

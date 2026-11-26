@@ -616,18 +616,33 @@ export class RoboHud {
   }
   resize(width, height, {fitViewport = false} = {}) {
     if (!(width > 0 && height > 0)) return;
-    const scale = fitViewport && (width < 1000 || height < 600)
-      ? Math.max(0.42, Math.min(1, width / 1000, height / 600))
-      : 1;
-    this.scale = scale;
-    this.width = scale < 1 ? Math.round(width / scale) : width;
-    this.height = scale < 1 ? Math.round(height / scale) : height;
-    this.root.style.width = `${this.width}px`;
-    this.root.style.height = `${this.height}px`;
-    this.root.style.transform = scale < 1 ? `scale(${scale})` : '';
-    this.root.style.transformOrigin = scale < 1 ? '0 0' : '';
-    this.root.style.setProperty('--m7-hud-scale', String(scale));
-    this.root.dataset.mobileScaled = scale < 1 ? 'true' : 'false';
+    if (fitViewport) {
+      const uiScale = Math.max(0.64, Math.min(1, width / 540, height / 420));
+      const reliveScale = Math.max(0.46, Math.min(0.86, (width - 24) / 660));
+      this.scale = 1;
+      this.width = width;
+      this.height = height;
+      this.root.style.width = '100%';
+      this.root.style.height = '100%';
+      this.root.style.transform = '';
+      this.root.style.transformOrigin = '';
+      this.root.style.setProperty('--m7-hud-scale', '1');
+      this.root.style.setProperty('--m7-ui-scale', uiScale.toFixed(3));
+      this.root.style.setProperty('--m7-relive-scale', reliveScale.toFixed(3));
+      this.root.dataset.mobileScaled = 'true';
+      return;
+    }
+    this.scale = 1;
+    this.width = width;
+    this.height = height;
+    this.root.style.width = `${width}px`;
+    this.root.style.height = `${height}px`;
+    this.root.style.transform = '';
+    this.root.style.transformOrigin = '';
+    this.root.style.setProperty('--m7-hud-scale', '1');
+    this.root.style.removeProperty('--m7-ui-scale');
+    this.root.style.removeProperty('--m7-relive-scale');
+    this.root.dataset.mobileScaled = 'false';
   }
   update(options) {
     const {state, catalog, hudCatalog, now, connected = true, spectator = {},

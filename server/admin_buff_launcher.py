@@ -38,14 +38,18 @@ def check_runtime():
 
 def main():
     os.chdir(ROOT)
-    check_runtime()
-    print('Web buff local: http://127.0.0.1:18083/admin/buff/')
-    print('Game cung server: http://127.0.0.1:18083/html5/')
-    print('Khong gui qua tu dong. Chi gui thu sau khi ban xem truoc va bam xac nhan.')
-    print('Khoa nam ngoai www tai data/admin_buff.key; khong chia se khoa.')
-    import app
-    sys.argv = [str(ROOT / 'server' / 'app.py'), '--bind', '127.0.0.1', '--enable-admin-buff']
-    app.main()
+    from portable_launcher import project_lock
+    with project_lock(ROOT / 'runtime' / 'state') as acquired:
+        if not acquired:
+            raise RuntimeError('Server dang chay hoac dang khoi dong. Tat server cu truoc; khong chay hai server.')
+        check_runtime()
+        print('Web buff local: http://127.0.0.1:18083/admin/buff/')
+        print('Game cung server: http://127.0.0.1:18083/html5/')
+        print('Khong gui qua tu dong. Chi gui thu sau khi ban xem truoc va bam xac nhan.')
+        print('Khoa nam ngoai www tai data/admin_buff.key; khong chia se khoa.')
+        import app
+        sys.argv = [str(ROOT / 'server' / 'app.py'), '--bind', '127.0.0.1', '--enable-admin-buff']
+        app.main()
 
 
 if __name__ == '__main__':

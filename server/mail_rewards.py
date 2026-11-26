@@ -9,8 +9,12 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 import struct
+import threading
 import time
 import uuid
+
+_CATALOG_LOCK = threading.Lock()
+_CATALOG_CACHE = {}
 
 import inventory
 import skin_catalog_overrides
@@ -78,6 +82,26 @@ def catalog(db):
     """
     from bot_setup import AI_TANKS
     from tank_halos import SUPPORTED as HALOS
+    db_file = skin_catalog_overrides._db_file(db)
+    setting_rows = {
+        row[0]: row[1]
+        for row in db.execute(
+            'SELECT name,value FROM settings WHERE name IN (?,?,?)',
+            (cosmetic_shop.CATALOG, skin_catalog_overrides.SUPPORT_SETTING, skin_catalog_overrides.EFFECT_SETTING),
+        )
+    }
+    cache_key = (
+        db_file,
+        setting_rows.get(cosmetic_shop.CATALOG),
+        setting_rows.get(skin_catalog_overrides.SUPPORT_SETTING),
+        setting_rows.get(skin_catalog_overrides.EFFECT_SETTING),
+    ) if db_file else None
+    if cache_key is not None:
+        with _CATALOG_LOCK:
+            cached = _CATALOG_CACHE.get(cache_key)
+        if cached is not None:
+            return {k: dict(v) for k, v in cached.items()}
+
     items = {_number(r['nItemId']): r for r in rows(db, 'ItemTemplate_table.xml')}
     items = skin_catalog_overrides.effective_items(db, items)
     levels = {(_number(r['nTankId']), _number(r['nLevel'])): r
@@ -95,7 +119,7 @@ def catalog(db):
     for row in rows(db, 'ConsumeLevelTemplate_table.xml'):
         if _number(row.get('nType')) in (1, 2) and _number(row.get('iItemCount')) > 0:
             material_ids.add(_number(row.get('nItemId')))
-    cosmetics = _setting(db, cosmetic_shop.CATALOG, {})
+    cosmetics = json.loads(setting_rows[cosmetic_shop.CATALOG]) if cosmetic_shop.CATALOG in setting_rows else {}
     skin_support, _skin_effects = skin_catalog_overrides.load(db)
     result = {}
     for ident, (_, name) in CURRENCIES.items():
@@ -141,6 +165,10 @@ def catalog(db):
                            name=_name(display_item_name(ident, row.get('szName')), 'Vật phẩm ' + str(ident)),
                            max_quantity=1 if unique else 135 if category == 'helper' else 1_000_000,
                            unique=unique, level=level, container=cont, stack_max=maximum)
+    if cache_key is not None:
+        with _CATALOG_LOCK:
+            _CATALOG_CACHE.clear()
+            _CATALOG_CACHE[cache_key] = {k: dict(v) for k, v in result.items()}
     return result
 
 

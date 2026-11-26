@@ -54,7 +54,7 @@ def tick(arena,now):
                                     vent_end_at=now+7000,vent_tick_at=now+2500,active=False))
         pk['vent_due_at']+=20000
     for vent in list(pk['vents']):
-        if now>vent['vent_end_at']:
+        if now>=vent['vent_end_at']:
             packets.append(remove_scene(arena,vent['id']));pk['vents'].remove(vent);continue
         if now<vent['vent_burst_at']:continue
         contacts=[a for a in members if a.alive and a.is_area_targetable() and math.dist(a.position_at(now),vent['pos'])<=120]
@@ -68,8 +68,6 @@ def tick(arena,now):
         if now>=vent['vent_tick_at']:
             vent['vent_tick_at']+=500
             for actor in contacts:packets+=environment_hit(actor,now,D(25))
-        if now==vent['vent_end_at']:
-            packets.append(remove_scene(arena,vent['id']));pk['vents'].remove(vent)
     for actor in members:
         if not actor.alive or actor.in_stasis():continue
         hot=any(v['active'] and math.dist(actor.position_at(now),v['pos'])<=120 for v in pk['vents'])

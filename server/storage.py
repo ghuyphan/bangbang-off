@@ -67,6 +67,7 @@ def connection(path=None, *, write=False):
     db.row_factory = sqlite3.Row
     try:
         db.execute('PRAGMA foreign_keys=ON')
+        db.execute('PRAGMA synchronous=NORMAL')
         if db.execute('PRAGMA user_version').fetchone()[0] != SCHEMA_VERSION:
             raise RuntimeError('Unsupported SQLite schema; run tools/migrate_sqlite.py first')
         if write:

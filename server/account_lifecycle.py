@@ -5,6 +5,7 @@ when explicitly enabled.  Old installations without those tables retain their
 existing login semantics.  Account locks never replace SQLite transactions.
 """
 from contextlib import contextmanager
+from pathlib import Path
 import threading
 
 import storage
@@ -15,11 +16,23 @@ _locks = {}
 
 @contextmanager
 def account_lock(username, path=None):
-    key = (str(path or storage.database_path()), str(username))
+    resolved = str(Path(path or storage.database_path()).resolve())
+    key = (resolved, str(username))
     with _guard:
-        lock = _locks.setdefault(key, threading.RLock())
-    with lock:
-        yield
+        entry = _locks.get(key)
+        if entry is None:
+            entry = [threading.RLock(), 0]
+            _locks[key] = entry
+        entry[1] += 1
+        lock = entry[0]
+    try:
+        with lock:
+            yield
+    finally:
+        with _guard:
+            entry[1] -= 1
+            if entry[1] <= 0:
+                _locks.pop(key, None)
 
 
 def has_table(db, name):

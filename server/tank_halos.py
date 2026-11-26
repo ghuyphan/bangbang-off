@@ -5,6 +5,7 @@ incomplete native choices stay closed; 7003002 is the native default, sent as0.
 Inventory is neither granted nor consumed by an equip operation.
 """
 import json
+import sqlite3
 import struct
 import time
 
@@ -58,19 +59,24 @@ def apply(state, payload, db):
         record['halo_id'] = halo
         selected = (state.get('selected_tank_uuid') == uuid or
                     not state.get('selected_tank_uuid') and state['tank_id'] == record['tank_id'])
-        new_state = dict(state)
-        if selected:
-            new_state.update(selected_tank_uuid=uuid, halo_id=halo)
         db.execute('UPDATE garage SET data=? WHERE profile_id=? AND uuid=?',
                    (json.dumps(record, ensure_ascii=False, separators=(',', ':')), storage.profile_id(), uuid))
-        db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
-                   (json.dumps(new_state, ensure_ascii=False, separators=(',', ':')),
-                    time.time_ns() // 1_000_000, storage.profile_id()))
+        world_row = db.execute('SELECT state FROM worlds WHERE profile_id=?', (storage.profile_id(),)).fetchone()
+        if world_row is not None:
+            saved = json.loads(world_row[0])
+            if selected and not state.get('tank_selection'):
+                saved.update(selected_tank_uuid=uuid, halo_id=halo)
+            db.execute('UPDATE worlds SET state=?,updated_ms=? WHERE profile_id=?',
+                       (json.dumps(saved, ensure_ascii=False, separators=(',', ':')),
+                        time.time_ns() // 1_000_000, storage.profile_id()))
         db.commit()
-        state.update(new_state)
+        if selected:
+            state.update(selected_tank_uuid=uuid)
+            if not state.get('tank_selection'):
+                state['halo_id'] = halo
         raw = uuid.encode('utf-8')
         return record, [(1160, struct.pack('<BH', 1, len(raw)) + raw + struct.pack('<I', halo))], None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         message = str(exc) if isinstance(exc, ValueError) and not isinstance(exc, UnicodeError) else 'Yêu cầu vòng sáng không hợp lệ.'
         raw = uuid.encode('utf-8')

@@ -156,6 +156,21 @@ export function beginLocalLoad(state, {generation, sceneId, mapId} = {}) {
 
 const LOAD_STAGES = new Set(['catalog', 'assets', 'interface', 'graphics', 'waiting-server', 'ready', 'error']);
 
+export function localLoadFraction(load) {
+  if (!load || load.error) return 0;
+  const ratio = load.total > 0 && finite(load.completed)
+    ? Math.max(0, Math.min(1, load.completed / load.total)) : null;
+  switch (load.stage) {
+    case 'catalog': return 0.08;
+    case 'assets': return ratio == null ? 0.12 : 0.12 + 0.66 * ratio;
+    case 'interface': return 0.80;
+    case 'graphics': return ratio == null ? 0.82 : 0.82 + 0.17 * ratio;
+    case 'waiting-server':
+    case 'ready': return 1;
+    default: return 0.10;
+  }
+}
+
 /** Counts must describe observed work; null total keeps the UI indeterminate. */
 export function updateLocalLoad(state, token, update = {}) {
   const current = state?.localLoad?.token;

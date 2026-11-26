@@ -8,6 +8,8 @@ Missing fields remain absent. Consumers must not silently invent a stat/skill.
 from __future__ import annotations
 
 from functools import lru_cache
+import threading
+from combat_math import D
 from storage import template_rows, database_path
 
 
@@ -15,17 +17,23 @@ class _TableRows(tuple):
     """Indexes belong to this loaded table, so clearing _rows drops them too."""
     def __init__(self, rows):
         self.indexes = {}
+        self._lock = threading.Lock()
 
     def candidates(self, keys):
         if not keys:
             return self
         field, value = keys[0]
-        if field not in self.indexes:
-            index = {}
-            for row in self:
-                index.setdefault(row.get(field), []).append(row)
-            self.indexes[field] = index
-        return self.indexes[field].get(str(value), ())
+        index = self.indexes.get(field)
+        if index is None:
+            with self._lock:
+                index = self.indexes.get(field)
+                if index is None:
+                    built = {}
+                    for row in self:
+                        built.setdefault(row.get(field), []).append(row)
+                    self.indexes[field] = built
+                    index = built
+        return index.get(str(value), ())
 
 
 @lru_cache(maxsize=16)
@@ -66,7 +74,7 @@ def table_row(filename: str, **keys: int) -> dict[str, str]:
     return _matching_row(filename,str(database_path()),tuple(sorted(keys.items()))).copy()
 
 
-def active_buff_effect_types(templates):
+def active_buff_effect_types(templates, database=None):
     """Static template lookup only; callers still filter live owner/expiry.
 
     Resolve the database once per scan, not once per active buff. Do not cache
@@ -75,9 +83,34 @@ def active_buff_effect_types(templates):
     """
     if not templates:
         return set()
-    database = str(database_path())
-    return {int(_matching_row('BuffTemplate_table.xml',database,(('nBuffId',template),))['nEffectType'])
-            for template in templates}
+    db = str(database_path()) if database is None else database
+    return {buff_meta(template, db)[0] for template in templates}
+
+
+@lru_cache(maxsize=2048)
+def _buff_meta_cached(database: str, template: int):
+    row = _matching_row('BuffTemplate_table.xml', database, (('nBuffId', template),))
+    val_a = row.get('fEffectValA') or '0'
+    stack_add = row.get('iStackAdd') or '0'
+    time_val = row.get('fTimeEffectValA') or ''
+    return (
+        int(row.get('nEffectType') or 0),
+        int(row.get('nTypeParam') or 0),
+        int(row.get('iValType') or 0),
+        float(val_a),
+        float(stack_add),
+        float(time_val) if time_val else 0.0,
+        int(row.get('iCoolTime') or 0),
+        int(row.get('fEffectValB') or 0),
+        row.get('iAspect', ''),
+        D(val_a),
+        D(stack_add),
+        D(time_val) if time_val else None,
+    )
+
+
+def buff_meta(template: int, database: str | None = None):
+    return _buff_meta_cached(str(database_path()) if database is None else database, template)
 
 
 def tank_stats(tank_id, level, strength=0):

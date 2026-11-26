@@ -54,10 +54,7 @@ export function buildRankedPanel(ui,{button,art}){
   const footer=element('div',null,'m813-rank-footer');
   const rules2=element('p','Chờ tối đa 5 giây; người lẻ đấu với bot. Loại bot tự chọn theo rank. Mỗi mùa 14 ngày. Rời trận tính là thua.','m813-rank-rule2');
   const actions=element('div',null,'m813-rank-actions');
-  const ranking=flashSpriteButton(ui,'zh_CN/gui_summer/controls/public/button_2_blue.png','',async()=>{
-    await ui.navigate('leaderboard');
-    if(ui.controller?.section==='leaderboard'){ui.controller.rankKind='ranked';ui.controller.rankPage=0;ui.controller.loadSection();}
-  },{width:142,height:32,testId:'rank-open-leaderboard',ariaLabel:'Bảng xếp hạng',title:'Bảng xếp hạng'});
+  const ranking=flashSpriteButton(ui,'zh_CN/gui_summer/controls/public/button_2_blue.png','',()=>ui.navigate('leaderboard',{rankKind:'ranked'}),{width:142,height:32,testId:'rank-open-leaderboard',ariaLabel:'Bảng xếp hạng',title:'Bảng xếp hạng'});
   ranking.append(artImg(LADDER_ART.viewRankWord,'Xem bảng xếp hạng','m813-rank-word-btn'));
   const historyButton=flashSpriteButton(ui,'zh_CN/gui_summer/controls/public/button_2_blue.png','Lịch sử 20 trận',()=>{
     const showHistory=history.hidden;

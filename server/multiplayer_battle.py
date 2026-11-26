@@ -123,6 +123,7 @@ class Match:
     initialized: set = field(default_factory=set)
     left: set = field(default_factory=set)
     loaded: dict = field(default_factory=dict)
+    delays: dict = field(default_factory=dict)
     disconnected_at: dict = field(default_factory=dict)
     mailboxes: dict = field(default_factory=dict)
     pending: list = field(default_factory=list)
@@ -132,6 +133,7 @@ class Match:
     ticks: int = 0
     error: str = ''
     dirty: bool = False
+    last_persisted: float = 0.0
     inputs: deque = field(default_factory=deque)
     world_json: dict = field(default_factory=dict)
     clock_remainder: float = 0.0
@@ -220,6 +222,7 @@ class BattleService:
                         for match in tuple(self.matches.values()):
                             try:
                                 if self._tick(match,now):dirty.append(match)
+                                elif match.pending and not match.error:self._publish_committed(match)
                             except Exception as exc:
                                 if not match.error:
                                     log.exception('Shared room %s checkpoint/tick failed',match.room_id)
@@ -233,6 +236,7 @@ class BattleService:
                                 for match in dirty:
                                     if not match.error:log.exception('Shared room batch checkpoint failed')
                                     match.error=str(exc)
+                                    match.dirty=False
                                     self._publish_status(match)
                         for match in tuple(self.matches.values()):
                             if not match.error and not match.dirty:
@@ -505,17 +509,31 @@ class BattleService:
         snapshot['bots']=deepcopy(match.state['bots'])
         return snapshot
 
-    def loaded(self,profile,progress):
-        return self._call('loaded',int(profile),int(progress))
+    def loaded(self,profile,progress,delay=15):
+        return self._call('loaded',int(profile),int(progress),int(delay))
 
-    def _loaded(self,profile,progress):
+    def _loaded(self,profile,progress,delay=15):
         match=self._match(profile)
         if match is None or not 0<=progress<=100:
             raise ValueError('Tiến trình tải phòng không hợp lệ.')
+        delay=max(0,min(9999,int(delay)))
         match.loaded[profile]=progress
+        match.delays[profile]=delay
         match.states[profile]['battle']['loaded']=progress
-        packet=(1709,struct.pack('<III',profile,15,progress))
+        packet=(1709,struct.pack('<III',profile,delay,progress))
         self._fanout(match,[packet],loading=True)
+
+    def loading_rates(self,profile):
+        return self._call('loading_rates',int(profile))
+
+    def _loading_rates(self,profile):
+        match=self._match(profile)
+        if match is None:
+            return []
+        delays=getattr(match,'delays',{})
+        rates=[(1709,struct.pack('<III',ident,delays.get(ident,15),match.loaded[ident])) for ident in match.states]
+        rates+=[(1709,struct.pack('<III',bot['acct_id'],10,100)) for bot in match.state['bots']]
+        return rates
 
     def entry(self,profile):
         return self._call('entry',int(profile))
@@ -645,7 +663,7 @@ class BattleService:
         self._advance_clock(match,now)
         if match.phase=='battle' and match.active() and not match.arena.pk['finished'] and not match.error:
             match.ticks+=1
-            match.pending.extend(match.arena.tick());match.dirty=True
+            match.pending.extend(match.arena.tick())
             try:
                 while match.inputs:
                     profile,mid,payload=match.inputs.popleft()
@@ -654,11 +672,21 @@ class BattleService:
                     match.pending.extend(match.arena.handle_for(match.objects[profile],mid,payload))
             finally:
                 match.arena._shared_input_dispatch=False
-        if match.pending or (match.arena.pk['finished'] and not match.state['battle'].get('completed_recorded')):
+        if (match.arena.pk['finished'] and not match.state['battle'].get('completed_recorded')
+                or match.phase=='battle' and match.active() and now-match.last_persisted>=.5):
             match.dirty=True
         # Retire arenas only after every participant explicitly left; offline
         # participants keep their stable actor slot for a genuine reconnect.
         if len(match.left)==len(match.states) and (match.phase=='finished' or not match.active()):
+            if match.phase!='finished':
+                try:
+                    self._db.execute('BEGIN IMMEDIATE')
+                    self._db.execute('UPDATE multiplayer_matches SET phase=?,updated_ms=? WHERE room_id=? AND phase=?',
+                                     ('abandoned',time.time_ns()//1000000,match.room_id,'battle'))
+                    self._db.commit()
+                except BaseException:
+                    self._db.rollback()
+                    raise
             self.matches.pop(match.room_id,None)
         return match.dirty
 
@@ -707,7 +735,7 @@ class BattleService:
                 for ident,state in settled.items():
                     match.states[ident].clear();match.states[ident].update(state)
                 match.state['battle'].update(completed_recorded=True,rank_result=merged)
-            match.phase=phase;match.dirty=False
+            match.phase=phase;match.dirty=False;match.last_persisted=time.monotonic()
             if phase=='finished' and not match.finished_at:match.finished_at=time.monotonic()
             self._publish_status(match)
 

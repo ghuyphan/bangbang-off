@@ -4,6 +4,7 @@ from copy import deepcopy
 from functools import lru_cache
 import json
 import random
+import sqlite3
 import struct
 import time
 import uuid
@@ -45,7 +46,8 @@ def _catalog(database):
         attrs[int(r['nAttrGroupId'])].append((int(r['nAttrType']), int(r['nValueType']), r['fAttrValue']))
     recipes = {int(r['nId']): r for r in storage.template_rows('ItemConvertTemplate_table.xml')
                if int(r.get('nType', 0)) == 29 and int(r['nNewItemId']) in crystals
-               and int(crystals[int(r['nNewItemId'])]['iReuseD']) in (4, 5)}
+               and int(crystals[int(r['nNewItemId'])]['iReuseD']) in (4, 5)
+               and int(r.get('iCount1', 0)) > 0}
     return items, crystals, slots, drops, attrs, recipes
 
 
@@ -115,9 +117,10 @@ def change_items(containers, ident, delta):
     items = containers.setdefault(container, [])
     matches = [i for i in items if i['template_id'] == ident]
     if delta < 0:
-        if sum(i['count'] for i in matches) < -delta:
-            raise ValueError('Không đủ vật phẩm.')
-        for item in matches:
+        usable = [i for i in matches if not (i.get('ext_flag', 0) & 2) and not i.get('life_time', 0)]
+        if sum(i['count'] for i in usable) < -delta:
+            raise ValueError('Không đủ vật phẩm hoặc vật phẩm đang bị khóa.')
+        for item in usable:
             take = min(item['count'], -delta)
             item['count'] -= take
             delta += take
@@ -128,7 +131,7 @@ def change_items(containers, ident, delta):
         return
     maximum = int(template['iStackMax'])
     for item in matches:
-        take = min(maximum - item['count'], delta)
+        take = min(max(0, maximum - item['count']), delta)
         item['count'] += take
         delta -= take
     occupied = {i['slot_no'] for i in items}
@@ -248,6 +251,8 @@ def apply(state, mid, payload, db, *, rng=None):
             if row is None:
                 raise ValueError('Tank không thuộc sở hữu của bạn.')
             record = json.loads(row[0])
+            if record.get('cont_type', 0) != 0 or record['tank_id'] in storage.DEFERRED_TANKS:
+                raise ValueError('Chỉ gắn bảng tinh thể cho tank sở hữu vĩnh viễn.')
             record['crystal_scheme_id'] = ident
             db.execute('UPDATE garage SET data=? WHERE profile_id=? AND uuid=?',
                        (json.dumps(record, ensure_ascii=False), storage.profile_id(), tank_uuid))
@@ -310,7 +315,7 @@ def apply(state, mid, payload, db, *, rng=None):
         packets = bag_updates(previous_items, containers, changed_containers) + packets
         db.commit()
         return packets, None
-    except (ValueError, UnicodeError, struct.error) as exc:
+    except (ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         message = str(exc) if type(exc) is ValueError else 'Yêu cầu tinh thể không hợp lệ.'
         packets = [shop.tip(mid, message)]

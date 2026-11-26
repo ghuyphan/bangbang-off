@@ -565,7 +565,7 @@ def apply(state, body, db):
         final = native + [(1230, struct.pack('<i', response['unread'])), packet(response)]
         db.commit()
         return final, None
-    except (RewardError, ValueError, UnicodeError, struct.error) as exc:
+    except (RewardError, ValueError, UnicodeError, struct.error, sqlite3.Error) as exc:
         db.rollback()
         error = exc if isinstance(exc, RewardError) else RewardError('mail_invalid', 'Dữ liệu thư chưa hợp lệ; chưa nhận quà.')
         return [packet(dict(request_id=request_id, action=action, ok=False, error=error.envelope()))], str(error)
