@@ -1,9 +1,29 @@
 import {element,assetImage,nativeText,numberText,selectInput,note,flashCloseButton,flashSpriteButton} from './m8_ui_helpers.js';
-import {at,panelArt,nativeButton,nativeLabel} from './m84_character.js';
+import {at,panelArt,panelAsset,nativeButton,nativeLabel} from './m84_character.js';
 import {createNativePanel} from './m81_native_panel.js';
 import {canonicalShopIntent,shopItemReference} from './m81345_shop_protocol.js';
 
 const P='zh_CN/gui_summer/controls/';
+const comma=value=>Math.max(0,Number(value)||0).toLocaleString('en-US');
+const ROLE_VI={
+  '刺客':'Sát thủ','射手':'Xạ thủ','法师':'Pháp sư','战士':'Đấu sĩ','肉盾':'Đỡ đòn','辅助':'Hỗ trợ',
+  '位移':'Cơ động','控制':'Khống chế','爆发':'Bùng nổ','复制':'Phân thân','灵动':'Linh hoạt',
+  '护盾':'Tạo giáp','沉默':'Câm lặng','拉扯':'Cấu rỉa','瞬移':'Dịch chuyển','禁疗':'Cấm hồi máu',
+  '狙击':'Bắn tỉa','收割':'Kết liễu','积攒':'Tích lũy','重伤':'Trọng thương','潜行':'Tàng hình',
+  '击退':'Đẩy lùi','弹射':'Nảy đạn','单体':'Đơn mục tiêu','反隐':'Chống tàng hình','穿透':'Xuyên giáp',
+  '群伤':'Diện rộng','吸血':'Hút máu','生存':'Sinh tồn','保护':'Bảo vệ','先手':'Mở giao tranh',
+  '冰冻':'Đóng băng','净化':'Thanh tẩy','减益':'Suy yếu','击飞':'Hất tung','分割':'Chia cắt',
+  '分身':'Phân thân','制裁':'Trừng phạt','加速':'Tăng tốc','反弹':'Phản đòn','反杀':'Phản kích',
+  '变身':'Biến hình','召唤':'Triệu hồi','回溯':'Quay ngược','增益':'Cường hóa','恐惧':'Hoảng sợ',
+  '恢复':'Hồi phục','抵挡':'Chống đỡ','换血':'Đổi máu','新手':'Tân thủ','暴击':'Bạo kích',
+  '治疗':'Hồi máu','消失':'Biến mất','消耗':'Cấu rỉa','混乱':'Hỗn loạn','石化':'Hóa đá',
+  '突进':'Đột kích','群体':'Diện rộng','群控':'Khống chế rộng','群疗':'Hồi máu nhóm',
+  '自愈':'Tự hồi phục','范围':'Diện rộng','补刀':'Kết liễu','转移':'Chuyển vị','连射':'Liên thanh',
+  '遁地':'Độn thổ','重生':'Hồi sinh','防弹':'Chắn đạn','陷阱':'Đặt bẫy','隐身':'Tàng hình',
+  '骚扰':'Quấy rối','魅惑':'Mê hoặc','不朽':'Bất tử','休眠':'Ngủ đông',
+};
+const formatRole=raw=>!raw?'':raw.split(/\s+|·/).map(t=>t.trim()).filter(Boolean).map(t=>ROLE_VI[t]||t).join(' · ');
+const coinIconKey=type=>type===1?'money':type===3?'coupon':'diamond';
 export const NORMAL_SHOP_TABS=Object.freeze([1,2,4,5,6,7]);
 export const normalShopType=value=>typeof value==='string'&&/^normal:(1|2|4|5|6|7)$/.test(value);
 export const shopCurrencyName=type=>({1:'Xu',2:'Bạc',3:'Xu Khóa'})[type]||'Tiền';
@@ -159,19 +179,32 @@ export function renderNormalShopGoods(ui,body){
     card.dataset.goodsId=String(offer.goodsId);card.dataset.itemId=String(offer.itemId);
     card.append(panelArt(ui,P+'shop/bigGoodsCard.png',-2,-2));
     const title=nativeLabel(name,10,13,230,27,{align:'center',className:'m84-shop-card-name'});title.title=name;card.append(title);
-    if(owned)card.append(element('span','Đã có','m84-shop-owned-badge'));
     const icon=normalShopVisual(ui,offer,160,138);if(icon)card.append(at(icon,45,48,160,138));
-    const description=at(element('p',nativeText(offer.description||''),'m81345-shop-description'),17,192,216,62);description.title=description.textContent;card.append(description);
-    const detail=box?rulesText(box):`Nhận ${numberText(payment.quantity)} ${offer.grantKind==='tank'?'tank vĩnh viễn':offer.grantKind==='skin'?'skin vĩnh viễn':'vật phẩm'} / lượt`;
-    const hint=at(element('p',detail,'m81345-shop-card-rule'),12,258,226,34);card.append(hint);
+    const description=at(element('p',nativeText(offer.description||''),'m81345-shop-description'),17,196,216,74);description.title=description.textContent;card.append(description);
+    const tankMeta=offer.grantKind==='tank'?formatRole(ui.assets?.garage?.tanks?.[String(offer.itemId)]?.nativeRole):'';
+    const detail=box?rulesText(box):tankMeta||(payment.quantity>1?`Số lượng: ×${comma(payment.quantity)}`:'');
+    if(detail)card.append(at(element('p',detail,'m81345-shop-card-rule'),12,274,226,20));
     const preferred=ui.shopSub==='gift'?(offer.payments.find(p=>p.coinType===3)||payment):ui.shopSub==='cash'?(offer.payments.find(p=>p.coinType===1)||payment):payment;
     const alt=offer.payments.find(p=>p.key!==preferred.key);
-    const price=at(element('p',`${numberText(preferred.price)} ${shopCurrencyName(preferred.coinType)}${preferred.quantity>1?` / ${numberText(preferred.quantity)}`:''}`,'m81345-shop-price'),10,297,230,24);card.append(price);
-    if(alt)card.append(at(element('p',`Hoặc: ${numberText(alt.price)} ${shopCurrencyName(alt.coinType)}`,'m81345-shop-alt'),10,321,230,17));
-    const affordable=isAffordable(offer);
-    card.append(nativeButton(ui,{skin:P+'shop/button_buy_t.png',label:owned?'Đã sở hữu '+name:'Mua '+name,x:80,y:343,testId:'normal-shop-buy-'+offer.goodsId,
-      disabled:owned||!canUseNormalShop(ui)||!affordable,title:owned?'Bạn đã sở hữu vĩnh viễn.':!canUseNormalShop(ui)?blocker(ui):affordable?'Mua '+name:'Chưa đủ tiền.',
-      onClick:()=>openNormalShopPurchase(ui,offer)}));cards.append(card);
+    const price=at(element('div',null,'m84-shop-price'),10,302,230,26);
+    if(owned){
+      price.title=`Đã sở hữu vĩnh viễn · ${comma(preferred.price)} ${shopCurrencyName(preferred.coinType)}`;
+      price.append(element('span','Đã sở hữu'));
+    }else{
+      const shown=alt?[preferred,alt]:[preferred];
+      shown.forEach((p,idx)=>{
+        if(idx>0){const sep=element('span','/');sep.className='m84-shop-price-sep';price.append(sep);}
+        const coin=panelAsset(ui,P+`shop/${coinIconKey(p.coinType)}.png`);
+        if(coin){const img=panelArt(ui,coin);Object.assign(img.style,{position:'static',width:'22px',height:'22px'});price.append(img);}
+        price.append(element('span',`${comma(p.price)}${p.quantity>1?`×${comma(p.quantity)}`:''}`));
+      });
+      if(alt)price.title=`${comma(preferred.price)} ${shopCurrencyName(preferred.coinType)} · Hoặc ${comma(alt.price)} ${shopCurrencyName(alt.coinType)}`;
+      const affordable=isAffordable(offer);
+      card.append(nativeButton(ui,{skin:P+'shop/button_buy_t.png',label:'Mua '+name,x:80,y:338,testId:'normal-shop-buy-'+offer.goodsId,
+        disabled:!canUseNormalShop(ui)||!affordable,title:!canUseNormalShop(ui)?blocker(ui):affordable?'Mua '+name:'Chưa đủ tiền.',
+        onClick:()=>openNormalShopPurchase(ui,offer)}));
+    }
+    card.append(price);cards.append(card);
   }
   body.append(cards,ui.nativePager('shop',pages,body));
   if(!rows.length){

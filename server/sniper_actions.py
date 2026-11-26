@@ -82,7 +82,7 @@ class SniperActions(ActionLockMixin, TankActions):
                 state['next_stack_at']+=500*count
                 state['count']=min(10,state['count']+count)
                 packets.extend(self._buff(376141,now,stacks=state['count']))
-        if self.special or now<self.combat_timer['end']:
+        if now<self.combat_timer['end']:
             if self.has_buff(376111,now):
                 packets.extend(self.remove_buff(376111,now)+self.remove_buff(376112,now))
         else:
@@ -244,7 +244,7 @@ class SniperActions(ActionLockMixin, TankActions):
         if slot not in SLOTS or self.blocked('attack',now) or self.skill_sealed(slot,now) or self.cooldowns[slot]>now:
             return []
         if slot in (0,1) and start==dest:return []
-        packets=self._activity(now);power=self.combat_stat('iAttack',now)
+        packets=[];power=self.combat_stat('iAttack',now)
         if slot==0 and self.special:
             index=self.special['index'];skill=SHOTS[index]
             self.cooldowns[0]=now+1250

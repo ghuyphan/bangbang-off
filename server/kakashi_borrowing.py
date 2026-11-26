@@ -80,7 +80,6 @@ class BorrowedKits:
         if self.ready or self.dash or self.vanish or TankActions.blocked(self,'attack',now) or self.skill_sealed(1,now):return []
         view=executor(self,self.borrowed) if self.borrowed is not None else None
         if any(v is not view and v.blocked('attack',now) for v in self.borrowed_views()):return []
-        stealth=self.stealth_versions(now)
         if view is None:
             target=self.arena.actors.get(target_id)
             if (now<self.cooldowns[1] or self.mp<10 or not target or not target.alive
@@ -97,12 +96,12 @@ class BorrowedKits:
             view=executor(self,serial)
             view._session['base_skill']=view.native_slot(1)[0]
             self.cooldowns[1]=now+self.skill_cooldown(10000, 1)
-            packets=self.break_borrowed_stealth(now,stealth)+self._resource(-10)+self._empower(now)
+            packets=self._resource(-10)+self._empower(now)
             packets+=self._buff(330203,now,duration=-1)
             packets.append(scene(skills=(self._skill_event(330201,start,target.position_at(now),target.id),)))
             return packets+[self._cooldown(1,True),self._cooldown(1)]
         packets=view.run('cast',1,start,dest,target_id,now)
-        if packets:packets+=self.break_borrowed_stealth(now,stealth)+self._empower(now)
+        if packets:packets+=self._empower(now)
         return packets
 
     def blocked(self, action, now):

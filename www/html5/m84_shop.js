@@ -40,20 +40,24 @@ export function renderNativeShop(ui,body,{purchaseState,previewAppearance,curren
       title:tip,testId:`shop-filter-${key}`,module:'ShopModuleFactory',onClick:()=>{ui.shopSub=key;ui.page=0;ui.render();}});
     button.setAttribute('aria-pressed',String(key===sub));body.append(button);
   }
-  const searchBox=at(element('div',null,'m84-shop-search'),518,101,isNormal?254:348,28);
+  const searchW=isNormal?254:348;
+  const searchBox=at(element('div',null,'m84-shop-search'),518,101,searchW,28);
   searchBox.setAttribute('role','search');
-  const searchInput=textInput(ui.query,{placeholder:'Tìm tên hoặc mô tả… (/)',maxLength:80});
+  searchBox.append(panelArt(ui,P+'public/label200x28.png',0,0,searchW,28,{className:'m84-native-fill'}));
+  const searchInput=textInput(ui.query,{placeholder:'Tìm kiếm… (/)',maxLength:80});
   searchInput.dataset.accountField='shop-search';searchInput.setAttribute('aria-label','Tìm vật phẩm');
   searchInput.addEventListener('input',()=>{ui.query=searchInput.value;ui.page=0;ui.render();});
   searchBox.append(searchInput);
   if(ui.query){
-    searchBox.append(ui.button('×',()=>{ui.query='';ui.page=0;ui.render();ui.host.querySelector('[data-account-field="shop-search"]')?.focus();},{testId:'shop-search-close',title:'Xóa từ khóa'}));
+    searchBox.append(ui.button('×',()=>{ui.query='';ui.page=0;ui.render();ui.host.querySelector('[data-account-field="shop-search"]')?.focus();},{testId:'shop-search-close',className:'m84-shop-search-clear',title:'Xóa từ khóa'}));
   }
   body.append(searchBox);
-  const affordBtn=ui.button(ui.shopAffordable?'✓ Đủ tiền':'Đủ tiền',()=>{ui.shopAffordable=!ui.shopAffordable;ui.page=0;ui.render();},
-    {testId:'shop-filter-affordable',className:`m84-shop-toggle${ui.shopAffordable?' is-active':''}`,title:'Chỉ hiện vật phẩm đủ tiền mua'});
+  const affordBtn=nativeButton(ui,{skin:P+`public/button_2_${ui.shopAffordable?'green':'blue'}.png`,
+    text:ui.shopAffordable?'✓ Đủ tiền':'Đủ tiền',label:'Chỉ hiện vật phẩm đủ tiền mua',
+    x:isNormal?780:874,y:101,width:88,height:28,testId:'shop-filter-affordable',module:'ShopModuleFactory',
+    onClick:()=>{ui.shopAffordable=!ui.shopAffordable;ui.page=0;ui.render();}});
   affordBtn.setAttribute('aria-pressed',String(!!ui.shopAffordable));
-  body.append(at(affordBtn,isNormal?780:874,101,88,28));
+  body.append(affordBtn);
   const currency=ui.snapshot.meta?.character?.currency||{};
   for(const [index,[key,label,icon]] of [['cash','Xu','money'],['silver','Xu Khóa','coupon'],['golden','Xu Bạc','diamond']].entries()){
     const y=356+index*30;

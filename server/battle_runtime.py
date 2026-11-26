@@ -668,7 +668,8 @@ class TankActions:
         # Allied fog is independent of an actor's own form/stealth state.
         # Do not save/restore it over info['untargetable'] and erase a vanish.
         now = getattr(self.arena,'event_now',None) or self.clock()
-        return self.in_stasis() or self.info.get('untargetable',False) or (self.has_buff(358902,now) and 32 not in self.buff_types(now))
+        return (self.in_stasis() or self.info.get('untargetable',False)
+                or (any(self.has_buff(t,now) for t in (358902,30105,510501)) and 32 not in self.buff_types(now)))
 
     def cc_immune(self, now, *, slow=False):
         return bool(getattr(self,'dora_travel',None)) or self.has_buff(311313,now) or self.has_buff(510711,now) or not slow and 54 in self.buff_types(now)
@@ -1717,19 +1718,12 @@ class TankActions:
             self.arena.damage_context = (self.id,self.generation,0,self._new_id(2))
             self.arena.current_slot = slot
             try:
-                stealth_version=self.buff_versions.get(510501)
                 if self.arena.geometry.id == 40002 and slot==1 and self.arena.pk['world_boss']['energy']>=8:
                     from world_boss_mode import cast_energy
                     cast_packets = cast_energy(self,(x,y),now)
                 else:
                     cast_packets = guild_combat.cast(self,(x,y),target,now) if slot==4 else self.cast(slot,start,(x,y),target,now)
                 if cast_packets:self.pk_safe_until=0
-                if cast_packets and self.has_buff(510501,now) and self.buff_versions.get(510501)==stealth_version:
-                    packets.extend(guild_combat.break_stealth(self,now))
-                if cast_packets and self.has_buff(358902,now):
-                    packets.extend(self.remove_buff(358902,now))
-                if cast_packets and self.has_buff(30105,now):
-                    packets.extend(self.remove_buff(30105,now))
                 packets.extend(cast_packets)
             finally:
                 self.arena.damage_context = None

@@ -324,14 +324,13 @@ class KakashiActions(BorrowedKits, VanishCcMixin, TankActions):
         if slot==0:
             borrowed=self.borrowed_basic(now)
             if borrowed:
-                stealth=self.stealth_versions(now)
                 packets=borrowed.run('cast',0,start,dest,target_id,now)
-                return packets+self.break_borrowed_stealth(now,stealth)+[self._cooldown(0,True)] if packets else []
+                return packets+[self._cooldown(0,True)] if packets else []
         fee = {0:0,2:75,10:25}[slot]
         if self.mp<fee or slot in (0,10) and start==dest: return []
         power = self.combat_stat('iEgAtk',now)
         self._cast_pen=D('.25') if self.has_buff(305201,now) else D(0)
-        packets = self.break_borrowed_stealth(now,self.stealth_versions(now))+self._resource(-fee)
+        packets = self._resource(-fee)
         self.cooldowns[slot] = now+self.skill_cooldown({0:self.fire_interval(now),2:30000,10:8000}[slot], slot)
         if slot==0 and not self.has_buff(330111,now):
             return packets+self.shoot(330100,start,dest,now,power,school='energy',basic=True)+[self._cooldown(0)]

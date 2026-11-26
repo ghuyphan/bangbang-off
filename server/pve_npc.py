@@ -63,6 +63,16 @@ class PveNpc(TankActions):
         if arena.geometry.id in CHAPTER8 + CHAPTER9:
             from pve_chapter8_9 import DECOR
             self.info['pve_trap']=info['npc_template'] in DECOR
+        width = int(arms.get('iWidth') or 0)
+        height = int(arms.get('iHeight') or 0)
+        crush_eligible = (
+            int(arms.get('iHardness') or 3) <= 2
+            and not int(arms.get('isBuilding') or 0)
+            and not int(row.get('iRoller') or 0)
+            and int(arms.get('iSpeed') or 0) > 0
+            and width > 0 and height > 0
+        )
+        self.pve_crush_half = min(width, height) / 2 if crush_eligible else 0
         self.hp = self.max_hp = D(self.stats['iHp'])
         self.info.update(hp=int(self.hp), max_hp=int(self.hp))
         self.last_speed = int(self.stats['iSpeed'])

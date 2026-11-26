@@ -254,7 +254,7 @@ class SasukeActions(SpeedLockMixin, BlockedLockMixin, MpResourceMixin, TankActio
             if target_id not in (0,target.id):return []
             from bot_ai import team_visible
             if not team_visible(self.arena,self,target,now):return []
-        packets=self.remove_buff(368403,now)
+        packets=[]
         power=self.combat_stat('iEgAtk',now)
         if skill not in (368320,368410):
             self.cooldowns[slot]=now+self.skill_cooldown({0:self.fire_interval(now),1:6000,2:20000,10:8000}[slot], slot)

@@ -125,7 +125,7 @@ class JokerActions(SlotCooldownMixin, MarksCleanupMixin, TankActions):
             return []
         power = self.combat_stat('iAttack',now)
         self.cooldowns[slot] = now+self.skill_cooldown({0:self.fire_interval(now),1:1000,2:25000,10:8000}[slot], slot)
-        packets = self.remove_buff(451403,now)
+        packets = []
         if slot in (0,2):
             return packets+self.shoot(SLOTS[slot],start,dest,now,power*(D('4.12') if slot else 1),
                                       school='physical',basic=slot==0,through_walls=slot==2,power=power)+[self._cooldown(slot)]

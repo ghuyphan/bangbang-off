@@ -237,7 +237,7 @@ class NightWingActions(ActionLockMixin, MpResourceMixin, ControlInterruptMixin, 
         if slot==2 and (not target or target not in enemies(self) or math.dist(start,target.position_at(now))>480
                        or not team_visible(self.arena,self,target,now)):return []
         power=self.combat_stat('iAttack',now)
-        packets=self._resource(-cost)+self._break_stealth(now)
+        packets=self._resource(-cost)
         self.cooldowns[slot]=now+self.skill_cooldown({0:self.fire_interval(now),1:8000,2:25000,10:4000}[slot], slot)
         if slot==0:
             enhanced=self.has_buff(390204,now)

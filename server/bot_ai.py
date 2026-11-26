@@ -459,14 +459,9 @@ def _native_perform(arena,actor,slot,dest,target,now):
         import guild_combat
         arena.damage_context=(actor.id,actor.generation,0,arena.new_id(2));arena.current_slot=slot
         try:
-            stealth=actor.buff_versions.get(510501)
             packets=guild_combat.cast(actor,dest,target,now)
             if packets:
                 actor.pk_safe_until=0
-                if stealth is not None and actor.buff_versions.get(510501)==stealth:
-                    packets+=guild_combat.break_stealth(actor,now)
-                for buff in (358902,30105):
-                    if actor.has_buff(buff,now):packets+=actor.remove_buff(buff,now)
             return packets
         finally:arena.damage_context=None;arena.current_slot=None
     ai05=actor.info['tank_id'] in bot_ai05.TANKS
@@ -497,8 +492,6 @@ def _native_perform(arena,actor,slot,dest,target,now):
         packets=actor.cast(slot,actor.position_at(now),dest,target,now)
         if packets:
             actor.pk_safe_until=0
-            if actor.has_buff(358902,now):packets+=actor.remove_buff(358902,now)
-            if actor.has_buff(30105,now):packets+=actor.remove_buff(30105,now)
         return packets
     finally:arena.damage_context=None;arena.current_slot=None
 

@@ -146,7 +146,7 @@ class DarkKnightActions(SlotCooldownMixin, TankActions):
         if slot not in SLOTS or self.blocked('attack',now) or self.skill_sealed(slot,now) or self.cooldowns[slot]>now:return []
         if self.channel and slot in (0,2,10) or slot in (0,2,10) and start==dest:return []
         pen = D('.25') if self.has_buff(305201,now) else D(0)
-        packets = self.remove_buff(305202,now) if slot!=1 else []
+        packets = []
         power = self.combat_stat('iAttack',now)
         if slot==1:
             self.cooldowns[1] = 2**63-1

@@ -1,9 +1,7 @@
 /* M45 normal shop only. Existing Fashion/Decoration selectors are unchanged. */
 .m81345-shop-card .m84-shop-card-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.m81345-shop-description{margin:0;padding:0 3px;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;white-space:pre-line;word-break:break-word;font:11.5px/15.5px Tahoma,Arial,sans-serif;color:#12445e;scrollbar-width:thin;scrollbar-color:#72bfe0 #eaf8ff}
-.m81345-shop-card-rule{margin:0;font:700 11.5px/16px Tahoma,Arial,sans-serif;color:#14587c;text-align:center;overflow:hidden}
-.m81345-shop-price{margin:0;font:700 14px/24px Tahoma,Arial,sans-serif;color:#784207;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.m81345-shop-alt{margin:0;font:700 11px/16px Tahoma,Arial,sans-serif;color:#8e4906;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m81345-shop-description{margin:0;padding:0 4px;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;white-space:pre-line;word-break:break-word;font:12px/16.5px Tahoma,Arial,sans-serif;color:#12445e;scrollbar-width:thin;scrollbar-color:#72bfe0 #eaf8ff}
+.m81345-shop-card-rule{margin:0;font:700 11.5px/16px Tahoma,Arial,sans-serif;color:#b84a00;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .m81345-shop-recovery{display:flex;align-items:center;justify-content:center;gap:12px;padding:3px 8px;box-sizing:border-box;background:#075f8f;color:#fff;border:1px solid #8cddff;border-radius:5px;font:12px Tahoma,Arial,sans-serif;z-index:6}
 .m81345-shop-recovery .m8-button{min-height:25px!important;padding:2px 9px!important}
 .m81345-shop-confirm{color:#164b66;font:13px Tahoma,Arial,sans-serif}

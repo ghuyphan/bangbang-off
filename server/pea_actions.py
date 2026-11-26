@@ -262,7 +262,7 @@ class PeaActions(TankActions):
             return []
         if slot==2 and self.mp<10:
             return []
-        packets = self._activity(now)
+        packets = []
         power = self.combat_stat('iEgAtk',now)
         if slot==0:
             gatling = self.gatling

@@ -2,9 +2,65 @@
 import math
 import struct
 
+from combat_geometry import TANK_CONTACT_RADIUS, circle_contact, rect_contact
 from combat_math import D
 from combat_protocol import scene
 from pve_catalog import CHAPTER2, CHAPTER3, CHAPTER4, CHAPTER5, CHAPTER6, CHAPTER7, CHAPTER8, CHAPTER9
+
+NON_CRUSHABLE_INFO = (
+    'pve_hostage',
+    'pve_trap',
+    'pve_flying',
+    'pve_stationary',
+    'pve_fortification',
+    'pve_local_forklift',
+    'map_object',
+)
+
+
+def _crush_hit(arena, player, prev_crush, p_pos, npc, now):
+    if (not npc.alive or not npc.info.get('pve_npc') or npc.camp == player.camp
+            or npc.in_stasis() or getattr(npc, 'pve_crush_half', 0) <= 0
+            or any(npc.info.get(key) for key in NON_CRUSHABLE_INFO)):
+        return False
+    n_pos = npc.position_at(now)
+    radius = TANK_CONTACT_RADIUS + npc.pve_crush_half
+    hit = math.dist(p_pos, n_pos) <= radius
+    if (not hit and prev_crush is not None):
+        prev_pos, prev_now = prev_crush
+        if (0 < math.dist(prev_pos, p_pos) <= 180
+                and arena.geometry.wall_contact(prev_pos, p_pos) is None
+                and rect_contact(prev_pos, p_pos, arena.water_rects(now)) is None):
+            hit = circle_contact(prev_pos, p_pos, npc.position_at(prev_now), n_pos, radius) is not None
+    if not hit:
+        return False
+    return (arena.geometry.wall_contact(p_pos, n_pos) is None
+            and rect_contact(p_pos, n_pos, arena.water_rects(now)) is None)
+
+
+def crush_soldiers(arena, now):
+    """Instantly kill crushable PvE infantry when the player's tank drives onto them."""
+    pve = arena.pk['pve']
+    player = arena.player
+    if player is None or not player.alive or player.in_stasis() or arena.pk.get('finished'):
+        pve.pop('last_crush', None)
+        return []
+    prev_crush = pve.get('last_crush')
+    p_pos = player.position_at(now)
+    pve['last_crush'] = (p_pos, now)
+    packets = []
+    for actor in list(arena.actors.values()):
+        if not _crush_hit(arena, player, prev_crush, p_pos, actor, now):
+            continue
+        shields = sum((s.remaining for s in actor.shields if s.expires_ms > now), D(0))
+        lethal = actor.hp + shields
+        packets += player.damage(
+            lethal, now, target=actor, school='true',
+            ignore_armor=True, ignore_reductions=True, resolved_damage=lethal,
+        )[0]
+        if arena.pk.get('finished'):
+            break
+    return packets
 
 
 def chapter(arena):
@@ -156,9 +212,12 @@ def _patrol(arena, actor, now):
 
 
 def tick(arena, now):
+    packets = crush_soldiers(arena, now)
+    if arena.pk.get('finished'):
+        return packets
     if arena.geometry.id!=201:
-        return chapter(arena).tick(arena,now)
-    pve = arena.pk['pve']; packets = []
+        return packets+chapter(arena).tick(arena,now)
+    pve = arena.pk['pve']
     player = arena.player
     if player.alive and not player.in_stasis() and not pve['triggered']:
         x, y = player.position_at(now)

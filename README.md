@@ -176,3 +176,5 @@ Trên Windows hãy dùng mục 3 để chơi trên một máy. Chơi LAN bằng 
 ## Thành phần đi kèm
 
 Gói gồm mã nguồn chạy game, database mẫu, tài nguyên và Python 3.13.15 x64. Giấy phép của Python và thư viện đi kèm được giữ trong các thư mục tương ứng.
+
+# bangbang-off

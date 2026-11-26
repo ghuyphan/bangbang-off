@@ -459,7 +459,7 @@
       "tab": 2,
       "grantKind": "tank",
       "name": "Teddy Bear",
-      "description": "最新仿生科技，完全隐藏机械的痕迹。",
+      "description": "Áp dụng công nghệ mô phỏng sinh học mới nhất, che giấu hoàn toàn dấu vết cơ khí.",
       "icon": {
         "url": "/rez/zh_CN/avatar/micro/c700d069824dfe1910e931f1fa4ab257.png",
         "width": 24,
@@ -1086,7 +1086,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hỏa Tinh (Gunda)",
-      "description": "皮肤型号：#COLOR_fff333_赤色彗星_END##ENTER#皮肤评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_手段不过是达成目的的途径而已~_END##ENTER#获取途径：#COLOR_fff333_商城购买获得_END##ENTER#",
+      "description": "Mẫu skin: #COLOR_fff333_Hỏa Tinh (Gunda)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Phương tiện chẳng qua chỉ là con đường dẫn đến mục đích~_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop_END##ENTER#",
       "icon": {
         "url": "/html5/assets/m81314/original/98d3956e66a2eb7ff4cfead66f2a41b86b8667b732bd7c66c432f12c4c5848ca.png",
         "width": 100,
@@ -1167,7 +1167,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Công Tước",
-      "description": "型号：#COLOR_fff333_幽灵公爵_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_就在这个夜晚，我有很多“惊喜”给你们！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Công Tước_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Ngay đêm nay, ta có rất nhiều “bất ngờ” dành cho các ngươi!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/html5/assets/m81335/icons/l/it/nangua_pf_lock10.webp",
         "width": 100,
@@ -1194,7 +1194,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Star Light (Transformer)",
-      "description": "型号：#COLOR_fff333_星爵_END##ENTER#皮肤评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_我们的征途是星辰大海！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果:#ENTER# 普通攻击进化成【#COLOR_fff333_流星光辉_END#】#ENTER#【枪炮专家】进化成【#COLOR_fff333_星辰灌注_END#】#ENTER#【电磁冲击弹】进化成【#COLOR_fff333_星流束缚_END#】#ENTER#【聚能光束炮】进化成【#COLOR_fff333_群星坠落_END#】",
+      "description": "Mẫu: #COLOR_fff333_Star Light (Transformer)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Hành trình của chúng ta là biển sao bao la!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER# Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Meteor_END#】#ENTER#【Chuyên gia súng】 tiến hóa thành 【#COLOR_fff333_Follow Star_END#】#ENTER#【Đạn Điện Từ】 tiến hóa thành 【#COLOR_fff333_Fetters_END#】#ENTER#【Pháo Tụ Năng】 tiến hóa thành 【#COLOR_fff333_The Fallen_END#】",
       "icon": {
         "url": "/rez/zh_CN/icon/item/02ecf63933c1c266017f209c2035b770.png",
         "width": 100,
@@ -1221,7 +1221,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Barbatos (Người Sói)",
-      "description": "型号：#COLOR_fff333_巴巴托斯_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_天狼座！帝王形态启动！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果：#ENTER#【嗜血狂热】进化成【#COLOR_fff333_嗜血狂热(巴巴托斯)_END#】：嗜血狂热的加速效果从15%提高到#COLOR_00ff00_20%_END#，持续时间提高到#COLOR_00ff00_1.5_END#秒。",
+      "description": "Mẫu: #COLOR_fff333_Barbatos (Người Sói)_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Thiên Lang! Kích hoạt hình thái Đế Vương!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER#【Hút Máu Điên Cuồng】 tiến hóa thành 【#COLOR_fff333_Hút Máu Điên Cuồng (Barbatos)_END#】: Hiệu ứng tăng tốc của Hút Máu Điên Cuồng tăng từ 15% lên #COLOR_00ff00_20%_END#, thời gian duy trì tăng lên #COLOR_00ff00_1.5_END# giây.",
       "icon": {
         "url": "/html5/assets_m82/head_gangzhua_pf02_cee9ef1a8fc9.webp",
         "width": 179,
@@ -1248,7 +1248,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Robin (Dark Knight)",
-      "description": "型号：#COLOR_fff333_罗宾_END##ENTER#皮肤评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_小人物，大英雄。配角也有属于自己的精彩~_END##ENTER#获取途径：#COLOR_fff333_参与活动获得，敬请关注_END##ENTER#进化效果：#ENTER# 普通攻击进化成【#COLOR_fff333_激光脉冲_END#】；#ENTER#【惩罚】进化成【#COLOR_fff333_暴乱镇压_END#】；#ENTER#【黑暗骑士】进化成【#COLOR_fff333_正义之影_END#】#ENTER#【毒镖风暴】进化成【#COLOR_fff333_罪恶制裁_END#】",
+      "description": "Mẫu: #COLOR_fff333_Robin (Dark Knight)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Nhân vật nhỏ, anh hùng lớn. Vai phụ cũng có màn tỏa sáng của riêng mình~_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tham gia sự kiện, hãy theo dõi thông báo_END##ENTER#Hiệu ứng tiến hóa: #ENTER# Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Mạch Laser_END#】; #ENTER#【Trừng trị】 tiến hóa thành 【#COLOR_fff333_Trấn Áp Bạo Loạn_END#】; #ENTER#【Dark Knight】 tiến hóa thành 【#COLOR_fff333_Bóng Dáng Chính Nghĩa_END#】#ENTER#【Bão Độc Tiêu】 tiến hóa thành 【#COLOR_fff333_Trừng Trị Tội Ác_END#】",
       "icon": {
         "url": "/html5/assets_m82/head_bianfuxia_pf11_4f97cfdb70ad.webp",
         "width": 179,
@@ -1275,7 +1275,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Darth Vader",
-      "description": "型号：#COLOR_fff333_黑武士_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_平衡才是原力应有的形态！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果:#ENTER#使用该皮肤后，会进化成【#COLOR_fff333_黑武士_END#】：#ENTER#普通攻击进化成【#COLOR_fff333_原力弹_END#】；#ENTER#被动技能进化成【#COLOR_fff333_原力增幅_END#】；#ENTER#【跟踪导弹】进化成【#COLOR_fff333_原力追踪_END#】；#ENTER#【镭射大炮】进化成【#COLOR_fff333_原力大炮_END#】",
+      "description": "Mẫu: #COLOR_fff333_Darth Vader_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Cân bằng mới là hình thái đúng đắn của Nguyên Lực!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER#Sau khi dùng skin này, tiến hóa thành 【#COLOR_fff333_Darth Vader_END#】: #ENTER#Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Đạn Nguyên Lực_END#】; #ENTER#Kỹ năng bị động tiến hóa thành 【#COLOR_fff333_Tăng Nguyên Lực_END#】; #ENTER#【Hỏa tiễn theo dõi】 tiến hóa thành 【#COLOR_fff333_Theo Dõi Nguyên Lực_END#】; #ENTER#【Đại bác laser】 tiến hóa thành 【#COLOR_fff333_Đại Bác Nguyên Lực_END#】",
       "icon": {
         "url": "/html5/assets/m81335/icons/l/it/feiyi_pf03.webp",
         "width": 200,
@@ -1302,7 +1302,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Big Monster",
-      "description": "型号：#COLOR_fff333_狂沙巨兽_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_恐怖的钢铁巨爪可以撕碎一切敌人。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Big Monster_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Móng vuốt thép đáng sợ có thể xé nát mọi kẻ địch._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/bb401f24fa69fc79e6dc97a753ef3d9a.png",
         "width": 100,
@@ -1329,7 +1329,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Nam Tước Địa Ngục",
-      "description": "型号：#COLOR_fff333_地狱男爵_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_他来自地狱，来自岩浆与黑暗的国度！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Nam Tước Địa Ngục_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Anh đến từ địa ngục, từ vương quốc dung nham và bóng tối!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/cb470b86f8bea9de984f6643d89d0a54.png",
         "width": 100,
@@ -1356,7 +1356,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Chiến Trường Phantom",
-      "description": "型号：#COLOR_fff333_战地魅影_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_野战王牌，没有人能在荒野中发现他的踪迹_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Chiến Trường Phantom_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Át chủ bài tác chiến dã ngoại; không ai tìm được dấu vết của anh giữa chốn hoang vu._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/3f8ad32fad14df96fcd2fc0204a0a200.png",
         "width": 100,
@@ -4300,7 +4300,7 @@
       "tab": 5,
       "grantKind": "item",
       "name": "Máy Lưu Trữ Thông Tin",
-      "description": "用于转移小助手星级，强化等级，等级。精密的结构可以保证储存信息的安全。",
+      "description": "Dùng để chuyển đổi cấp sao, cường hóa và cấp độ giữa các Trợ thủ Tank.",
       "icon": {
         "url": "/html5/assets/m81314/original/c55f702ce1752bda9aebb6fedff89b33569a6c1a9957d5f3c3b6c825d1c86a52.png",
         "width": 100,
@@ -5683,14 +5683,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -5716,14 +5716,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -5749,14 +5749,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -5782,14 +5782,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -5815,14 +5815,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -5848,14 +5848,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -5881,14 +5881,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -5902,7 +5902,7 @@
       "tab": 2,
       "grantKind": "tank",
       "name": "Bọt Biển",
-      "description": "在我看来，扔肥皂与捡肥皂都是人生的一大乐趣。今天你捡肥皂了么？",
+      "description": "Ném xà phòng và nhặt xà phòng là niềm vui lớn nhất trên chiến trường!",
       "icon": {
         "url": "/rez/zh_CN/avatar/micro/6de240ad7fd5d288d88af3576ed7210a.png",
         "width": 24,
@@ -5914,14 +5914,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -5947,14 +5947,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -5980,14 +5980,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -6013,14 +6013,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6046,14 +6046,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -6079,14 +6079,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6112,14 +6112,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -6145,14 +6145,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6178,14 +6178,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6211,14 +6211,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6245,13 +6245,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6278,13 +6278,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6310,14 +6310,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6343,14 +6343,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6376,14 +6376,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6409,14 +6409,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6443,13 +6443,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6475,14 +6475,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6508,14 +6508,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6542,13 +6542,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6575,13 +6575,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6608,13 +6608,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6641,13 +6641,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6673,14 +6673,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6707,13 +6707,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6727,7 +6727,7 @@
       "tab": 2,
       "grantKind": "tank",
       "name": "Joker",
-      "description": "猜一猜，你打的这个人是我么",
+      "description": "Đoán xem người bạn vừa bắn trúng có phải bản thể thật không nào?",
       "icon": {
         "url": "/rez/zh_CN/avatar/micro/c4be3754ee7d306b37e6fdea928e452a.png",
         "width": 24,
@@ -6740,13 +6740,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6772,14 +6772,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -6805,14 +6805,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6838,14 +6838,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -6872,13 +6872,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6905,13 +6905,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6938,13 +6938,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -6971,13 +6971,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -7003,14 +7003,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7036,14 +7036,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7069,14 +7069,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7102,14 +7102,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7136,13 +7136,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -7169,13 +7169,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -7201,14 +7201,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -7234,14 +7234,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7267,14 +7267,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7300,14 +7300,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7333,14 +7333,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7366,14 +7366,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7399,14 +7399,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7432,14 +7432,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7465,14 +7465,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7498,14 +7498,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7531,14 +7531,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7564,14 +7564,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7597,14 +7597,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7631,13 +7631,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -7663,14 +7663,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7696,14 +7696,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7729,14 +7729,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7762,14 +7762,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7795,14 +7795,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7828,14 +7828,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7861,14 +7861,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7894,14 +7894,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7927,14 +7927,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -7961,13 +7961,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -7993,14 +7993,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -8026,14 +8026,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -8059,14 +8059,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -8092,14 +8092,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -8125,14 +8125,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -8159,13 +8159,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -8191,14 +8191,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -8212,7 +8212,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Iron Man 2",
-      "description": "型号：#COLOR_fff333_钢铁Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_钢铁的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Iron Man Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Iron Man; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/gangtiexia_pf_lock06.png",
         "width": 100,
@@ -8225,13 +8225,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -8245,7 +8245,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Iron Man 3",
-      "description": "型号：#COLOR_fff333_钢铁Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_钢铁的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Iron Man Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Iron Man; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/44852d7baabbcc5afd78060f322b0655.png",
         "width": 100,
@@ -8258,13 +8258,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8278,7 +8278,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Panda 3",
-      "description": "型号：#COLOR_fff333_阿宝Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_阿宝的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Panda Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Panda; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/243e85c941488a1a8ebe17a75b9b7377.png",
         "width": 100,
@@ -8291,13 +8291,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8311,7 +8311,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Spider Man 3",
-      "description": "型号：#COLOR_fff333_网虫Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_网虫的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Spider Man Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Spider Man; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/cd36a91e3839fd44c434a87059979580.png",
         "width": 100,
@@ -8324,13 +8324,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8344,7 +8344,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Bão Sa Mạc",
-      "description": "型号：#COLOR_fff333_沙漠风暴_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_大地扬起的沙尘，将遮蔽整个天空。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Bão Sa Mạc_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Cát bụi cuộn lên từ mặt đất sẽ che kín cả bầu trời._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/5c485a70182372bd68cb790d0f9fe144.png",
         "width": 100,
@@ -8359,9 +8359,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8371,7 +8377,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dũng Sĩ Bình Minh",
-      "description": "型号：#COLOR_fff333_黎明勇士_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_他就是黎明的第一道曙光，照亮这个黑暗的世界。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Dũng Sĩ Bình Minh_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Anh là tia sáng đầu tiên của bình minh, soi rọi thế giới tăm tối này._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/09b7196992319dd9a2cd92c945b56d3d.png",
         "width": 100,
@@ -8386,9 +8392,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8398,7 +8410,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Patriot",
-      "description": "型号：#COLOR_fff333_爱国者_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_搭载了最强的外置火力，惹怒他的人要小心。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Patriot_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Được trang bị hỏa lực bên ngoài mạnh nhất; ai chọc giận anh hãy coi chừng._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/a3001b7442925e66d419abfccf8629dc.png",
         "width": 100,
@@ -8413,9 +8425,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8440,9 +8458,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8452,7 +8476,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Gundam II",
-      "description": "型号：#COLOR_fff333_飞翼Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_飞翼的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Gundam Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Gundam; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/feiyi_pf_lock06.png",
         "width": 100,
@@ -8465,13 +8489,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -8485,7 +8509,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Gundam 3",
-      "description": "型号：#COLOR_fff333_飞翼Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_飞翼的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Gundam Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Gundam; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/6a2e6adab631b19c68dba70cd4febb21.png",
         "width": 100,
@@ -8498,13 +8522,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8518,7 +8542,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Amy",
-      "description": "型号：#COLOR_fff333_阿萌_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_又呆又萌的熊猫妹妹。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Amy_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Cô em gấu trúc vừa ngốc nghếch vừa đáng yêu._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/10de7cbe5ad30de240ccddeb81512e67.png",
         "width": 100,
@@ -8533,9 +8557,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8545,7 +8575,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Chopper 2",
-      "description": "型号：#COLOR_fff333_小狸猫Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_小狸猫的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Chopper Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Chopper; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/qiaoba_pf_lock06.png",
         "width": 100,
@@ -8558,13 +8588,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -8578,7 +8608,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Chopper 3",
-      "description": "型号：#COLOR_fff333_小狸猫Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_小狸猫的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Chopper Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Chopper; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/d1fbbd077d03b1eff5ee9b37bd223c1a.png",
         "width": 100,
@@ -8591,13 +8621,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8611,7 +8641,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tia Chớp",
-      "description": "型号：#COLOR_fff333_闪电_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_闪电，就是我的武器！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Tia Chớp_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Tia chớp chính là vũ khí của ta!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/3fee347a2a4cfdc77dba507ad99f66c8.png",
         "width": 100,
@@ -8626,9 +8656,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8638,7 +8674,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thiên Sứ Hắc Ám",
-      "description": "型号：#COLOR_fff333_黑暗天使_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_堕落的黑暗天使。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Thiên Sứ Hắc Ám_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Thiên sứ bóng tối sa ngã._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/dae9f99b0338a41ea05fed2a9f0f5ecc.png",
         "width": 100,
@@ -8653,9 +8689,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8665,7 +8707,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dark Knight 2",
-      "description": "型号：#COLOR_fff333_黑暗骑士Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_黑暗骑士的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Dark Knight Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Dark Knight; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/heianqishi_pf_lock06.png",
         "width": 64,
@@ -8678,13 +8720,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -8698,7 +8740,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dark Knight 3",
-      "description": "型号：#COLOR_fff333_黑暗骑士Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_黑暗骑士的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Dark Knight Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Dark Knight; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/719a92bfc3e844526229d36ede07cd17.png",
         "width": 100,
@@ -8711,13 +8753,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8731,7 +8773,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Captain II",
-      "description": "型号：#COLOR_fff333_上尉Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_上尉的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Captain Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Captain; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/shangwei_pf_lock06.png",
         "width": 64,
@@ -8744,13 +8786,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -8764,7 +8806,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Pea Shooter 3",
-      "description": "型号：#COLOR_fff333_豌豆射手Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_豌豆射手的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Pea Shooter Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Pea Shooter; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/e660278cd3ff253987f858ac0636bcf6.png",
         "width": 100,
@@ -8777,13 +8819,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8797,7 +8839,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hulk 3",
-      "description": "型号：#COLOR_fff333_绿巨人Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_绿巨人的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Hulk Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Hulk; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/803d724c6fad9c31a998e382505dc6cd.png",
         "width": 100,
@@ -8810,13 +8852,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8845,9 +8887,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8857,7 +8905,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Pegasus 2",
-      "description": "型号：#COLOR_fff333_天马Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_天马的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Pegasus Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Pegasus; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/6c0f9d9955ca8022ce1f0754447f32b3.png",
         "width": 100,
@@ -8870,13 +8918,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -8890,7 +8938,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Pegasus 3",
-      "description": "型号：#COLOR_fff333_天马Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_天马的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Pegasus Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Pegasus; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/ebdf6b0979177c7ee5a34f82d6dbf137.png",
         "width": 100,
@@ -8903,13 +8951,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8923,7 +8971,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Ngộ Không 3",
-      "description": "型号：#COLOR_fff333_悟空Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_悟空的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Ngộ Không Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Ngộ Không; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/73565fb3808584defbc3f5b8696f2ed2.png",
         "width": 100,
@@ -8936,13 +8984,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -8971,9 +9019,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -8983,7 +9037,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hồ Lô 3",
-      "description": "型号：#COLOR_fff333_葫芦Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_葫芦的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Hồ Lô Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Hồ Lô; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/0c79f6eb5bea5620660c177b87c7091c.png",
         "width": 100,
@@ -8996,13 +9050,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9016,7 +9070,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thor 2",
-      "description": "型号：#COLOR_fff333_雷神Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_雷神的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thor Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Thor; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/leishen_pf_lock06.png",
         "width": 100,
@@ -9029,13 +9083,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9049,7 +9103,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thor 3",
-      "description": "型号：#COLOR_fff333_雷神Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_雷神的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thor Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Thor; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/bfedd4ddde9c74a7938529d671b93710.png",
         "width": 100,
@@ -9062,13 +9116,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9082,7 +9136,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dơi Vàng",
-      "description": "型号：#COLOR_fff333_黄金蝙蝠_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_巨大的蝠翼，一改往日笨重的机身，通体黄金化带来炫酷外观的同时，更能在战斗中震慑敌人。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果：#ENTER# 普通攻击进化成【#COLOR_fff333_黄金飞镖_END#】；#ENTER#【惩罚】进化成【#COLOR_fff333_惩戒_END#】；#ENTER#【黑暗骑士】进化成【#COLOR_fff333_黄金骑士_END#】；#ENTER#【毒镖风暴】进化成【#COLOR_fff333_黄金风暴_END#】",
+      "description": "Mẫu: #COLOR_fff333_Dơi Vàng_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Đôi cánh dơi khổng lồ thay đổi hẳn thân máy nặng nề trước đây. Toàn thân hóa vàng không chỉ tạo vẻ ngoài nổi bật mà còn khiến kẻ địch khiếp sợ trong chiến đấu._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER# Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Phi Tiêu Vàng._END#】; #ENTER#【Trừng trị】 tiến hóa thành 【#COLOR_fff333_Trừng Trị_END#】; #ENTER#【Dark Knight】 tiến hóa thành 【#COLOR_fff333_KOG_END#】; #ENTER#【Bão Độc Tiêu】 tiến hóa thành 【#COLOR_fff333_Gold Storm_END#】",
       "icon": {
         "url": "/rez/zh_CN/icon/item/05c62d03523e722f0acb7472bf6da956.png",
         "width": 100,
@@ -9109,7 +9163,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Người Sói 3",
-      "description": "型号：#COLOR_fff333_钢爪Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_钢爪的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Người Sói Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Người Sói; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/fdd1d8d6fe8c1fc7750d789498a68702.png",
         "width": 100,
@@ -9122,13 +9176,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9142,7 +9196,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Legolas 2",
-      "description": "型号：#COLOR_fff333_精灵王子Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_精灵王子的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Legolas Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Legolas; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/wangzi_pf_lock06.png",
         "width": 100,
@@ -9155,13 +9209,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9175,7 +9229,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Legolas 3",
-      "description": "型号：#COLOR_fff333_精灵王子Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_精灵王子的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Legolas Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Legolas; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/1e8fd302352f46873275abc3f50fd3b5.png",
         "width": 100,
@@ -9188,13 +9242,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9208,7 +9262,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Songoku 2",
-      "description": "型号：#COLOR_fff333_赛亚Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_赛亚的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Songoku Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Songoku; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/saiya_pf_lock06.png",
         "width": 100,
@@ -9221,13 +9275,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9241,7 +9295,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thánh Gióng 2",
-      "description": "型号：#COLOR_fff333_圣勇Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_圣勇的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thánh Gióng Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Thánh Gióng; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/shengyong_pf_lock06.png",
         "width": 100,
@@ -9254,13 +9308,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9274,7 +9328,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Naruto 3",
-      "description": "型号：#COLOR_fff333_漩涡Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_漩涡的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Naruto Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Naruto; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/d29d468230e25b39c2a511f7a6968cc8.png",
         "width": 100,
@@ -9287,13 +9341,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9307,7 +9361,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Pikachu 2",
-      "description": "型号：#COLOR_fff333_比卡Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_比卡的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Pikachu Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Pikachu; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/bika_pf_lock06.png",
         "width": 100,
@@ -9320,13 +9374,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9340,7 +9394,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Pikachu 3",
-      "description": "型号：#COLOR_fff333_比卡Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_比卡的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Pikachu Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Pikachu; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/46d7deb4319a3145c777af400ad9abc5.png",
         "width": 100,
@@ -9353,13 +9407,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9388,9 +9442,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9415,9 +9475,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9440,13 +9506,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9473,13 +9539,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9493,7 +9559,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Transformer 3",
-      "description": "型号：#COLOR_fff333_大黄蜂Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_大黄蜂的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Transformer Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Transformer; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/346f26c2505e66468346766ab3d84b76.png",
         "width": 100,
@@ -9506,13 +9572,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9526,7 +9592,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Bác Sĩ Hải Tặc",
-      "description": "型号：#COLOR_fff333_海贼医官_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_草帽海贼团的医疗官，悬赏额0。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Bác Sĩ Hải Tặc_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Bác sĩ của băng hải tặc Mũ Rơm, tiền truy nã 0._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/1263789e63078875738511f34b612aaa.png",
         "width": 100,
@@ -9541,9 +9607,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9553,7 +9625,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tuần Lộc Băng",
-      "description": "型号：#COLOR_fff333_冷冻驯鹿_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_就算被冻的满身冰霜，也要冲向大海。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Tuần Lộc Băng_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Dù toàn thân phủ đầy băng giá, vẫn phải tiến ra biển lớn._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/4bd598edb5eae66e1097a4225d7c10af.png",
         "width": 100,
@@ -9568,9 +9640,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9580,7 +9658,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hải Tặc Vàng",
-      "description": "型号：#COLOR_fff333_黄金海贼_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_你看，我满身都是黄金呢！来抓我呀~来抓我呀~_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Hải Tặc Vàng_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Nhìn này, khắp người ta đều là vàng! Đến bắt ta đi~ Đến bắt ta đi~_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/cb978fd12a86a80eab4e1ee1e156ef65.png",
         "width": 100,
@@ -9607,7 +9685,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thợ Săn Thời Gian 2",
-      "description": "型号：#COLOR_fff333_时空猎人Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_时空猎人的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thợ Săn Thời Gian Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Thợ Săn Thời Gian; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/791bb6661fa0b891678b6502f66b6947.png",
         "width": 1,
@@ -9620,13 +9698,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9640,7 +9718,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thợ Săn Thời Gian 3",
-      "description": "型号：#COLOR_fff333_时空猎人Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_时空猎人的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thợ Săn Thời Gian Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Thợ Săn Thời Gian; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/e81e70923d3bf8fe92280ef6359252a2.png",
         "width": 100,
@@ -9653,13 +9731,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9673,7 +9751,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Sơn Tinh 2",
-      "description": "型号：#COLOR_fff333_山精Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_山精的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Sơn Tinh Ⅱ_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Sơn Tinh; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/bf90f8b33a55263f3c797b1168931b90.png",
         "width": 1,
@@ -9686,13 +9764,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -9706,7 +9784,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Sơn Tinh 3",
-      "description": "型号：#COLOR_fff333_山精Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_山精的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Sơn Tinh Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Sơn Tinh; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/278b00f94417b5874b1424feb478dce2.png",
         "width": 1,
@@ -9719,13 +9797,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9739,7 +9817,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Trùm Cơ Giáp",
-      "description": "型号：#COLOR_fff333_终级机甲_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#高性能重装终极武器，唯至强者可驾驭。#ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果:#ENTER# 普通攻击进化成【#COLOR_fff333_集束射击_END#】#ENTER#【大地之怒】进化成【#COLOR_fff333_援护推进_END#】#ENTER#【嗜血】进化成【#COLOR_fff333_掠夺_END#】#ENTER#【山神降临】进化成【#COLOR_fff333_机战佣兵_END#】",
+      "description": "Mẫu: #COLOR_fff333_Trùm Cơ Giáp_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Vũ khí hạng nặng tối thượng với hiệu năng cao, chỉ người mạnh nhất mới có thể điều khiển.#ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER# Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Tụ Xạ Kích_END#】#ENTER#【Cuồng Nộ】 tiến hóa thành 【#COLOR_fff333_Chi Viện_END#】#ENTER#【Say máu】 tiến hóa thành 【#COLOR_fff333_Cướp Đoạt_END#】#ENTER#【Thần Núi Đến】 tiến hóa thành 【#COLOR_fff333_Lính Máy_END#】",
       "icon": {
         "url": "/rez/zh_CN/icon/item/787718eb1a5d7465f631c2f377787c0a.png",
         "width": 1,
@@ -9766,7 +9844,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Vu Linh",
-      "description": "型号：#COLOR_fff333_万圣巫灵_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_万圣狂欢夜才刚刚开始！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Vu Linh_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Đêm hội Halloween chỉ vừa mới bắt đầu!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/afd3148f67ff55350c9bb9541c9f983a.png",
         "width": 100,
@@ -9781,9 +9859,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9793,7 +9877,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Xe Noel",
-      "description": "型号：#COLOR_fff333_圣诞鹿车_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_圣诞快递公司专用交通工具，驾驶时请小心电线杆。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Xe Noel_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Phương tiện chuyên dụng của công ty chuyển phát Giáng Sinh. Hãy coi chừng cột điện khi lái xe._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/b44bdb4a9613dc91cdd5c29c81109cf4.png",
         "width": 100,
@@ -9808,9 +9892,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9835,9 +9925,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9847,7 +9943,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Kakashi 3",
-      "description": "型号：#COLOR_fff333_复制忍者Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_卡卡西的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Kakashi Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Kakashi; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/51de67b9fd94d3ef7a7b0ee208831bce.png",
         "width": 100,
@@ -9860,13 +9956,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9880,7 +9976,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dracula 3",
-      "description": "型号：#COLOR_fff333_德古拉Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_德古拉的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Dracula Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Dracula; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/d8f45d9d4049117081314e19e68ab872.png",
         "width": 100,
@@ -9893,13 +9989,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -9913,7 +10009,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tử Long",
-      "description": "型号：#COLOR_fff333_紫龙_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_以龙为名，身躯中蕴含着可怕的小宇宙。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Tử Long_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Mang tên rồng, bên trong cơ thể ẩn chứa tiểu vũ trụ đáng sợ._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/7f755776af5f664c7f00cc809a8e08f3.png",
         "width": 100,
@@ -9928,9 +10024,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9940,7 +10042,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Athena",
-      "description": "型号：#COLOR_fff333_雅典娜_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_以战争女神的名义赋予你胜利。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果：#ENTER#【女神意志】进化为【#COLOR_fff333_女神意志（雅典娜）_END#】#ENTER#【天马流星拳】进化为【#COLOR_fff333_天马流星拳(雅典娜）_END#】#ENTER#【天马彗星拳】进化成【#COLOR_fff333_天马彗星拳(雅典娜)_END#】",
+      "description": "Mẫu: #COLOR_fff333_Athena_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Nhân danh nữ thần chiến tranh, ta ban cho ngươi chiến thắng._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER#【Khiên Phép Thuật】 tiến hóa thành 【#COLOR_fff333_Khiên Phép Thuật (Athena)_END#】#ENTER#【Thiên Mã Lưu Tinh Quyền】 tiến hóa thành 【#COLOR_fff333_Thiên Mã Lưu Tinh Quyền (Athena)_END#】#ENTER#【Quả Cầu Băng】 tiến hóa thành 【#COLOR_fff333_Quả Cầu Băng (Athena)_END#】",
       "icon": {
         "url": "/rez/zh_CN/icon/item/d8f940126d0fb7fa094e3ad84f4710e6.png",
         "width": 100,
@@ -9982,9 +10084,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -9994,7 +10102,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Vua Âm Nhạc",
-      "description": "型号：#COLOR_fff333_音乐大师_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_bang！bang！bang！boom shakalaka！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Vua Âm Nhạc_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_bang! bang! bang! boom shakalaka!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/65286256480edbd871887c6cef7cde6a.png",
         "width": 100,
@@ -10009,9 +10117,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10021,7 +10135,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Optimus Prime 3",
-      "description": "型号：#COLOR_fff333_擎天Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_擎天的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Optimus Prime Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Optimus Prime; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/f2765bb6dbd8694aadd4c6facd396995.png",
         "width": 100,
@@ -10034,13 +10148,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10081,7 +10195,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thạch Sanh 2",
-      "description": "型号：#COLOR_fff333_后羿Ⅱ_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_金乌西坠，玉兔东升！_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thạch Sanh Ⅱ_END##ENTER#Xếp hạng: #COLOR_fff333_A_END##ENTER#Đặc điểm: #COLOR_fff333_Mặt trời lặn phía tây, trăng ngọc mọc phía đông!_END##ENTER#Cách nhận: #COLOR_fff333_Nhận ngay khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/houyi_pf_lock06.png",
         "width": 100,
@@ -10094,13 +10208,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -10114,7 +10228,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Ichigo III",
-      "description": "型号：#COLOR_fff333_死神Ⅲ_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_死神的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Ichigo Ⅲ_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Ichigo; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/2a0571bb417fddd77d889b6d29e2a305.png",
         "width": 100,
@@ -10127,13 +10241,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10162,9 +10276,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10174,7 +10294,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tiên Cá II",
-      "description": "型号：#COLOR_fff333_人鱼公主II_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_人鱼公主的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Tiên Cá II_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Tiên Cá; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/renyu_pf_lock06.png",
         "width": 100,
@@ -10187,13 +10307,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -10207,7 +10327,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tiên Cá III",
-      "description": "型号：#COLOR_fff333_人鱼公主III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_人鱼公主的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Tiên Cá III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Tiên Cá; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/09a6defa9e7a2f4f8fcc2fb12c84a0b0.png",
         "width": 100,
@@ -10220,13 +10340,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10240,7 +10360,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Edwina Knight III",
-      "description": "型号：#COLOR_fff333_守望骑士III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_守望骑士的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Edwina Knight III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Edwina Knight; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/21f731042cbce0a19e5f8ee586b6ce13.png",
         "width": 100,
@@ -10253,13 +10373,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10300,7 +10420,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Triệu Vân III",
-      "description": "型号：#COLOR_fff333_赵云III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_赵云的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Triệu Vân III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Triệu Vân; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/2a040022cd75614c926e45e93bb9e58f.png",
         "width": 100,
@@ -10313,13 +10433,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10333,7 +10453,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thần Uy Long Tướng",
-      "description": "型号：#COLOR_fff333_神威龙将_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：惊鸿游龙，神威赫赫！#ENTER#获取途径：#COLOR_fff333_商城购买等_END##ENTER#进化效果:#ENTER# 普通攻击进化成【#COLOR_fff333_龙鸣枪_END#】；#ENTER#【血战天下】进化成【#COLOR_fff333_龙魂战吼_END#】；#ENTER#【驰骋突击】进化成【#COLOR_fff333_飞龙在天_END#】#ENTER#【枪出如龙】进化成【#COLOR_fff333_龙击长空_END#】",
+      "description": "Mẫu: #COLOR_fff333_Thần Uy Long Tướng_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: Tựa chim hồng bay, tựa rồng lượn; thần uy lẫm liệt!#ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END##ENTER#Hiệu ứng tiến hóa: #ENTER# Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Long Ngâm Thương_END#】; #ENTER#【Huyết Chiến Thiên Hạ】 tiến hóa thành 【#COLOR_fff333_Long Hồn Hống_END#】; #ENTER#【Đột Kích Thần Tốc】 tiến hóa thành 【#COLOR_fff333_Phi Long Tại Thiên_END#】#ENTER#【Long Kích】 tiến hóa thành 【#COLOR_fff333_Kích Trường Không_END#】",
       "icon": {
         "url": "/rez/zh_CN/icon/item/76527a231ea666d1ea141f546e74b687.png",
         "width": 100,
@@ -10360,7 +10480,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Bò Cạp III",
-      "description": "型号：#COLOR_fff333_毒蝎女王III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_毒蝎的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Bò Cạp Độc III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Bò Cạp Độc; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/c9c9342d90b741b8030babe96b2377e7.png",
         "width": 100,
@@ -10373,13 +10493,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10393,7 +10513,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Deadpool II",
-      "description": "型号：#COLOR_fff333_死亡侍者II_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_死亡侍者的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Deadpool II_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Deadpool; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/sishi_pf_lock06.png",
         "width": 100,
@@ -10406,13 +10526,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -10426,7 +10546,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Deadpool III",
-      "description": "型号：#COLOR_fff333_死亡侍者III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_死亡侍者的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Deadpool III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Deadpool; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/5fec6a6718765a87688356e09813a0fb.png",
         "width": 100,
@@ -10439,13 +10559,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10459,7 +10579,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Joker III",
-      "description": "型号：#COLOR_fff333_小丑III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_小丑的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Joker III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Joker; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/5cb15c1c57254033211ed7f42e394d71.png",
         "width": 100,
@@ -10472,13 +10592,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10492,7 +10612,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Apocalypse II",
-      "description": "皮肤型号：#COLOR_fff333_天启II_END##ENTER#皮肤评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_天启的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克升到4级立即获得_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Apocalypse II_END##ENTER#Cấp skin: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Apocalypse; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/4b77e0760e3018f78fb7c7ceedd60206.png",
         "width": 100,
@@ -10505,13 +10625,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -10525,7 +10645,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Apocalypse III",
-      "description": "皮肤型号：#COLOR_fff333_天启III_END##ENTER#皮肤评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_天启的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克升到5级立即获得_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Apocalypse III_END##ENTER#Cấp skin: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Apocalypse; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/618377a8d6587e8a568cc3c4f44f8e6c.png",
         "width": 100,
@@ -10538,13 +10658,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10558,7 +10678,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Strike (Apocalypse)",
-      "description": "皮肤型号：#COLOR_fff333_强袭（天启）_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_为永恒的自由而奋战！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Strike (Apocalypse)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Chiến đấu vì tự do vĩnh cửu!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/bbf99846cf6cf55eb2e077e3eacb0d85.png",
         "width": 100,
@@ -10573,9 +10693,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10612,7 +10738,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hắc Giáp",
-      "description": "型号：#COLOR_fff333_暗黑装甲_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_萌物有时候也想尝试酷酷的装扮！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Hắc Giáp_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Đôi khi những sinh vật đáng yêu cũng muốn thử một bộ trang phục thật ngầu!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/e1f229955734f25fc4af8a9306016fcd.png",
         "width": 100,
@@ -10627,9 +10753,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10639,7 +10771,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Điêu Thuyền II",
-      "description": "型号：#COLOR_fff333_貂蝉II_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_貂蝉的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Điêu Thuyền II_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Điêu Thuyền; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/diaochan_pf_lock06.png",
         "width": 100,
@@ -10652,13 +10784,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -10672,7 +10804,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Điêu Thuyền III",
-      "description": "型号：#COLOR_fff333_貂蝉III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_貂蝉的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Điêu Thuyền III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Điêu Thuyền; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/4c0bee5d54227052290d3137a42c611a.png",
         "width": 100,
@@ -10685,13 +10817,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10705,7 +10837,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Sa Mạc Vũ",
-      "description": "型号：#COLOR_fff333_沙漠舞娘_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_来自异域的舞娘，别样的风情！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Sa Mạc Vũ_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Vũ nữ đến từ miền đất lạ, mang vẻ quyến rũ khác biệt!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/b3a56aec77964692aa3078b870da2276.png",
         "width": 100,
@@ -10720,9 +10852,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10732,7 +10870,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Lữ Bố III",
-      "description": "型号：#COLOR_fff333_吕布III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_吕布的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级立即获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Lữ Bố III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Lữ Bố; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/7fe9f74374528c4819a85d489dc6b8f8.png",
         "width": 100,
@@ -10745,13 +10883,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10780,9 +10918,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10792,7 +10936,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Sứ Giả Doomsday",
-      "description": "型号：#COLOR_fff333_末日使者_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_只有彻底毁灭才能获得新生！_END##ENTER#获取途径：#COLOR_fff333_参与活动获得，敬请关注_END#",
+      "description": "Mẫu: #COLOR_fff333_Sứ Giả Doomsday_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Chỉ có hủy diệt hoàn toàn mới giành được sự tái sinh!_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tham gia sự kiện, hãy theo dõi thông báo_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/15c950a778bba5a8e557cd98dab43fbf.png",
         "width": 100,
@@ -10807,9 +10951,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10819,7 +10969,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Zoro III",
-      "description": "型号：#COLOR_fff333_海贼猎人III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_海贼猎人的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Zoro III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Zoro; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/suolong_pf_lock10.png",
         "width": 100,
@@ -10832,13 +10982,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10867,9 +11017,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10879,7 +11035,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Mikasa II",
-      "description": "型号：#COLOR_fff333_米卡莎II_END##ENTER#评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_米卡莎的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Mikasa II_END##ENTER#Cấp: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Mikasa; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/sanli_pf_lock06.png",
         "width": 100,
@@ -10892,13 +11048,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -10912,7 +11068,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thủy Tinh III",
-      "description": "型号：#COLOR_fff333_海妖III_END##ENTER#评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_海妖的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到5级获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Thủy Tinh III_END##ENTER#Cấp: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Thủy Tinh; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/haiyao_pf_lock10.png",
         "width": 100,
@@ -10925,13 +11081,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -10945,7 +11101,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Lửa Hồn Xanh",
-      "description": "型号：#COLOR_fff333_碧蓝幽火_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_来自异次元的邪恶幽灵，碧蓝的火焰将点燃你的灵魂。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Lửa Hồn Xanh_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Ác linh đến từ chiều không gian khác; ngọn lửa xanh biếc sẽ thiêu đốt linh hồn ngươi._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/8e3fc974373ff4700c2a6590709bf798.png",
         "width": 100,
@@ -10960,9 +11116,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -10972,7 +11134,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Mèo Máy Tương Lai",
-      "description": "型号：#COLOR_fff333_天外来客_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_愚蠢的地球人，我来自高贵的喵星！_END##ENTER#获取途径：#COLOR_fff333_参与活动获得，敬请关注_END#",
+      "description": "Mẫu: #COLOR_fff333_Mèo Máy Tương Lai_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Lũ người Trái Đất ngu ngốc, ta đến từ hành tinh Mèo cao quý!_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tham gia sự kiện, hãy theo dõi thông báo_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/0433bb74bfc6026de28218d7a6f48de5.png",
         "width": 100,
@@ -10987,9 +11149,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11026,7 +11194,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Kiếm Thần II",
-      "description": "型号：#COLOR_fff333_李白II_END##ENTER#皮肤评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_李白的第二代型号，武器和防御系统得到了提升_END##ENTER#获取途径：#COLOR_fff333_坦克达到4级获得_END#",
+      "description": "Mẫu: #COLOR_fff333_Kiếm Thần II_END##ENTER#Cấp skin: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Kiếm Thần; vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 4_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/libai_pf_lock06.png",
         "width": 100,
@@ -11039,13 +11207,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -11074,9 +11242,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11086,7 +11260,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Enel",
-      "description": "型号：#COLOR_fff333_空岛之神_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_耶哈哈哈哈，尝尝响雷果实的威力！_END##ENTER#获取途径：#COLOR_fff333_参与活动获得，敬请关注_END#",
+      "description": "Mẫu: #COLOR_fff333_Enel_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Yahahaha, nếm thử sức mạnh của trái Sấm Sét đi!_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tham gia sự kiện, hãy theo dõi thông báo_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/d50ea1b640fbe31d4bc88e641b26f556.png",
         "width": 100,
@@ -11101,9 +11275,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11113,7 +11293,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Giáp Vũ Trang (Doctor Strange)",
-      "description": "皮肤型号：#COLOR_fff333_机械武僧_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_凡尘游走，禅心不忘。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Giáp Vũ Trang (Doctor Strange)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Dạo bước giữa trần gian, không quên tâm thiền._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/729179d182973a1bbc02f95360bdee41.png",
         "width": 100,
@@ -11128,9 +11308,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11140,7 +11326,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thiên Yêu Sư (Gia Cát Lượng)",
-      "description": "皮肤型号：#COLOR_fff333_天祈妖师_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_风云变幻藏虚实，神机妙算卜先机！_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Thiên Yêu Sư (Gia Cát Lượng)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Gió mây biến ảo giấu hư thực, mưu kế thần kỳ đoán trước thời cơ!_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/a819fa2b716ed27ad6cea0239a73bbff.png",
         "width": 100,
@@ -11155,9 +11341,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11167,7 +11359,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Ngọa Long Vô Song (Gia Cát Lượng)",
-      "description": "皮肤型号：#COLOR_fff333_无双卧龙_END##ENTER#皮肤评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_fff333_袖手看苍云，谈笑主沉浮。_END##ENTER#进化效果:#ENTER# 普通攻击进化成【#COLOR_fff333_卧龙之怒_END#】；#ENTER#【天变玄决】进化成【#COLOR_fff333_驭天秘咒_END#】；#ENTER#【卧龙神策】进化成【#COLOR_fff333_五行封魔_END#】#ENTER#【奇门八卦】进化成【#COLOR_fff333_万象杀阵_END#】",
+      "description": "Mẫu skin: #COLOR_fff333_Ngọa Long Vô Song (Gia Cát Lượng)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_fff333_Khoanh tay ngắm mây trời, giữa tiếng cười định đoạt thăng trầm._END##ENTER#Hiệu ứng tiến hóa: #ENTER# Đòn đánh thường tiến hóa thành 【#COLOR_fff333_Ngọa Long Nộ_END#】; #ENTER#【Thiên Quyết】 tiến hóa thành 【#COLOR_fff333_Thiên Chú_END#】; #ENTER#【Ngọa Long Sách】 tiến hóa thành 【#COLOR_fff333_Phong Ma_END#】#ENTER#【Bát Quái】 tiến hóa thành 【#COLOR_fff333_Vạn Tượng_END#】",
       "icon": {
         "url": "/rez/zh_CN/icon/item/zhuge_pf_lock12.png",
         "width": 100,
@@ -11209,9 +11401,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11221,7 +11419,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Cửu Vĩ Hồ II",
-      "description": "皮肤型号：#COLOR_fff333_妖狐II_END##ENTER#皮肤评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_妖狐的第二代型号，武器和防御系统得到了提升_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Cửu Vĩ Hồ II_END##ENTER#Cấp skin: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Cửu Vĩ Hồ; vũ khí và hệ thống phòng thủ được nâng cấp_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/yaohu_pf_lock06.png",
         "width": 100,
@@ -11234,13 +11432,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -11269,9 +11467,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11281,7 +11485,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dương Tiễn II",
-      "description": "皮肤型号：#COLOR_fff333_二郎神II_END##ENTER#皮肤评级：#COLOR_fff333_A级_END##ENTER#特征描述：#COLOR_fff333_二郎神的第二代型号，武器和防御系统得到了提升_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Dương Tiễn II_END##ENTER#Cấp skin: #COLOR_fff333_Cấp A_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ hai của Dương Tiễn; vũ khí và hệ thống phòng thủ được nâng cấp_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/yangjian_pf_lock06.png",
         "width": 100,
@@ -11294,13 +11498,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 900,
+          "price": 899,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         }
       ],
@@ -11314,7 +11518,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Dương Tiễn III",
-      "description": "皮肤型号：#COLOR_fff333_二郎神III_END##ENTER#皮肤评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_二郎神的第三代型号，武器和防御系统全面得到提升_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Dương Tiễn III_END##ENTER#Cấp skin: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Dương Tiễn; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/eef231e0eaa5f5782142b46c15671a10.png",
         "width": 100,
@@ -11327,13 +11531,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -11347,7 +11551,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Vua Pharaoh (Dương Tiễn)",
-      "description": "皮肤型号：#COLOR_fff333_千年法老_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_拥有千年之眼的神秘法老王！_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Vua Pharaoh (Dương Tiễn)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Vị Pharaoh bí ẩn sở hữu Con Mắt Ngàn Năm!_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/2497330ded7d52508168c9d5d8e60a6e.png",
         "width": 100,
@@ -11362,9 +11566,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11374,7 +11584,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Bạo Quân Sa Đọa (Gilgamesh)",
-      "description": "皮肤型号：#COLOR_fff333_堕落暴君_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_愚蠢的反抗者，臣服吧！除非你想没有尊严的死去。_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Bạo Quân Sa Đọa (Gilgamesh)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Lũ phản kháng ngu ngốc, hãy thần phục! Trừ khi các ngươi muốn chết không còn chút tôn nghiêm._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/895b9b3d301525528b3878c7f8e77c31.png",
         "width": 100,
@@ -11389,9 +11599,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11428,7 +11644,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "August Rush (Star Lord)",
-      "description": "皮肤型号：#COLOR_fff333_流浪乐手_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_狂暴的节奏战士，死亡颂唱者。_END#",
+      "description": "Mẫu skin: #COLOR_fff333_August Rush (Star Lord)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Chiến binh tiết tấu cuồng bạo, người cất lên khúc ca tử thần._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/805b04c2acf26dc5db81ea7d855c560e.png",
         "width": 100,
@@ -11443,9 +11659,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11455,7 +11677,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tia Điện Bạc",
-      "description": "型号：#COLOR_fff333_银色闪电_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_天边闪过一道银色的雷光！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Tia Điện Bạc_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Một tia sét bạc lóe lên nơi chân trời!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/950d8e290275e5bf29bac6936be53d8a.png",
         "width": 100,
@@ -11470,9 +11692,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11482,7 +11710,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tà Thần Rocky",
-      "description": "型号：#COLOR_fff333_邪神洛基_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_浩克喜欢叫他邪神“弱鸡”！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Tà Thần Rocky_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Hulk thích gọi hắn là tà thần “Yếu Xìu”!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/f8127d6a15e8121363ea69d441233441.png",
         "width": 100,
@@ -11497,9 +11725,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11522,13 +11756,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -11557,9 +11791,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11584,9 +11824,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11611,9 +11857,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11638,9 +11890,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11665,9 +11923,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11677,7 +11941,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Quỷ Vũ Vương (Tào Tháo)",
-      "description": "皮肤型号：#COLOR_fff333_鬼武之王_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_向鬼神借取力量的鬼泣武士，可觉醒鬼手之击。_END##ENTER#获取途径：#COLOR_fff333_商城购买等。_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Quỷ Vũ Vương (Tào Tháo)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Võ sĩ quỷ khóc vay mượn sức mạnh của quỷ thần, có thể thức tỉnh đòn đánh Quỷ Thủ._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/29a1f0d8ada468f3e198764549a9e507.png",
         "width": 100,
@@ -11692,9 +11956,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11704,7 +11974,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hỏa Long Chiến Cơ (Hoa Mộc Lan)",
-      "description": "皮肤型号：#COLOR_fff333_屠苏战姬_END##ENTER#皮肤评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_戎战半生，关山万里，归来仍是昔日风华。_END##ENTER#获取途径：#COLOR_fff333_活动获取。_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Hỏa Long Chiến Cơ (Hoa Mộc Lan)_END##ENTER#Xếp hạng skin: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Nửa đời chinh chiến, vượt muôn trùng quan ải; trở về vẫn giữ phong thái năm xưa._END##ENTER#Cách nhận: #COLOR_fff333_Nhận qua sự kiện._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/edc4c2f07f4f8818aede7be80a4c8dfe.png",
         "width": 100,
@@ -11719,9 +11989,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11731,7 +12007,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Black Widow",
-      "description": "型号：#COLOR_fff333_黑寡妇_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_夜幕中的杀手，一旦失去警惕，她致命的毒牙就会出现在你的脑后。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Black Widow_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Sát thủ trong màn đêm. Chỉ cần mất cảnh giác, nanh độc chết người của cô sẽ xuất hiện sau gáy bạn._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/63af10c420beb3b379ffe4100f84753c.png",
         "width": 100,
@@ -11746,9 +12022,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11758,7 +12040,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Thạch Hầu",
-      "description": "型号：#COLOR_fff333_石猴_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_谁能告诉我，为什么石头里可以生出猴子来？_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Thạch Hầu_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Ai có thể nói cho ta biết, vì sao khỉ lại có thể sinh ra từ đá?_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/ba5db31dee6eae9b8ce0e2f715d63c18.png",
         "width": 100,
@@ -11773,9 +12055,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11785,7 +12073,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Bất Diệt Kim Thân",
-      "description": "型号：#COLOR_fff333_不灭金身_END##ENTER#评级：#COLOR_fff333_SSS级_END##ENTER#特征描述：#COLOR_00e4ff_通过太上老君炼丹炉的淬炼而获得的超强肉身。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Bất Diệt Kim Thân_END##ENTER#Xếp hạng: #COLOR_fff333_SSS_END##ENTER#Đặc điểm: #COLOR_00e4ff_Thân thể siêu phàm có được sau khi tôi luyện trong lò luyện đan của Thái Thượng Lão Quân._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/5930ac7fbecff3ecc9530a6ffcf9dc92.png",
         "width": 100,
@@ -11812,7 +12100,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Hoa Ăn Thịt Người",
-      "description": "型号：#COLOR_fff333_食人花_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_生活在亚马逊原始森林，专门捕捉网虫与黑寡妇。_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Hoa Ăn Thịt Người_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Sống trong rừng nguyên sinh Amazon, chuyên săn Spider Man và Black Widow._END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/cc8834dff3cf66d349a2a57b2beffead.png",
         "width": 100,
@@ -11827,9 +12115,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11839,7 +12133,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Mèo",
-      "description": "型号：#COLOR_fff333_猫猫_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_这一刻萌猫附体！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Mèo_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Khoảnh khắc này, mèo đáng yêu nhập thể!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/b2b590caeda1880e0ebe10e881419f86.png",
         "width": 100,
@@ -11854,9 +12148,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11866,7 +12166,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Chiến Binh Mùa Đông",
-      "description": "型号：#COLOR_fff333_凛冬战士_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_凛冽寒冬中最强大的改造战士！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Chiến Binh Mùa Đông_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Chiến binh cải tạo mạnh nhất giữa mùa đông buốt giá!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/3ec8e7083cac7862ccf146354a2258ac.png",
         "width": 100,
@@ -11881,9 +12181,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11893,7 +12199,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Ninja Hắc Ám",
-      "description": "型号：#COLOR_fff333_暗夜忍者_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_为什么要做忍者？因为吃拉面可以打五折呀！！！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Ninja Hắc Ám_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Vì sao lại làm ninja? Vì ăn mì ramen được giảm còn nửa giá!!!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/33ef4654b222d0813ab9d451e5c23ad9.png",
         "width": 100,
@@ -11908,9 +12214,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11920,7 +12232,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Raichu",
-      "description": "型号：#COLOR_fff333_雷丘_END##ENTER#评级：#COLOR_fff333_SS级_END##ENTER#特征描述：#COLOR_fff333_新型产品，代号雷丘，据说可发出20万伏特电压！绝缘体？哼！_END##ENTER#获取途径：#COLOR_fff333_商城购买等_END#",
+      "description": "Mẫu: #COLOR_fff333_Raichu_END##ENTER#Xếp hạng: #COLOR_fff333_SS_END##ENTER#Đặc điểm: #COLOR_fff333_Sản phẩm kiểu mới, mật danh Raichu, nghe nói có thể phóng điện áp 20 vạn vôn! Vật cách điện ư? Hừ!_END##ENTER#Cách nhận: #COLOR_fff333_Mua trong Shop, v.v._END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/a88c126a832d0931d0f614a9134c2304.png",
         "width": 100,
@@ -11935,9 +12247,15 @@
           "coinType": 1,
           "price": 1500,
           "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
+          "price": 1800,
+          "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -11947,7 +12265,7 @@
       "tab": 7,
       "grantKind": "skin",
       "name": "Tư Mã Ý III",
-      "description": "皮肤型号：#COLOR_fff333_司马懿Ⅲ_END##ENTER#皮肤评级：#COLOR_fff333_S级_END##ENTER#特征描述：#COLOR_fff333_司马懿的第三代型号，武器和防御系统全面得到提升_END##ENTER#获取途径：#COLOR_fff333_坦克升到5级立即获得_END#",
+      "description": "Mẫu skin: #COLOR_fff333_Tư Mã Ý Ⅲ_END##ENTER#Cấp skin: #COLOR_fff333_Cấp S_END##ENTER#Đặc điểm: #COLOR_fff333_Phiên bản thế hệ ba của Tư Mã Ý; toàn bộ vũ khí và hệ thống phòng thủ được nâng cấp_END##ENTER#Cách nhận: #COLOR_fff333_Nhận khi tank đạt cấp 5_END#",
       "icon": {
         "url": "/rez/zh_CN/icon/item/sima_pf_lock10.png",
         "width": 100,
@@ -11960,13 +12278,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1200,
+          "price": 1199,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1500,
+          "price": 1499,
           "quantity": 1
         }
       ],
@@ -11992,14 +12310,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 80,
+          "coinType": 3,
+          "price": 50,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 120,
+          "coinType": 2,
+          "price": 50000,
           "quantity": 1
         }
       ],
@@ -12025,14 +12343,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 80,
+          "coinType": 3,
+          "price": 50,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 120,
+          "coinType": 2,
+          "price": 50000,
           "quantity": 1
         }
       ],
@@ -12058,14 +12376,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 80,
+          "coinType": 3,
+          "price": 50,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 120,
+          "coinType": 2,
+          "price": 50000,
           "quantity": 1
         }
       ],
@@ -12091,14 +12409,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 80,
+          "coinType": 3,
+          "price": 50,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 120,
+          "coinType": 2,
+          "price": 50000,
           "quantity": 1
         }
       ],
@@ -12124,14 +12442,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12157,14 +12475,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12190,14 +12508,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12223,14 +12541,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12256,14 +12574,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12289,14 +12607,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12322,14 +12640,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12355,14 +12673,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12388,14 +12706,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 180,
+          "coinType": 3,
+          "price": 150,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 260,
+          "coinType": 1,
+          "price": 100,
           "quantity": 1
         }
       ],
@@ -12421,14 +12739,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12454,14 +12772,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12487,14 +12805,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12520,14 +12838,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12553,14 +12871,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12586,14 +12904,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12619,14 +12937,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12652,14 +12970,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12685,14 +13003,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12718,14 +13036,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12751,14 +13069,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12784,14 +13102,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12817,14 +13135,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 400,
+          "coinType": 3,
+          "price": 350,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 550,
+          "coinType": 1,
+          "price": 250,
           "quantity": 1
         }
       ],
@@ -12851,11 +13169,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -12878,11 +13202,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -12905,11 +13235,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -12932,11 +13268,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -12959,11 +13301,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -12986,11 +13334,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13013,11 +13367,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13040,11 +13400,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13067,11 +13433,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13094,11 +13466,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13121,11 +13499,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13148,11 +13532,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13175,11 +13565,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 600,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 800,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13202,11 +13598,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13229,11 +13631,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13256,11 +13664,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13283,11 +13697,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13310,11 +13730,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13337,11 +13763,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13364,11 +13796,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13391,11 +13829,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13418,11 +13862,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13445,11 +13895,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13472,11 +13928,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13499,11 +13961,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13526,11 +13994,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13553,11 +14027,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -13942,14 +14422,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 599,
+          "coinType": 3,
+          "price": 399,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 749,
+          "coinType": 1,
+          "price": 399,
           "quantity": 1
         }
       ],
@@ -13975,14 +14455,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -14009,13 +14489,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -14042,13 +14522,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -14075,13 +14555,13 @@
         {
           "key": "primary",
           "coinType": 1,
-          "price": 1199,
+          "price": 799,
           "quantity": 1
         },
         {
           "key": "alternate",
           "coinType": 3,
-          "price": 1499,
+          "price": 999,
           "quantity": 1
         }
       ],
@@ -14107,14 +14587,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -14140,14 +14620,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -14173,14 +14653,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -14206,14 +14686,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -14239,14 +14719,14 @@
       "payments": [
         {
           "key": "primary",
-          "coinType": 1,
-          "price": 899,
+          "coinType": 3,
+          "price": 579,
           "quantity": 1
         },
         {
           "key": "alternate",
-          "coinType": 3,
-          "price": 1119,
+          "coinType": 1,
+          "price": 579,
           "quantity": 1
         }
       ],
@@ -14273,11 +14753,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -14300,11 +14786,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -14327,11 +14819,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -14354,11 +14852,17 @@
         {
           "key": "primary",
           "coinType": 1,
+          "price": 1200,
+          "quantity": 1
+        },
+        {
+          "key": "alternate",
+          "coinType": 3,
           "price": 1500,
           "quantity": 1
         }
       ],
-      "canUseGift": false,
+      "canUseGift": true,
       "autoUse": false,
       "available": true
     },
@@ -21339,5 +21843,5 @@
       "stack_max": 99999
     }
   },
-  "revision": "1a4902900bd30309086ce0e2395b302b72ea29152c86001c8468a64b6256458b"
+  "revision": "54bcde2063389a2785d529d9361578d653cec673c3d7434275cf17f25ac349a3"
 }
