@@ -1,0 +1,39 @@
+.m813-rank-panel{position:absolute;left:20px;top:96px;width:786px;height:310px;box-sizing:border-box;color:#fff;font:13px Tahoma,Arial,sans-serif;overflow:hidden}
+.m813-rank-panel-bg{position:absolute;inset:0;width:786px;height:310px;pointer-events:none;user-select:none;display:block}
+.m813-rank-banner{position:absolute;left:15px;top:7px;width:516px;height:187px;z-index:2;pointer-events:none}
+.m813-rank-banner[hidden]{display:none}
+.m813-rank-frame{position:absolute;inset:0;pointer-events:none}
+.m813-rank-frame-img{width:516px;height:187px;display:block;pointer-events:none}
+.m813-rank-banner-header{position:absolute;left:58px;right:20px;top:41px;height:28px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 6px}
+.m813-rank-banner-header h2{margin:0;font:700 17px Tahoma,Arial,sans-serif;color:#fff;text-shadow:0 2px 3px #00233a}
+.m813-season{margin:0;color:#ffff7a;font:700 12.5px Tahoma,Arial,sans-serif;text-shadow:0 1px 3px #001a2d;white-space:nowrap}
+.m813-rank-banner-footer{position:absolute;left:16px;right:14px;bottom:10px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px}
+.m813-rank-banner-copy{min-width:0;flex:1;padding:4px 8px;background:rgba(2,30,52,.62);border:1px solid rgba(132,223,255,.35);border-radius:6px}
+.m813-rank-description{margin:0 0 2px;font:700 11px/1.3 Tahoma,Arial,sans-serif;color:#e7f9ff;text-shadow:0 1px 2px #001e33}
+.m813-rank-rule{margin:0;font:600 11px/1.3 Tahoma,Arial,sans-serif;color:#ffe694;text-shadow:0 1px 2px #001e33}
+.m813-rank-top10{width:152px;height:auto;flex:none;pointer-events:none;filter:drop-shadow(0 1px 3px rgba(0,22,44,.75))}
+.m813-rank-card{position:absolute;left:530px;top:10px;width:246px;height:179px;z-index:2;box-sizing:border-box;padding:12px 14px 10px;display:flex;flex-direction:column;justify-content:space-between}
+.m813-rank-box-bg{position:absolute;inset:0;width:246px;height:179px;pointer-events:none;user-select:none;border-radius:6px}
+.m813-rank-card-main{position:relative;z-index:1;display:flex;align-items:center;gap:8px;min-height:84px}
+.m813-rank-badge{position:relative;width:78px;height:78px;flex:none}
+.m813-rank-emblem{position:absolute!important;left:0;top:0;transform:scale(.39);transform-origin:top left;filter:drop-shadow(0 2px 5px rgba(0,18,40,.65))}
+.m813-rank-summary{position:relative;z-index:1;min-width:0;flex:1}
+.m813-rank-summary h3{margin:0 0 5px;color:#ffff77;font:700 18px/1.15 Tahoma,Arial,sans-serif;text-shadow:0 1px 2px #002b48;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m813-rank-rating{margin:2px 0;font:700 12px/1.35 Tahoma,Arial,sans-serif;color:#effbff;text-shadow:0 1px 2px #002944}
+.m813-rank-record{position:relative;z-index:1;margin:0 0 4px;text-align:center;font:700 11.5px/1.3 Tahoma,Arial,sans-serif;color:#c7eeff;text-shadow:0 1px 2px #002944;white-space:nowrap}
+.m813-rank-progress{position:relative;z-index:1;margin:0 auto 6px}
+.m813-rank-footer{position:absolute;left:26px;top:214px;width:736px;height:78px;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;box-sizing:border-box}
+.m813-rank-rule2{margin:0;flex:1;font:600 11.5px/1.4 Tahoma,Arial,sans-serif;color:#ddf6ff;text-shadow:0 1px 2px #003554}
+.m813-rank-actions{display:flex;align-items:center;gap:8px;flex:none}
+.m813-rank-word-btn{position:relative;z-index:1;width:111px;height:22px;pointer-events:none;display:block}
+.m813-rank-history{position:absolute;left:19px;top:11px;width:508px;height:179px;z-index:3;box-sizing:border-box;overflow-y:auto;padding:4px 8px;background:#044a72ee;border:1.5px solid #88e1ff;border-radius:6px;scrollbar-width:thin;scrollbar-color:#46b2e6 #052c49}
+.m813-rank-history[hidden]{display:none}
+.m813-history-empty{margin:16px 8px;color:#cceeff;font-weight:700}
+.m813-history-row{padding:7px 8px;border-bottom:1px solid #359ec4;display:grid;gap:2px}
+.m813-history-row strong{font-size:12.5px;color:#fff}
+.m813-history-row span{font-size:11px;color:#bdeeff}
+.m813-rank-join-hint{position:absolute;left:482px;top:505px;width:326px;text-align:center;color:#fff;font:700 12px/16px Tahoma,Arial,sans-serif;text-shadow:0 1px 2px #002642;white-space:nowrap}
+.m8-account .m813-character-rank .m81-rank-row{grid-template-columns:36px 1fr 105px 52px;font-size:12px}
+.m813-character-rank .m81-rank-row>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m813-season-picker{background:white!important;color:#111!important;border:1px solid #3985ab;border-radius:4px;font-size:14px}
+.m813-season-picker option{background:white;color:#111}.m813-season-picker option:checked{background:#0679ce;color:#fff}

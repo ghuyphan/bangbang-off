@@ -1,0 +1,73 @@
+.m81329-mail-frame{position:absolute!important;left:70px;top:16px;color:#fff;font:13px Tahoma,Arial,sans-serif}
+.m81329-mail-body{position:absolute;inset:0}
+.m81329-mail-title{position:absolute;left:160px;top:18px;width:540px;height:28px;margin:0;text-align:center;font-size:19px;line-height:28px;font-weight:800;color:#fff;text-shadow:0 1px 2px #1c4e68;pointer-events:none}
+.m81329-mail-close{position:absolute!important;right:16px;top:16px;z-index:3}
+.m81329-mail-toolbar{position:absolute;left:25px;top:52px;width:810px;height:35px;display:flex;align-items:center;gap:10px;z-index:2}
+.m81329-mail-toolbar .m81329-mail-count{margin:0 0 0 auto;white-space:nowrap;font-size:11.5px;font-weight:700;color:#effaff;text-shadow:0 1px 1px #054d70}
+.m81329-mail-tabs{display:flex;gap:5px;height:35px;align-items:flex-end}
+.m81329-mail-tab{min-height:0!important}
+.m81329-mail-main{position:absolute;left:25px;top:86px;width:810px;height:424px;display:grid;grid-template-columns:403px 397px;gap:10px;z-index:1}
+
+.m81329-mail-list-panel{box-sizing:border-box;background:linear-gradient(180deg,#0992cb,#0578ad);border:2px solid #73ddf6;border-radius:10px;overflow:hidden;position:relative}
+.m81329-mail-list{height:362px;box-sizing:border-box;padding:10px 8px 6px;overflow:hidden}
+.m81329-mail-row-wrap{position:relative;height:61px;margin-bottom:6px}
+.m81329-mail-row{display:flex!important;align-items:center;gap:8px;box-sizing:border-box;width:100%;height:61px;padding:6px 10px!important;text-align:left!important;border-radius:6px!important;border:1px solid #8ed3f2!important;background-color:#fff8e3;background-size:100% 100%;background-repeat:no-repeat;color:#8e340b!important;text-shadow:none!important;white-space:normal!important;overflow:hidden;box-shadow:none!important}
+.m81329-mail-row.has-skin{border:0!important;border-radius:0!important;background-color:transparent!important;box-shadow:none!important}
+.m81329-mail-row[aria-pressed=true]:not(.has-skin){border-color:#e15b29!important;background-color:#ffcfaa}
+.m81329-mail-envelope{display:block;flex:none;width:36px;font-size:32px;line-height:38px;color:#d97923;transform:rotate(-10deg)}
+.m81329-mail-envelope-img{flex:none;width:36px;height:32px;object-fit:contain;pointer-events:none}
+.m81329-mail-row-copy{display:flex;flex-direction:column;justify-content:center;gap:3px;min-width:0;flex:1}
+.m81329-mail-row strong{display:block;padding-right:22px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;line-height:18px}
+.m81329-mail-row[data-read=false] strong:before{content:'• ';color:#d6651f}
+.m81329-mail-row-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.m81329-mail-row-sender{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px;line-height:14px;font-weight:700;color:#9f4f22}
+.m81329-mail-state{flex:none;font-size:10px;line-height:14px;font-weight:700;white-space:nowrap}
+.m81329-mail-state.is-unclaimed{color:#c04d0a}
+.m81329-mail-state.is-claimed{color:#9a7152}
+.m81329-mail-delete{position:absolute;right:8px;top:7px;width:18px;height:18px;min-width:18px!important;min-height:18px!important;border:0!important;padding:0!important;background:transparent!important;color:#f99e00!important;text-shadow:-1px 0 #a73900,0 1px #a73900,1px 0 #a73900,0 -1px #a73900!important;box-shadow:none!important;font-size:18px!important;line-height:18px!important;display:grid!important;place-items:center;z-index:1}
+.m81329-mail-delete-img{width:16px;height:16px;object-fit:contain;pointer-events:none}
+.m81329-mail-delete:hover{filter:brightness(1.12)}
+
+.m81329-mail-detail{position:relative;box-sizing:border-box;background-color:#078fc4;background-size:100% 100%;background-repeat:no-repeat;border:2px solid #73ddf6;border-radius:10px;padding:9px;color:#fff;overflow:hidden}
+.m81329-mail-detail.has-skin{background-color:transparent;border:0;border-radius:0;padding:0}
+.m81329-mail-heading{position:relative;height:58px}
+.m81329-mail-field-label{position:absolute;left:12px;width:62px;height:21px;line-height:21px;font-size:11px;font-weight:700;color:#eaf9ff;text-shadow:0 1px 1px #044e75;white-space:nowrap;pointer-events:none}
+.m81329-mail-field-label.is-sender{top:10px}
+.m81329-mail-field-label.is-subject{top:34px}
+.m81329-mail-detail .m81329-mail-sender,.m81329-mail-detail .m81329-mail-subject{position:absolute;left:82px;width:298px;height:21px;margin:0;padding:0 6px;box-sizing:border-box;line-height:21px;font-size:12px;color:#fff;text-shadow:0 1px 1px #023e60;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.m81329-mail-detail .m81329-mail-sender{top:10px;font-weight:700}
+.m81329-mail-detail .m81329-mail-subject{top:34px;font-weight:400}
+.m81329-mail-detail:not(.has-skin) .m81329-mail-sender,.m81329-mail-detail:not(.has-skin) .m81329-mail-subject{background:#007da9;border:1px solid #54c5e9;border-radius:7px}
+
+.m81329-mail-letter{position:absolute;left:12px;top:61px;width:374px;height:268px;box-sizing:border-box;padding:4px 12px 6px;overflow:auto;display:flex;flex-direction:column;color:#8e340b}
+.m81329-mail-detail:not(.has-skin) .m81329-mail-letter{background:#fffbe8;border:2px solid #fff;border-radius:5px}
+.m81329-mail-text{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:20px;font-size:13px;font-weight:700;color:#8e340b}
+.m81329-mail-date{margin-top:auto;padding-top:6px;text-align:right;font-size:10px;line-height:14px;color:#a76c42}
+
+.m81329-mail-tray{position:absolute;left:12px;top:334px;width:374px;height:83px;box-sizing:border-box}
+.m81329-mail-rewards{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;height:66px;overflow:auto;align-content:start}
+.m81329-mail-rewards li{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;text-align:center}
+.m81329-mail-reward-slot{position:relative;width:46px;height:46px;flex:none;background-color:#0674a6;background-size:100% 100%;background-repeat:no-repeat;border-radius:4px;display:grid;place-items:center;overflow:hidden}
+.m81329-mail-reward-slot img{max-width:34px;max-height:34px;object-fit:contain}
+.m81329-mail-reward-slot b{position:absolute;right:3px;bottom:1px;font-size:10.5px;line-height:12px;font-weight:800;color:#fff6c4;text-shadow:0 1px 2px #00233a,0 0 3px #00233a}
+.m81329-mail-rewards li span{display:block;max-width:100%;font-size:10px;line-height:13px;color:#e8faff;text-shadow:0 1px 1px #034366;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.m81329-mail-detail .m81329-mail-policy{position:absolute;left:0;right:2px;bottom:0;margin:0;font-size:10px;line-height:14px;text-align:right;color:#dff7ff;text-shadow:0 1px 1px #044a70}
+
+.m81329-mail-empty{font-size:13px;line-height:1.6;padding:60px 18px 18px;text-align:center;color:#e5faff}
+.m81329-mail-detail .m81329-mail-empty{position:absolute;left:12px;top:61px;width:374px;height:268px;box-sizing:border-box;display:grid;place-items:center;padding:20px;color:#8e340b;font-weight:700}
+
+.m81329-mail-bottom{position:absolute;left:0;bottom:9px;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;font-size:12px;color:#fff}
+.m81329-mail-page{min-width:56px;height:28px;line-height:28px;padding:0 6px;box-sizing:border-box;background:#038dc2;border:1px solid #72d2ef;border-radius:14px;text-align:center;font-weight:700}
+.m81329-mail-page.has-skin{min-width:66px;height:33px;line-height:33px;background-color:transparent;background-size:100% 100%;background-repeat:no-repeat;border:0;border-radius:0;text-shadow:0 1px 1px #024264}
+.m81329-mail-bottom .m8-flash-btn-label{padding:0!important;font-size:16px;line-height:1}
+.m81329-mail-bottom .m8-flash-btn-label:empty{display:none}
+.m81329-mail-bottom button{min-width:28px!important;min-height:24px!important;padding:0!important}
+
+.m81329-mail-controls{position:absolute;right:26px;top:527px;display:flex;gap:10px;align-items:center}
+.m81329-mail-controls .m8-flash-btn:disabled{opacity:1;filter:none}
+.m81329-mail-controls .m8-flash-btn:disabled .m8-flash-btn-bg{filter:grayscale(.55) brightness(.85);opacity:.82}
+.m81329-mail-controls .m8-flash-btn:disabled .m8-flash-btn-label{color:#eef7ff;text-shadow:0 1px 2px #102b3d}
+.m81329-mail-notice{position:absolute;left:28px;top:533px;width:512px;margin:0;font-size:11.5px;line-height:18px;font-weight:700;color:#08476e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m81329-mail-notice.is-error{color:#9a2015}
+.m81329-mail-frame button:is(:focus,:focus-visible){outline:none}
+.m81329-mail-frame button:disabled{opacity:.65;cursor:default}

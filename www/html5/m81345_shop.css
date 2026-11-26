@@ -1,0 +1,27 @@
+/* M45 normal shop only. Existing Fashion/Decoration selectors are unchanged. */
+.m81345-shop-card .m84-shop-card-name{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.m81345-shop-description{margin:0;padding:0 3px;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;white-space:pre-line;word-break:break-word;font:11.5px/15.5px Tahoma,Arial,sans-serif;color:#12445e;scrollbar-width:thin;scrollbar-color:#72bfe0 #eaf8ff}
+.m81345-shop-card-rule{margin:0;font:700 11.5px/16px Tahoma,Arial,sans-serif;color:#14587c;text-align:center;overflow:hidden}
+.m81345-shop-price{margin:0;font:700 14px/24px Tahoma,Arial,sans-serif;color:#784207;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m81345-shop-alt{margin:0;font:700 11px/16px Tahoma,Arial,sans-serif;color:#8e4906;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m81345-shop-recovery{display:flex;align-items:center;justify-content:center;gap:12px;padding:3px 8px;box-sizing:border-box;background:#075f8f;color:#fff;border:1px solid #8cddff;border-radius:5px;font:12px Tahoma,Arial,sans-serif;z-index:6}
+.m81345-shop-recovery .m8-button{min-height:25px!important;padding:2px 9px!important}
+.m81345-shop-confirm{color:#164b66;font:13px Tahoma,Arial,sans-serif}
+.m81345-shop-dialog-body{display:flex;flex-direction:column;gap:8px;box-sizing:border-box;overflow:auto;scrollbar-color:#54b7df #d6f4ff}
+.m81345-shop-dialog-body h2{font-size:18px;line-height:24px;margin:0;text-align:center;flex-shrink:0}
+.m81345-shop-dialog-body .m8-note{margin:0;line-height:1.45;font-size:13px}
+.m81345-shop-hero{display:flex;gap:12px;align-items:center;min-height:65px;max-height:94px;flex-shrink:0;overflow:hidden}
+.m81345-shop-hero>div{min-width:0;max-height:90px;overflow:auto}
+.m81345-shop-choices{display:flex;gap:12px;align-items:center;flex-shrink:0}
+.m81345-shop-choices label{white-space:nowrap}.m81345-shop-choices input{width:75px;height:31px;margin-left:5px}
+.m81345-shop-choices select{height:31px;flex:1;min-width:0}
+.m81345-shop-dialog-details{overflow:auto;min-height:36px;flex:1;padding:9px 12px;background:#d8f5ff;border:1px solid #71bfdf;border-radius:5px;scrollbar-color:#54b7df #d6f4ff}
+.m81345-shop-rewards strong{display:block;margin:4px 0;color:#075b88}.m81345-shop-rewards ul{margin:4px 0 7px;padding-left:20px;line-height:1.5}
+.m81345-shop-dialog-status{padding:8px 10px;background:#e5f8ff;border:1px solid #77c6e2;border-radius:4px;flex-shrink:0;color:#064a72}
+.m81345-shop-dialog-footer{display:flex;justify-content:flex-end;gap:12px}
+.m81345-shop-dialog-footer>.m84-native-button{position:relative!important;left:auto!important;top:auto!important;flex-shrink:0}
+.m81345-shop-dialog-footer .m84-button-label{font-size:13px!important}
+.m81345-shop-dialog-body .error{color:#a63f13!important}
+.m81345-shop-close-x{position:absolute!important;right:15px;top:14px;z-index:4}
+.m81345-shop-dialog-details{background:linear-gradient(#e7f9ff,#c8eefc)!important;border:1.5px solid #59b4db!important;box-shadow:inset 0 1px 0 #fff,0 1px 3px #095b8033}
+.m81345-shop-dialog-body input{background:#fff;border:1.5px solid #2b86b8;border-radius:4px;color:#083857;font-weight:700}

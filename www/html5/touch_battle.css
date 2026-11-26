@@ -1,0 +1,545 @@
+.touch-battle-controls { display: none; }
+#robo-aim-assist, #robo-mobile-zoom { display: none; }
+
+/* Hide placeholder offline_empty_buff sprites on all viewports so no floating clock wedges appear */
+.m7-buff:has(> img:not([src])),
+.m7-buff:has(> img[src=""]),
+.m7-buff:has(> img[src*="offline_empty_buff"]),
+.m7-buff:has(> img[hidden]) {
+  display: none !important;
+}
+
+@media (pointer: coarse), (hover: none) and (any-pointer: coarse) {
+  body:not([data-touch-active="false"]) #robo-aim-assist,
+  body:not([data-touch-active="false"]) #robo-mobile-zoom { display: block; }
+}
+
+body[data-touch-active="true"] #robo-aim-assist,
+body[data-touch-active="true"] #robo-mobile-zoom { display: block; }
+
+body[data-touch-active="true"] #battle-panel.robo-native .battle-stage {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.touch-battle-controls:not([hidden]) {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@media (hover: none) and (any-pointer: coarse), (pointer: coarse) {
+  body[data-touch-active="false"] .touch-battle-controls { display: none; }
+}
+
+@media (pointer: coarse), (hover: none) and (any-pointer: coarse), (any-pointer: coarse) {
+  body[data-touch-active="true"] .touch-battle-controls:not([hidden]) { display: block; }
+
+  .touch-battle-controls button {
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-radius: 50%;
+    color: #f4fbff;
+    font: 700 13px Tahoma, system-ui, sans-serif;
+    touch-action: none;
+    pointer-events: auto;
+    -webkit-tap-highlight-color: transparent;
+    transition: filter .1s ease, border-color .1s ease;
+  }
+
+  /* Invisible bottom-left floating joystick grab zone */
+  .touch-battle-move-zone {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 42vw;
+    height: 62vh;
+    pointer-events: auto;
+    touch-action: none;
+  }
+
+  /* Left movement thumbstick */
+  .touch-battle-stick {
+    position: absolute;
+    left: max(18px, env(safe-area-inset-left));
+    bottom: max(18px, env(safe-area-inset-bottom));
+    width: clamp(92px, 19vw, 114px);
+    aspect-ratio: 1;
+    border: 1.5px solid rgba(132, 203, 240, 0.55);
+    background: radial-gradient(circle, rgba(9, 28, 48, 0.36) 0%, rgba(7, 22, 38, 0.68) 100%);
+    box-shadow: inset 0 0 14px rgba(72, 174, 232, 0.16), 0 4px 14px rgba(0, 0, 0, 0.42);
+    opacity: 0.78;
+  }
+
+  .touch-battle-stick span {
+    width: 40%;
+    aspect-ratio: 1;
+    border: 1.5px solid #aee5ff;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #63b5df, #1d5d88);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+  }
+
+  .touch-battle-stick.is-held {
+    border-color: #ffe28a;
+    opacity: 1;
+  }
+
+  /* Right twin-stick aim/fire pad + arc of skills */
+  .touch-battle-actions {
+    position: absolute;
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: 196px;
+    height: 196px;
+    pointer-events: none;
+  }
+
+  .touch-battle-actions .touch-battle-fire {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    width: 82px;
+    height: 82px;
+    border: 2px solid rgba(255, 212, 122, 0.85);
+    background: radial-gradient(circle, rgba(112, 58, 18, 0.52) 0%, rgba(64, 30, 8, 0.82) 100%);
+    box-shadow: inset 0 0 14px rgba(255, 190, 92, 0.22), 0 4px 14px rgba(0, 0, 0, 0.5);
+  }
+
+  .touch-battle-fire-thumb {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1.5px solid #ffe49c;
+    background: radial-gradient(circle at 35% 30%, #f59a38, #9c4711);
+    color: #fff9e6;
+    font: 700 13px Tahoma, system-ui, sans-serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+  }
+
+  .touch-battle-actions .touch-battle-fire.is-held {
+    border-color: #fff2b2;
+    box-shadow: 0 0 18px rgba(255, 182, 74, 0.6), inset 0 0 14px rgba(255, 224, 130, 0.38);
+  }
+
+  .touch-battle-actions .touch-battle-fire.is-manual-aim {
+    border-color: #6ce8ff;
+    box-shadow: 0 0 18px rgba(108, 232, 255, 0.65), inset 0 0 14px rgba(108, 232, 255, 0.35);
+  }
+
+  .touch-battle-skill {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    overflow: visible;
+    border: 2px solid rgba(138, 196, 232, 0.78);
+    background: linear-gradient(160deg, rgba(18, 52, 82, 0.92), rgba(7, 24, 42, 0.95));
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.52);
+  }
+
+  .touch-battle-skill[hidden] { display: none !important; }
+
+  /* Spacious mobile MOBA arc around the Attack button */
+  .touch-skill-e  { right: 112px; bottom: 8px; }
+  .touch-skill-r  { right: 106px; bottom: 72px; }
+  .touch-skill-q  { right: 64px;  bottom: 124px; width: 46px; height: 46px; }
+  .touch-skill-sp { right: 6px;   bottom: 120px; width: 56px; height: 56px; border-color: rgba(255, 212, 122, 0.88); }
+
+  .touch-skill-icon {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .touch-skill-sweep {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: scaleX(-1);
+    background: conic-gradient(from 0deg, rgba(4, 12, 24, 0.72) var(--cd-angle, 0deg), transparent var(--cd-angle, 0deg));
+    pointer-events: none;
+  }
+
+  .touch-skill-key {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    padding: 1px 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(164, 218, 248, 0.65);
+    background: rgba(7, 24, 42, 0.92);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #eef9ff;
+    text-shadow: 0 1px 2px #000;
+    pointer-events: none;
+  }
+
+  .touch-skill-charge {
+    position: absolute;
+    left: -3px;
+    top: -3px;
+    padding: 1px 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 224, 132, 0.75);
+    background: rgba(18, 36, 54, 0.95);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffe899;
+    pointer-events: none;
+  }
+
+  .touch-skill-charge:empty { display: none; }
+
+  .touch-skill-cd {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff6c9;
+    font: 800 13px Tahoma, system-ui, sans-serif;
+    text-shadow: 0 1px 3px #000, 0 0 4px #000;
+    pointer-events: none;
+  }
+
+  .touch-skill-cd:empty { display: none; }
+
+  .touch-battle-skill.is-ready {
+    border-color: #7ee3ff;
+    box-shadow: 0 0 12px rgba(84, 212, 255, 0.4), 0 3px 10px rgba(0, 0, 0, 0.52);
+  }
+
+  .touch-skill-sp.is-ready {
+    border-color: #ffe185;
+    box-shadow: 0 0 14px rgba(255, 206, 92, 0.45), 0 3px 10px rgba(0, 0, 0, 0.52);
+  }
+
+  .touch-battle-skill.is-passive {
+    opacity: 0.78;
+    border-color: rgba(138, 168, 192, 0.5);
+    pointer-events: none;
+  }
+
+  .touch-battle-skill.is-locked,
+  .touch-battle-skill.is-low-mp {
+    opacity: 0.46;
+  }
+
+  .touch-battle-skill.is-aiming {
+    border-color: #fff2a8;
+    filter: brightness(1.22);
+    z-index: 2;
+  }
+
+  .touch-battle-cancel {
+    position: absolute;
+    right: 12px;
+    bottom: 196px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255, 130, 120, 0.75);
+    background: rgba(44, 16, 18, 0.88);
+    color: #ffd5d0;
+    font: 700 12px Tahoma, system-ui, sans-serif;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55);
+    pointer-events: none;
+  }
+
+  .touch-battle-cancel.is-active {
+    border-color: #ff6b6b;
+    background: rgba(185, 36, 36, 0.94);
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .touch-battle-settings {
+    position: absolute;
+    right: max(8px, env(safe-area-inset-right));
+    top: max(6px, env(safe-area-inset-top));
+    width: 30px;
+    height: 30px;
+    border-radius: 6px !important;
+    border: 1.5px solid #82d9fa;
+    background: linear-gradient(#126ca3, #07385c);
+    box-shadow: inset 0 1px 0 #c6f4ff66, 0 2px 8px rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+  }
+
+  /* Mobile HUD: hide duplicate skill bar and turn m7-bottom into a compact Flash-framed vital pill */
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-system {
+    right: calc(44px / var(--m7-hud-scale, 0.54));
+    top: 6px;
+    width: auto;
+    height: auto;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-system-bg {
+    display: none;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-ping {
+    position: static;
+    width: auto;
+    min-width: 44px;
+    height: 22px;
+    line-height: 22px;
+    padding: 0 7px;
+    border-radius: 4px;
+    background: rgba(6, 38, 62, 0.86);
+    border: 1px solid #69c7ee;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-map-title {
+    left: 6px;
+    top: 2px;
+    font-size: 13px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-objective {
+    right: calc(104px / var(--m7-hud-scale, 0.54));
+    width: 196px;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-objective-text {
+    width: 116px;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-kda {
+    left: 124px;
+    width: 64px;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-settings,
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-battle-chat,
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-signal,
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-bottom-bg,
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-bottom .m7-skill {
+    display: none;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-bottom {
+    width: 150px;
+    height: 70px;
+    margin-left: -75px;
+    bottom: 6px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(10, 56, 92, 0.9), rgba(5, 29, 51, 0.94));
+    border: 1.5px solid #6ad2f7;
+    box-shadow: inset 0 1px 0 rgba(191, 243, 255, 0.45), 0 3px 10px rgba(0, 0, 0, 0.55);
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-self-info {
+    left: 7px;
+    top: 2px;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster {
+    top: 164px;
+    transform: scale(0.5);
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-a {
+    left: 6px;
+    transform-origin: top left;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-b {
+    top: 72px;
+    right: 6px;
+    transform-origin: top right;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-buffs {
+    left: 50%;
+    top: 74px;
+    bottom: auto;
+    width: auto;
+    height: 36px;
+    transform: translateX(-50%) scale(0.82);
+    transform-origin: top center;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-buffs .m7-buff {
+    position: relative;
+    top: 0;
+    left: auto !important;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+  }
+
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img:not([src])),
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img[src=""]),
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img[src*="offline_empty_buff"]),
+  .m7-robo-hud[data-mobile-scaled="true"] .m7-buff:has(> img[hidden]) {
+    display: none;
+  }
+
+  #battle-panel.robo-native:has(.touch-battle-controls:not([hidden])) #battle-paused {
+    bottom: 92px;
+    text-align: center;
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .robo-settings {
+    max-width: calc(100vw - 28px);
+    max-height: calc(100vh - 28px);
+    overflow: auto;
+  }
+
+  /* Portrait phones only: scale down login neatly without clipping & lift touch pads */
+  @media (orientation: portrait) {
+    .touch-battle-move-zone {
+      height: calc(50vh - 40px);
+      bottom: 44px;
+    }
+
+    .touch-battle-stick {
+      bottom: max(54px, calc(env(safe-area-inset-bottom) + 48px));
+      width: 90px;
+    }
+
+    .touch-battle-actions {
+      bottom: max(50px, calc(env(safe-area-inset-bottom) + 44px));
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-objective {
+      top: 76px;
+      right: 12px;
+      width: 176px;
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-objective-text {
+      width: 102px;
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-kda {
+      left: 110px;
+      width: 58px;
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-roster-b {
+      top: 112px;
+    }
+
+    .m7-robo-hud[data-mobile-scaled="true"] .m7-bottom {
+      transform: scale(1.18);
+      transform-origin: bottom center;
+      bottom: 4px;
+    }
+
+    body:not(:has(.m85-settings-surface)) .m8-shell[data-screen="lobby"]:not(:has(.m81-create-shade,.m8-account))::after {
+      content: '↻ Xoay ngang màn hình để chơi rộng hơn';
+      position: fixed;
+      left: 50%;
+      bottom: max(56px, calc(env(safe-area-inset-bottom) + 52px));
+      transform: translateX(-50%);
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1.5px solid #7cd8fb;
+      background: linear-gradient(180deg, rgba(12, 74, 114, 0.94), rgba(5, 38, 66, 0.96));
+      color: #fff3b5;
+      font: 700 11px Tahoma, system-ui, sans-serif;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1200;
+    }
+
+    .m8-map-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .m8-flash-tank-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .m8-shell:is([data-screen="boot"], [data-screen="login"]) .m8-stage {
+      width: 100% !important;
+      height: 100% !important;
+      transform: none !important;
+    }
+
+    .m8-shell:is([data-screen="boot"], [data-screen="login"]) .m8-content {
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .m8-shell:is([data-screen="boot"], [data-screen="login"]) .m83-world-background {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      transform: scale(1.07) !important;
+      z-index: 0 !important;
+    }
+
+    .m8-shell:is([data-screen="boot"], [data-screen="login"]) .m8-login-logo {
+      position: static !important;
+      transform: none !important;
+      width: min(310px, 82vw) !important;
+      height: auto !important;
+      flex: none;
+    }
+
+    .m8-shell[data-screen="boot"] .m8-boot-note {
+      position: static !important;
+      transform: none !important;
+      flex: none;
+    }
+
+    .m8-shell[data-screen="login"] .m8-login-shell {
+      position: relative !important;
+      inset: auto !important;
+      flex: none;
+      width: 420px !important;
+      height: 318px !important;
+      transform: scale(var(--m8-login-scale, 1));
+      transform-origin: top center;
+      margin-bottom: calc((var(--m8-login-scale, 1) - 1) * 318px);
+    }
+
+    .m8-shell:is([data-screen="boot"], [data-screen="login"]) :is(.m8-status, .m8-error) {
+      top: auto;
+      left: 12px;
+      right: 12px;
+      bottom: max(12px, env(safe-area-inset-bottom));
+    }
+  }
+
+  /* Coarse touch UX polish inside menus & modals: 16px inputs prevent iOS auto-zoom */
+  .m8-shell :is(input, select, textarea) {
+    font-size: 16px;
+  }
+}

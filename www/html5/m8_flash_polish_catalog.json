@@ -1,0 +1,670 @@
+{
+  "schema": "m8-flash-polish/v1",
+  "mdlistSha256": "9981eda5174266977c6d963a1fc13413a8f5004f96179c0a6c7f46e1b1b2faae",
+  "assets": {
+    "email.rightBg": {
+      "logical": "zh_CN/gui_summer/controls/email/email_righttbk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/da3dccc3c85d081d44e9a52c13f70e84.png",
+      "width": 389,
+      "height": 446,
+      "bytes": 3026,
+      "sha256": "9f5e93558b9c93772416b21f2df8794109e44c1d77f6bbcfacc9203a4cd77bed"
+    },
+    "email.writeBg": {
+      "logical": "zh_CN/gui_summer/controls/email/email_writebk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/291c4b02d54e3026f37ac3d601035ae5.png",
+      "width": 388,
+      "height": 247,
+      "bytes": 693,
+      "sha256": "9fa64294ea870ce1c8c09cae238cdaffd6ff03d213b43f7b5eefe7940de4dbca"
+    },
+    "email.rowUp": {
+      "logical": "zh_CN/gui_summer/controls/email/emaillist_bk_up.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/b66da0c74baf580f732be350a415774d.png",
+      "width": 403,
+      "height": 61,
+      "bytes": 575,
+      "sha256": "a5a83b0a9c165f556426944f11dd0aa1410b7039818a827808791a81a16508a4"
+    },
+    "email.rowSelect": {
+      "logical": "zh_CN/gui_summer/controls/email/emaillist_bk_select.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/20561708b0f60c973169404d61b75711.png",
+      "width": 403,
+      "height": 61,
+      "bytes": 998,
+      "sha256": "8d692af573b573abe360c98cdbf12b958a6a3ced554399e4bf80bbea8c527c6a"
+    },
+    "email.envelopeClose": {
+      "logical": "zh_CN/gui_summer/controls/email/envelope_close.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/848286bd0c5a8fa396d3670a9c6e69ed.png",
+      "width": 47,
+      "height": 38,
+      "bytes": 1431,
+      "sha256": "74d5a3fba7ac1e4a64df3eca59e7b60251caaa1563a021e4276f03e3f4db5a53"
+    },
+    "email.envelopeOpen": {
+      "logical": "zh_CN/gui_summer/controls/email/envelope_open.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/c105586b12284c046224b39312aad865.png",
+      "width": 49,
+      "height": 48,
+      "bytes": 1634,
+      "sha256": "1f626f493be6b4a604a962fb89c6465e8050b6d8a499fdbe8d62c51a4a4a3961"
+    },
+    "email.mailItem": {
+      "logical": "zh_CN/gui_summer/controls/email/mail_item.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/73866d1ecdabf5eb902af38ad53b2170.png",
+      "width": 47,
+      "height": 45,
+      "bytes": 2285,
+      "sha256": "97840b768635e8b428faf169a1bf810ce105775d3d764f87138ed869e724150f"
+    },
+    "email.findFriend": {
+      "logical": "zh_CN/gui_summer/controls/email/button_findfriend.png",
+      "url": "/rez/zh_CN/gui_summer/controls/email/8253cd2666af1f2229ec19e0eb1a867d.png",
+      "width": 35,
+      "height": 21,
+      "bytes": 1138,
+      "sha256": "8dd10965a070d564d1dda0b31fc206bc860bae5038124ab0f7f25c3b8b17f48f"
+    },
+    "ladder.infoBg": {
+      "logical": "zh_CN/gui_summer/controls/ladder/img_ladder_info_BG.png",
+      "url": "/rez/zh_CN/gui_summer/controls/ladder/099bd1898592fd54ccdfcf86d0ca1c66.png",
+      "width": 786,
+      "height": 310,
+      "bytes": 36064,
+      "sha256": "360cffb5bedc9a23cedfce6b799f6bdd3739d7319695d39a1d256c47d681a376"
+    },
+    "ladder.rewardBg": {
+      "logical": "zh_CN/gui_summer/controls/ladder/img_ladder_reward_BG.png",
+      "url": "/rez/zh_CN/gui_summer/controls/ladder/f9a4e0de72c8f719549b647fc042d809.png",
+      "width": 700,
+      "height": 358,
+      "bytes": 197726,
+      "sha256": "94e3fc15dd06bc10a816e3a41386b424482b33f25245b095e7d222ae83ed0dc6"
+    },
+    "ladder.coinBg": {
+      "logical": "zh_CN/gui_summer/controls/ladder/img_coin_BG.png",
+      "url": "/rez/zh_CN/gui_summer/controls/ladder/1c74a5e858df43a1b7959576890c7b38.png",
+      "width": 245,
+      "height": 174,
+      "bytes": 911,
+      "sha256": "cbf0d12949ab6354cd5d2ac31401a23502d14d8a73958887409e1ed370a7dca6"
+    },
+    "ladder.noCoinBg": {
+      "logical": "zh_CN/gui_summer/controls/ladder/img_no_coin_bg.png",
+      "url": "/rez/zh_CN/gui_summer/controls/ladder/2460561c52d2d371018343aadd9852be.png",
+      "width": 250,
+      "height": 179,
+      "bytes": 23009,
+      "sha256": "c76457730b31dfaa76766db0e3c622d705db4439fe3f7fdfb6ff1c65a9b2aee0"
+    },
+    "polish.btnWindowOrange": {
+      "logical": "zh_CN/gui_summer/controls/public/button_window_orange.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/bf8b5497b549e4de57370ef55a6c13d0.png",
+      "width": 120,
+      "height": 35,
+      "bytes": 1735,
+      "sha256": "86a88252df40746f2b405813e04e2e18d7a8351888bdc7a69c30639e7ed86fe2"
+    },
+    "polish.btnWindowGreenS": {
+      "logical": "zh_CN/gui_summer/controls/public/button_window_green_s.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/150c4b5c91ad7cfb6fb8a3c20cc2d0db.png",
+      "width": 96,
+      "height": 30,
+      "bytes": 1548,
+      "sha256": "de8f4363bc8fc18931aa2c659c901188386de98ded583196a14888d4a06b6281"
+    },
+    "polish.btnWindowOy2": {
+      "logical": "zh_CN/gui_summer/controls/public/button_window_oy_2.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/ecb28bb9dadf82db288f361eed3fd574.png",
+      "width": 140,
+      "height": 33,
+      "bytes": 2069,
+      "sha256": "14ec41abfcca30c3eb4ca53aa3da5f14ea1d15e7c1ffd6cd6ce62230a2218eed"
+    },
+    "polish.btnWindowGray2": {
+      "logical": "zh_CN/gui_summer/controls/public/button_window_gray_2.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/bd34083a4d551564f502f459537c6d60.png",
+      "width": 140,
+      "height": 33,
+      "bytes": 1479,
+      "sha256": "6f3e6d7f97883be9299882b97d30e3afce0491313951a490ed44f80ca43d43d7"
+    },
+    "polish.btn3Black": {
+      "logical": "zh_CN/gui_summer/controls/public/button_3_black.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/511f3c1d7c48a6b15433f2092424786d.png",
+      "width": 100,
+      "height": 33,
+      "bytes": 1098,
+      "sha256": "fa481977beb258d95c6df114f11ec2b80215c0be403d8206f5d7f240f320f89a"
+    },
+    "polish.btn3Green": {
+      "logical": "zh_CN/gui_summer/controls/public/button_3_green.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/cf40629c41142d9ee804ef882427d2d1.png",
+      "width": 100,
+      "height": 33,
+      "bytes": 1821,
+      "sha256": "97bb9defe28d8b66cafaed9099d1b0c12723e9e563fb0e0f0c4d0b5e6ed44f8c"
+    },
+    "polish.btn3Orange": {
+      "logical": "zh_CN/gui_summer/controls/public/button_3_orange.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/1f1c571b623aeeeeb3a6724d7775fdfb.png",
+      "width": 100,
+      "height": 33,
+      "bytes": 1767,
+      "sha256": "c1c43c2faacc1c6d831e21afa16cf00271014502d0161e98657dd69d53ec65e2"
+    },
+    "polish.btn2Gray": {
+      "logical": "zh_CN/gui_summer/controls/public/button_2_gray.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/4a098a388ce4a1b764f3b7b6621ecb21.png",
+      "width": 98,
+      "height": 28,
+      "bytes": 932,
+      "sha256": "a29a43ab8ca0e853e4d795ffbc0d08f410cfbfa83e0e995d79f12f819005d882"
+    },
+    "polish.btn2GreenS": {
+      "logical": "zh_CN/gui_summer/controls/public/button_2_green_s.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/e6771910f6f44f7dd7a7223220eede5a.png",
+      "width": 52,
+      "height": 22,
+      "bytes": 909,
+      "sha256": "60954300ea74ae83f236b3bf0067ed58d4ae841aeea22c16cbaf50a35d96929c"
+    },
+    "polish.btn2OrangeS": {
+      "logical": "zh_CN/gui_summer/controls/public/button_2_orange_s.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/d9a597e3ee78ff89f7beef9633271cd8.png",
+      "width": 52,
+      "height": 22,
+      "bytes": 1222,
+      "sha256": "2de1cbe01aef726ab5afd039ec05345d11c59861f72d102dba3ad16317ed19aa"
+    },
+    "polish.btn2SBlue": {
+      "logical": "zh_CN/gui_summer/controls/public/button_2_s_blue.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/84afe87166f977e1e73e7256031c5367.png",
+      "width": 86,
+      "height": 25,
+      "bytes": 1245,
+      "sha256": "ab6e3d5d0dfa647fc48dc568d7173c8964d4d5df10468d7554946f901ea9d73e"
+    },
+    "polish.btn2SsBlack": {
+      "logical": "zh_CN/gui_summer/controls/public/button_2_ss_black.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/659097312b33534edacce21aee045419.png",
+      "width": 66,
+      "height": 29,
+      "bytes": 1085,
+      "sha256": "2a0c1bc2578ec0d8cda4e351aa09fd58800478ed3f25ee32438c15a0caf49d49"
+    },
+    "polish.btn2SsBlue": {
+      "logical": "zh_CN/gui_summer/controls/public/button_2_ss_blue.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/b0be376ac4f67526ddc3cafffa4e305e.png",
+      "width": 66,
+      "height": 29,
+      "bytes": 1417,
+      "sha256": "6233ee4d674275286e229f5c973342b6344cdbd2d332c1ecfaa4d623f10006ce"
+    },
+    "polish.btnGreen112": {
+      "logical": "zh_CN/gui_summer/controls/public/btn_112x45_green.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/1f88c4d232a210fcd4a894ef91be5126.png",
+      "width": 112,
+      "height": 45,
+      "bytes": 2373,
+      "sha256": "10fc37fc5ca3792d817c80a0a7c0feddc2ae2761cae6c92833a2bf182707f11a"
+    },
+    "polish.btnGreen141": {
+      "logical": "zh_CN/gui_summer/controls/public/button_green_141x64.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/87583ae13c2d3584fe11656711a6e409.png",
+      "width": 141,
+      "height": 64,
+      "bytes": 2538,
+      "sha256": "04658e0f72a2fac73d009e76108bbbf57161c615de0bc80e26a020ee39efc3f8"
+    },
+    "polish.btnGreen142": {
+      "logical": "zh_CN/gui_summer/controls/public/btn_142x58_green.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/e2669cd8fabb771153fb86cef0cea4da.png",
+      "width": 142,
+      "height": 58,
+      "bytes": 3645,
+      "sha256": "e0ddc73cb21174fbcd03dd0015326340467703fae8322ceba6ab547fad39f450"
+    },
+    "polish.btnBlue7": {
+      "logical": "zh_CN/gui_summer/controls/public/button_7_blue.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/dfe5f20286db7f1a0862ef41c0a8545a.png",
+      "width": 182,
+      "height": 76,
+      "bytes": 3882,
+      "sha256": "1fdabcf43166b87e9bcef393c35a32fa2fd22f43f6bc902747006e2af91346ff"
+    },
+    "polish.btnOrange7": {
+      "logical": "zh_CN/gui_summer/controls/public/button_7_orange.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/f23b4451de4a03b972fd1f41a6ebad54.png",
+      "width": 182,
+      "height": 76,
+      "bytes": 3008,
+      "sha256": "238bf7950c9ab5b91dce092004342687e84fb639f3dc2dabfde59bacc7393026"
+    },
+    "polish.tabTopUp": {
+      "logical": "zh_CN/gui_summer/controls/act/newseven/convert_top_tab.png",
+      "url": "/rez/zh_CN/gui_summer/controls/act/newseven/cde7599c0bc9ae6c035c7db5e3c1b1fa.png",
+      "width": 105,
+      "height": 35,
+      "bytes": 481,
+      "sha256": "2d31ec4d1c21a0a1118d2ef248f0d572fae80df796e5ff7c0077dd430913956d"
+    },
+    "polish.tabTopSelected": {
+      "logical": "zh_CN/gui_summer/controls/act/newseven/convert_top_tab_select.png",
+      "url": "/rez/zh_CN/gui_summer/controls/act/newseven/4afeeaa641f6977d42126c5623cb4e76.png",
+      "width": 105,
+      "height": 35,
+      "bytes": 1354,
+      "sha256": "aee9eb09e991c3f34b0a6059739f7db0258a1645d386cbbaf728b088539e8162"
+    },
+    "polish.tabLeftUp": {
+      "logical": "zh_CN/gui_summer/controls/act/luckegg/btn_lefttab.png",
+      "url": "/rez/zh_CN/gui_summer/controls/act/luckegg/19e597998bb1186940404dbe0cdc8e70.png",
+      "width": 165,
+      "height": 92,
+      "bytes": 9710,
+      "sha256": "af6f142f20d5e5c573ba64a61893d806e2505a36894343a534b330cfcc843e64"
+    },
+    "polish.tabLeftSelected": {
+      "logical": "zh_CN/gui_summer/controls/act/luckegg/btn_lefttab_selected.png",
+      "url": "/rez/zh_CN/gui_summer/controls/act/luckegg/65835b1992795a928e81f74b49dfd760.png",
+      "width": 165,
+      "height": 94,
+      "bytes": 11235,
+      "sha256": "4f2a805ac96a5fd1052aaedd5bc6bf7abf4be499a0ac271a7bc3ec82788a2e54"
+    },
+    "polish.inputL": {
+      "logical": "zh_CN/gui_summer/controls/public/input_bk_l.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/56a9bcde382602766f84154e513b0e94.png",
+      "width": 330,
+      "height": 35,
+      "bytes": 2195,
+      "sha256": "ea15decb3b552072c1ef65b7bc12ee7effc0209520d11878d609b38f8ece7e79"
+    },
+    "polish.inputXxxl": {
+      "logical": "zh_CN/gui_summer/controls/public/input_bk_xxxl.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/02113b8e1df18c728893f19973a56d18.png",
+      "width": 480,
+      "height": 35,
+      "bytes": 2267,
+      "sha256": "4c9152c5960d39028c10e69028e5eee98b55eb5d470cdfcb399e6fc156644f0f"
+    },
+    "polish.input3": {
+      "logical": "zh_CN/gui_summer/controls/public/input3.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/cc3e3dc45d04a0755e03e87bf769ceca.png",
+      "width": 257,
+      "height": 69,
+      "bytes": 3249,
+      "sha256": "989ad8c3e195c1597bcf3fa858e25fdefe6ef57485fead59d2bdcbad2ed4d0ea"
+    },
+    "polish.lbInputM": {
+      "logical": "zh_CN/gui_summer/controls/public/lbinput_m_bk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/c0afb1433bcc7c4ae307e60ad3697634.png",
+      "width": 224,
+      "height": 32,
+      "bytes": 1292,
+      "sha256": "01420d42ab35be73afa6f1d5a366425f83a61b1edd5ac5b97e53c445555a3df1"
+    },
+    "polish.lbInputMmh": {
+      "logical": "zh_CN/gui_summer/controls/public/lbinput_mmh_bk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/3a59891cb871a5dc21b61bcb61e7b37a.png",
+      "width": 304,
+      "height": 54,
+      "bytes": 1576,
+      "sha256": "d88690aa91ce6864d1df561ad9347bddb740f84eb994f86c84b9eb84d0af33f9"
+    },
+    "polish.lbInputSm": {
+      "logical": "zh_CN/gui_summer/controls/public/lbinput_sm_bk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/8076175de8ce6d75bd427a6fdb01e040.png",
+      "width": 194,
+      "height": 32,
+      "bytes": 1385,
+      "sha256": "3e742561033c2fe8511ea0b6a1529c81a9b29d0ef97ddd5ec30676b42dc22bce"
+    },
+    "polish.btnCloseSign": {
+      "logical": "zh_CN/gui_summer/controls/public/button_close_signin.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/913f2c5e45d7fbb38ee9e019d457b9e9.png",
+      "width": 45,
+      "height": 46,
+      "bytes": 2153,
+      "sha256": "3bb5520a8a61cbd5aff949b328bb1dcf9cf5851d94f8d8944306548884be21c7"
+    },
+    "polish.btnClose2": {
+      "logical": "zh_CN/gui_summer/controls/public/button_close_2.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/e017cccf426316a9367369bfebdb7e12.png",
+      "width": 21,
+      "height": 20,
+      "bytes": 632,
+      "sha256": "b24bc848ed18030712b07aa8dcfeb857b461b4a8c782bb378614a73e7705ab82"
+    },
+    "polish.btnCloseAlt": {
+      "logical": "zh_CN/gui_summer/controls/public/btn_close.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/190608057246fec1d81663f1879cc707.png",
+      "width": 46,
+      "height": 46,
+      "bytes": 2181,
+      "sha256": "c903e1e7cba6d678ba0fad2db583a412ea8666281f49e107adda57ec1f59cb5c"
+    },
+    "polish.checkboxBk": {
+      "logical": "zh_CN/gui_summer/controls/public/checkbox_bk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/e9e201b0e85a3569975306853556449c.png",
+      "width": 22,
+      "height": 23,
+      "bytes": 759,
+      "sha256": "485406fd3d0048b1ad737d3d8a7f59f5a86baca12ee7bf544eac1e273d6e53df"
+    },
+    "polish.checkboxChecked": {
+      "logical": "zh_CN/gui_summer/controls/public/checkbox_checked.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/60a538d870a8ed442903b214a2ec26e3.png",
+      "width": 22,
+      "height": 23,
+      "bytes": 1138,
+      "sha256": "6f3b3bd743e9b13e015c16116e615e0d5cb7cd5f5d50bce23ce15351cb255df6"
+    },
+    "polish.doubleBtnBk": {
+      "logical": "zh_CN/gui_summer/controls/public/n_doublebtn_bk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/1f77e90ca0906cda19687822b30cc15a.png",
+      "width": 340,
+      "height": 53,
+      "bytes": 1719,
+      "sha256": "c2543033185cb42a0b854201e1388b3d73e3094df21984693890f61073ce9a47"
+    },
+    "polish.oneBtnBk": {
+      "logical": "zh_CN/gui_summer/controls/public/n_onebtn_bk.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/238a201ac979783da700819da3f99920.png",
+      "width": 194,
+      "height": 53,
+      "bytes": 1507,
+      "sha256": "78ae2adce59d6d2c17917ced74da3094f97249f0757a6961cb9c720f29bdd8a2"
+    },
+    "polish.bkChallengeInfo": {
+      "logical": "zh_CN/gui_summer/controls/public/bk_challenge_info.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/8fcb1a8ec64150f6a1ff5f7153f1a354.png",
+      "width": 401,
+      "height": 133,
+      "bytes": 1288,
+      "sha256": "460f4dcabf6016a85c5a7743464ab9d9f0e64719bbccf0c17157a7a91ea156be"
+    },
+    "polish.bar1": {
+      "logical": "zh_CN/gui_summer/controls/public/bar1.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/b4fb397dd2694c7ee5e71b7596aa5a0a.png",
+      "width": 448,
+      "height": 79,
+      "bytes": 5415,
+      "sha256": "112c4328bfa860c04950f19cf5df1e5a95984a66a7f6b9ce60fa91488bcb6378"
+    },
+    "polish.cutline2": {
+      "logical": "zh_CN/gui_summer/controls/public/cutline2.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/6d4a466db4d5c28b0293fc34f9a2ad51.png",
+      "width": 1,
+      "height": 3,
+      "bytes": 107,
+      "sha256": "879ccdfbe8afd781a5362aa27a643b55b863cb913610cb832efd9d48b5c64ecb"
+    },
+    "polish.line2": {
+      "logical": "zh_CN/gui_summer/controls/public/line_2.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/1bbd72d11000bc2a9578ae1277459a64.png",
+      "width": 3,
+      "height": 92,
+      "bytes": 197,
+      "sha256": "48ffe8f79ff47f5de423610111aab36639a00ccfeabc12e68a248761b9e01cd7"
+    },
+    "polish.row": {
+      "logical": "zh_CN/gui_summer/controls/public/row.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/0af0e10e54432c9543796d32ce58121a.png",
+      "width": 138,
+      "height": 29,
+      "bytes": 580,
+      "sha256": "3ab186083d4f6884236aac2773f9221706bb8771ef5fe69d37b4bb1b65c17f3b"
+    },
+    "polish.rowColor": {
+      "logical": "zh_CN/gui_summer/controls/public/row_color.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/fdecaacebd3742ad475fc57725f2afae.png",
+      "width": 128,
+      "height": 19,
+      "bytes": 469,
+      "sha256": "f2fdb7f944cf5182e7593e747ae97b10e26fd2d93cd90569030b2bd69fd3561d"
+    },
+    "polish.lock": {
+      "logical": "zh_CN/gui_summer/controls/public/lock.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/73881969b79f85cb9e1793420e3783b4.png",
+      "width": 77,
+      "height": 73,
+      "bytes": 7524,
+      "sha256": "3f8b6bc3c81267492e47823b775ddb6827b076b181b6a33535a9cb97d9f4bb17"
+    },
+    "polish.starGold": {
+      "logical": "zh_CN/gui_summer/controls/public/star_gold_1.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/87066a56d482a7a680950faa361fb8cb.png",
+      "width": 16,
+      "height": 16,
+      "bytes": 516,
+      "sha256": "8bfe220944df0dd5948dc7fd87dc96d683fe096213c0d8421326f103d3b49028"
+    },
+    "polish.medalGold": {
+      "logical": "zh_CN/gui_summer/controls/public/medal_gold_2.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/c8f45f9604ae2e45dd7a1cef394801c8.png",
+      "width": 16,
+      "height": 16,
+      "bytes": 501,
+      "sha256": "f64829d7f061864cc23b442042c5bcfbdf2832b4036023a53263a53b4fb3b65b"
+    },
+    "polish.circlePagerWhite": {
+      "logical": "zh_CN/gui_summer/controls/public/circlepager_white.png",
+      "url": "/rez/zh_CN/gui_summer/controls/public/522127dd20a721ce4f352f142fa37444.png",
+      "width": 24,
+      "height": 25,
+      "bytes": 686,
+      "sha256": "b916435d441ec60e4799416ef40e1903e05323b4ca5f0c32ac96898957eca9ff"
+    },
+    "polish.scrollTrack": {
+      "logical": "zh_CN/VI/public/scroller/track.png",
+      "url": "/rez/zh_CN/VI/public/scroller/932e81d81313001553d6c14e5499f606.png",
+      "width": 6,
+      "height": 352,
+      "bytes": 177,
+      "sha256": "12beea3d554837ded2cdd8aee2e565dd377cafc01f7069eb1383179fea6d5162"
+    },
+    "polish.scrollThumb": {
+      "logical": "zh_CN/VI/public/scroller/thumb.png",
+      "url": "/rez/zh_CN/VI/public/scroller/ba48ed2ad844845f96b4db1707e6cebc.png",
+      "width": 10,
+      "height": 63,
+      "bytes": 145,
+      "sha256": "d68c20521a901fd58277ca791c63162ddd29019d52649cfb3c5e2ac5f34da510"
+    },
+    "polish.scrollUp": {
+      "logical": "zh_CN/VI/public/scroller/up_arrow.png",
+      "url": "/rez/zh_CN/VI/public/scroller/1cc766b44932ffc8a6502013d35b7da7.png",
+      "width": 12,
+      "height": 12,
+      "bytes": 139,
+      "sha256": "8dec5e8f4c750c9895d3ab4c8d08dfa43b7c4b4db85ec06f6da3ac542e2163c0"
+    },
+    "polish.scrollDown": {
+      "logical": "zh_CN/VI/public/scroller/down_arrow.png",
+      "url": "/rez/zh_CN/VI/public/scroller/6ce44a4dc71bca289440168ab5d3785a.png",
+      "width": 12,
+      "height": 12,
+      "bytes": 143,
+      "sha256": "3b9ada73d29acc6a4e76353b7d6e9402696ecc25d898c5d3aaf50b499074e763"
+    },
+    "polish.shopFactory10": {
+      "logical": "polish.shopFactory10",
+      "url": "/html5/assets_m84/panels/ShopModuleFactory_10_fb4113fbc21c.png",
+      "width": 35,
+      "height": 19,
+      "bytes": 1028,
+      "sha256": "fb4113fbc21c61086251963a3243138cc649c991d853d5d1f434e6dbc6a0b322"
+    },
+    "polish.shopFactory2": {
+      "logical": "polish.shopFactory2",
+      "url": "/html5/assets_m84/panels/ShopModuleFactory_2_03a5fd72fbad.png",
+      "width": 37,
+      "height": 21,
+      "bytes": 612,
+      "sha256": "03a5fd72fbadce82300571ab864836eb8d8e940338ce176affb6056fd91c074e"
+    },
+    "polish.shopFactory20": {
+      "logical": "polish.shopFactory20",
+      "url": "/html5/assets_m84/panels/ShopModuleFactory_20_13cdd63469e3.png",
+      "width": 37,
+      "height": 21,
+      "bytes": 1322,
+      "sha256": "13cdd63469e340bdcc77d87c904250550666fc51addad531bbba019acbc78e0a"
+    },
+    "polish.shopFactory22": {
+      "logical": "polish.shopFactory22",
+      "url": "/html5/assets_m84/panels/ShopModuleFactory_22_8ed64b970c2b.png",
+      "width": 101,
+      "height": 33,
+      "bytes": 1062,
+      "sha256": "8ed64b970c2b294db2205034dc5e2ce53b4aac6a7e4976ba90288d7a9eb07d15"
+    },
+    "polish.shopFactory37": {
+      "logical": "polish.shopFactory37",
+      "url": "/html5/assets_m84/panels/ShopModuleFactory_37_ccb303888e64.png",
+      "width": 37,
+      "height": 21,
+      "bytes": 1375,
+      "sha256": "ccb303888e64bdcb323a804d1485ca18ca551aed60c0ef45ada1d6a583be9df2"
+    },
+    "polish.shopFactory40": {
+      "logical": "polish.shopFactory40",
+      "url": "/html5/assets_m84/panels/ShopModuleFactory_40_51b0a310c55c.png",
+      "width": 101,
+      "height": 33,
+      "bytes": 499,
+      "sha256": "51b0a310c55cb531a803714da2254200f4c0b9b9a56bc599f6524e596d285909"
+    },
+    "movie.battleStart": {
+      "logical": "zh_CN/swf/ui/battle_start.swf",
+      "width": 1920,
+      "height": 1080,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/swf/ui/5e6995de5408b53932a3a5d436ce6478.swf",
+        "sha256": "954e90aeb0f7b185aa7875bc2ed37bf052abc71e643d91a5c25df073dfbb50b7",
+        "bytes": 214548,
+        "width": 1920,
+        "height": 1080,
+        "frames": 97,
+        "fps": 24.0,
+        "backgroundColor": "#333333",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.loaderSpinner": {
+      "logical": "zh_CN/swf/ui/loader_loading_mv.swf",
+      "width": 200,
+      "height": 200,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/swf/ui/d4efb61aea1e38f707834bb5ce205e88.swf",
+        "sha256": "e1cee15057fbfe46f162acacc67b9132262e9bd3cd2ded020547ab2f9735b0bc",
+        "bytes": 23416,
+        "width": 200,
+        "height": 200,
+        "frames": 50,
+        "fps": 24.0,
+        "backgroundColor": "#000000",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.tankAppear": {
+      "logical": "zh_CN/swf/ui/arena/tankAppear.swf",
+      "width": 550,
+      "height": 400,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/swf/ui/arena/5a12ff24c923928e13f6ab8c283d483c.swf",
+        "sha256": "3251f02371929c7db216b9cce1470f0cc74ff6351d366d2b3f4e1ec32723ee3a",
+        "bytes": 157593,
+        "width": 550,
+        "height": 400,
+        "frames": 18,
+        "fps": 24.0,
+        "backgroundColor": "#666666",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.openSkinEffect": {
+      "logical": "zh_CN/swf/ui/mc_open_skin_effect.swf",
+      "width": 105,
+      "height": 105,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/swf/ui/877497a5b4b0ba48a8759d6dba7b9df2.swf",
+        "sha256": "906b6c7811fd7e1ac15cd495d592aa0d2aa79320e0296d692af0b3ece1e5cb17",
+        "bytes": 34973,
+        "width": 105,
+        "height": 105,
+        "frames": 46,
+        "fps": 24.0,
+        "backgroundColor": "#333333",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.starGame": {
+      "logical": "zh_CN/swf/ui/starGame.swf",
+      "width": 130,
+      "height": 130,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/swf/ui/927552ae59de7827470338f8c53059b4.swf",
+        "sha256": "29c4191bbab93af011b282e125fe15c5998054ff5411cafbc6c4f0639a9ec855",
+        "bytes": 1571,
+        "width": 130,
+        "height": 130,
+        "frames": 55,
+        "fps": 24.0,
+        "backgroundColor": "#000000",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.helperLevelUp": {
+      "logical": "zh_CN/gui_summer/controls/swf/helperLevelUp_t.swf",
+      "width": 200,
+      "height": 200,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/gui_summer/controls/swf/2c19eeb7c7ad1e1e6f68ee1bdd243707.swf",
+        "sha256": "02a4cde7e850cb7a09872accb2f02afc7088fac458bfbdc07180f99464a8842e",
+        "bytes": 108017,
+        "width": 200,
+        "height": 200,
+        "frames": 24,
+        "fps": 24.0,
+        "backgroundColor": "#000000",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.helperStarUp": {
+      "logical": "zh_CN/gui_summer/controls/swf/helperStarUp_t.swf",
+      "width": 200,
+      "height": 200,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/gui_summer/controls/swf/5d7638c88449e615db8f6c4d32113eaf.swf",
+        "sha256": "bf4c45e38be8d9488cecbbc6990cbeb45bbab46ae05b26b4e66cc0e13fb843e1",
+        "bytes": 107335,
+        "width": 200,
+        "height": 200,
+        "frames": 24,
+        "fps": 24.0,
+        "backgroundColor": "#000000",
+        "scriptTagTypes": []
+      }
+    },
+    "movie.loadingBar": {
+      "logical": "zh_CN/gui_summer/controls/swf/loading.swf",
+      "width": 832,
+      "height": 29,
+      "nativeMovie": {
+        "url": "/rez/zh_CN/gui_summer/controls/swf/0953430ed1689f19ba8c3011ce4f1c73.swf",
+        "sha256": "1edbd48052800702e357722797844cab6b0b7f4bab522d6815360927785a1290",
+        "bytes": 12882,
+        "width": 832,
+        "height": 29,
+        "frames": 100,
+        "fps": 24.0,
+        "backgroundColor": "#666666",
+        "scriptTagTypes": []
+      }
+    }
+  }
+}
